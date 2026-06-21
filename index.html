@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة الدكتور في اللغة العربية</title>
+    <meta name="description" content="المنصة التعليمية الرائدة للدكتور في اللغة العربية. تفوق وسهولة في التعلم بأسلوب حديث ومبتكر.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Background Glow Spheres -->
+    <div class="glow-sphere sphere-1"></div>
+    <div class="glow-sphere sphere-2"></div>
+
+    <!-- Navigation Bar -->
+    <header id="header">
+        <div class="header-container">
+            <!-- Left Side: Logo & Theme Toggle -->
+            <div class="header-left">
+                <a href="#home" class="logo" id="logo-link">
+                    <img src="ايقونة الهدر.png" alt="شعار الدكتور" class="logo-img">
+                    <div class="logo-text">
+                        <span class="logo-main">الدكتور</span>
+                        <span class="logo-sub">في اللغة العربية</span>
+                    </div>
+                </a>
+
+                <!-- Theme Toggle Switch -->
+                <div class="theme-switch-container">
+                    <label class="theme-switch" for="checkbox">
+                        <input type="checkbox" id="checkbox" />
+                        <div class="slider round">
+                            <span class="sun-icon"><i class="fas fa-sun"></i></span>
+                            <span class="moon-icon"><i class="fas fa-moon"></i></span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Right Side: Search and Authentication Buttons -->
+            <div class="header-right">
+                <button class="search-btn" id="search-toggle" aria-label="بحث">
+                    <i class="fas fa-search"></i>
+                </button>
+
+                <a href="#login" class="nav-login-link" id="nav-login-btn">
+                    <i class="fas fa-accessibility"></i>
+                    <span>سجل دخولك</span>
+                </a>
+
+                <a href="#register" class="btn-signup" id="nav-register-btn">
+                    <i class="fas fa-user-plus"></i>
+                    <span>اعمل حساب جديد!</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Modal / Overlay -->
+    <div id="search-overlay" class="search-overlay">
+        <div class="search-modal">
+            <button class="search-close" id="search-close">&times;</button>
+            <form class="search-form" onsubmit="event.preventDefault(); alert('البحث قيد التطوير...');">
+                <input type="text" placeholder="اكتب ما تبحث عنه هنا..." autofocus>
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main id="app-container">
+
+        <!-- 1. Home View -->
+        <section id="home-view" class="view-section active">
+            <div class="hero-container">
+                <!-- Right Side: Text & Heading -->
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        منصة <span class="highlight">الدكتور</span>
+                        <div class="hero-title-sub">في اللغة العربية</div>
+                    </h1>
+                </div>
+
+                <!-- Left Side: Custom Blob Image Display -->
+                <div class="hero-visual">
+                    <div class="blob-wrapper">
+                        <!-- Background Blob Shape -->
+                        <div class="blob-bg"></div>
+                        <!-- Student/Teacher Image -->
+                        <div class="blob-image-container">
+                            <img src="صورة الواجهه.jpeg" alt="الدكتور" class="hero-main-img">
+                        </div>
+
+                        <!-- Decorative Floating Dotted Rings -->
+                        <div class="dotted-ring ring-1"></div>
+                        <div class="dotted-ring ring-2"></div>
+
+                        <!-- Floating Educational Icons -->
+                        <div class="floating-icon icon-cap" style="--delay: 0s; --x: 10%; --y: 10%;"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="floating-icon icon-book" style="--delay: 1.5s; --x: 85%; --y: 20%;"><i class="fas fa-book-open"></i></div>
+                        <div class="floating-icon icon-pencil" style="--delay: 3s; --x: 5%; --y: 75%;"><i class="fas fa-pencil-alt"></i></div>
+                        <div class="floating-icon icon-ruler" style="--delay: 4.5s; --x: 90%; --y: 80%;"><i class="fas fa-ruler-combined"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Courses Section -->
+            <div class="courses-section">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fas fa-graduation-cap"></i> الكورسات المتاحة</h2>
+                    <p class="section-subtitle">ابدأ رحلتك التعليمية الآن مع أقوى الكورسات المخصصة للتفوق والريادة</p>
+                </div>
+                <div class="courses-grid">
+                    <!-- Course 1 -->
+                    <div class="course-card">
+                        <div class="course-image-container">
+                            <img src="صورة الواجهه.jpeg" alt="تأسيس النحو من الصفر" class="course-img">
+                            <span class="course-badge">كورس مجاني</span>
+                        </div>
+                        <div class="course-info">
+                            <h3 class="course-title">تأسيس النحو من الصفر</h3>
+                            <p class="course-desc">شرح تفصيلي ومبسط لكافة القواعد الإعرابية من البداية وحتى الاحتراف بأسلوب عصري.</p>
+                            <div class="course-stats">
+                                <span><i class="fas fa-play-circle"></i> 14 محاضرة</span>
+                                <span><i class="fas fa-clock"></i> 10 ساعات</span>
+                            </div>
+                            <button class="btn-course-action" onclick="alert('سيتم فتح الكورس قريباً بعد التفعيل...');">ابدأ التعلم الآن <i class="fas fa-arrow-left"></i></button>
+                        </div>
+                    </div>
+                    <!-- Course 2 -->
+                    <div class="course-card">
+                        <div class="course-image-container">
+                            <img src="صورة الواجهه.jpeg" alt="البلاغة والتذوق الأدبي" class="course-img">
+                            <span class="course-badge">كورس مجاني</span>
+                        </div>
+                        <div class="course-info">
+                            <h3 class="course-title">البلاغة والتذوق الأدبي</h3>
+                            <p class="course-desc">افهم أسرار البلاغة وتعلم كيفية إجابة أسئلة التذوق والنصوص المتحررة بنظام الامتحانات الجديد.</p>
+                            <div class="course-stats">
+                                <span><i class="fas fa-play-circle"></i> 8 محاضرات</span>
+                                <span><i class="fas fa-clock"></i> 6 ساعات</span>
+                            </div>
+                            <button class="btn-course-action" onclick="alert('سيتم فتح الكورس قريباً بعد التفعيل...');">ابدأ التعلم الآن <i class="fas fa-arrow-left"></i></button>
+                        </div>
+                    </div>
+                    <!-- Course 3 -->
+                    <div class="course-card">
+                        <div class="course-image-container">
+                            <img src="صورة الواجهه.jpeg" alt="شرح منهج الأدب والنصوص" class="course-img">
+                            <span class="course-badge">كورس مجاني</span>
+                        </div>
+                        <div class="course-info">
+                            <h3 class="course-title">منهج الأدب والنصوص للثانوية</h3>
+                            <p class="course-desc">شرح وافٍ لمدارس الأدب والتعليقات على النصوص المقررة لضمان تحصيل الدرجة النهائية.</p>
+                            <div class="course-stats">
+                                <span><i class="fas fa-play-circle"></i> 18 محاضرة</span>
+                                <span><i class="fas fa-clock"></i> 12 ساعة</span>
+                            </div>
+                            <button class="btn-course-action" onclick="alert('سيتم فتح الكورس قريباً بعد التفعيل...');">ابدأ التعلم الآن <i class="fas fa-arrow-left"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 2. Login View -->
+        <section id="login-view" class="view-section">
+            <div class="split-container">
+                <!-- Left Side: Login Form -->
+                <div class="form-container">
+                    <div class="form-header">
+                        <h2 class="form-title"><i class="fas fa-accessibility"></i> تسجيل الدخول :</h2>
+                        <p class="form-subtitle">ادخل على حسابك بإدخال رقم الهاتف و كلمة المرور المسجل بهم من قبل</p>
+                        <a href="#register" class="form-link-btn" id="go-to-register">لا يوجد لديك حساب؟ انشئ حسابك الآن !</a>
+                    </div>
+
+                    <form id="login-form" class="auth-form" onsubmit="handleLoginSubmit(event)">
+                        <!-- Phone Number -->
+                        <div class="input-group">
+                            <label for="login-phone" class="input-label">
+                                <span class="label-text">رقم الهاتف</span>
+                                <i class="fas fa-phone input-icon"></i>
+                            </label>
+                            <input type="tel" id="login-phone" class="underline-input" required placeholder="01xxxxxxxxx">
+                        </div>
+
+                        <!-- Password -->
+                        <div class="input-group">
+                            <label for="login-password" class="input-label">
+                                <span class="label-text">كلمة السر</span>
+                                <i class="fas fa-lock input-icon"></i>
+                            </label>
+                            <input type="password" id="login-password" class="underline-input" required placeholder="••••••••">
+                        </div>
+
+                        <!-- Options -->
+                        <div class="form-options">
+                            <div class="toggle-container">
+                                <span class="toggle-label">أو قم بتسجيل الدخول عن طريق الكود</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="login-by-code">
+                                    <span class="switch-slider round"></span>
+                                </label>
+                            </div>
+
+                            <a href="#" class="forgot-password" onclick="alert('برجاء التواصل مع الدعم لتغيير كلمة السر');">هل نسيت كلمة السر؟ اضغط هنا</a>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn-submit-yellow">تسجيل الدخول</button>
+                    </form>
+                </div>
+
+                <!-- Right Side: Login Illustration -->
+                <div class="illustration-container">
+                    <div class="image-wrapper">
+                        <img src="تسجيل الخول .jpeg" alt="تسجيل الدخول" class="illustration-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Register View -->
+        <section id="register-view" class="view-section">
+            <div class="split-container">
+                <!-- Left Side: Registration Form -->
+                <div class="form-container">
+                    <div class="form-header">
+                        <h2 class="form-title"><i class="fas fa-user-plus"></i> طلب انشاء حساب :</h2>
+                        <p class="form-subtitle">ادخل بياناتك بشكل صحيح وسيتم التواصل معك خلال ساعات قليلة لتفعيل الحساب !</p>
+                        <a href="#login" class="form-link-btn" id="go-to-login">يوجد لديك حساب بالفعل؟ ادخل إلى حسابك الآن !</a>
+                    </div>
+
+                    <form id="register-form" class="auth-form" onsubmit="handleRegisterSubmit(event)">
+                        <!-- Name Row 1 -->
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="reg-fname" class="input-label">
+                                    <span class="label-text">الاسم الأول</span>
+                                    <i class="fas fa-user input-icon"></i>
+                                </label>
+                                <input type="text" id="reg-fname" class="underline-input" required placeholder="الاسم الأول">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="reg-sname" class="input-label">
+                                    <span class="label-text">الاسم الثاني</span>
+                                    <i class="fas fa-user input-icon"></i>
+                                </label>
+                                <input type="text" id="reg-sname" class="underline-input" required placeholder="الاسم الثاني">
+                            </div>
+                        </div>
+
+                        <!-- Name Row 2 -->
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="reg-tname" class="input-label">
+                                    <span class="label-text">الاسم الثالث</span>
+                                    <i class="fas fa-user input-icon"></i>
+                                </label>
+                                <input type="text" id="reg-tname" class="underline-input" required placeholder="الاسم الثالث">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="reg-lname" class="input-label">
+                                    <span class="label-text">الاسم الأخير</span>
+                                    <i class="fas fa-user input-icon"></i>
+                                </label>
+                                <input type="text" id="reg-lname" class="underline-input" required placeholder="الاسم الأخير">
+                            </div>
+                        </div>
+
+                        <!-- Student Phone -->
+                        <div class="input-group">
+                            <label for="reg-phone" class="input-label">
+                                <span class="label-text">رقم الهاتف</span>
+                                <i class="fas fa-phone input-icon"></i>
+                            </label>
+                            <input type="tel" id="reg-phone" class="underline-input" required placeholder="01xxxxxxxxx">
+                        </div>
+
+                        <!-- Parent Phones Row -->
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="reg-father-phone" class="input-label">
+                                    <span class="label-text">رقم هاتف الأب</span>
+                                    <i class="fas fa-phone input-icon"></i>
+                                </label>
+                                <input type="tel" id="reg-father-phone" class="underline-input" required placeholder="01xxxxxxxxx">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="reg-mother-phone" class="input-label">
+                                    <span class="label-text">رقم هاتف الأم</span>
+                                    <i class="fas fa-phone input-icon"></i>
+                                </label>
+                                <input type="tel" id="reg-mother-phone" class="underline-input" required placeholder="01xxxxxxxxx">
+                            </div>
+                        </div>
+
+                        <!-- School and Parent Job -->
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="reg-school" class="input-label">
+                                    <span class="label-text">اسم المدرسة</span>
+                                    <i class="fas fa-school input-icon"></i>
+                                </label>
+                                <input type="text" id="reg-school" class="underline-input" required placeholder="اسم المدرسة">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="reg-parent-job" class="input-label">
+                                    <span class="label-text">مهنة ولي الأمر</span>
+                                    <i class="fas fa-briefcase input-icon"></i>
+                                </label>
+                                <input type="text" id="reg-parent-job" class="underline-input" required placeholder="مهنة ولي الأمر">
+                            </div>
+                        </div>
+
+                        <!-- Governorate and Gender Row -->
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="reg-gov" class="input-label">
+                                    <span class="label-text">المحافظة</span>
+                                    <i class="fas fa-map-marker-alt input-icon"></i>
+                                </label>
+                                <select id="reg-gov" class="underline-select" required>
+                                    <option value="" disabled selected>اختر المحافظة</option>
+                                    <option value="السويس">السويس</option>
+                                    <option value="القاهرة">القاهرة</option>
+                                    <option value="الجيزة">الجيزة</option>
+                                    <option value="الإسكندرية">الإسكندرية</option>
+                                    <option value="الدقهلية">الدقهلية</option>
+                                    <option value="البحيرة">البحيرة</option>
+                                    <option value="الفيوم">الفيوم</option>
+                                    <option value="الغربية">الغربية</option>
+                                    <option value="الإسماعيلية">الإسماعيلية</option>
+                                    <option value="المنوفية">المنوفية</option>
+                                    <option value="المنيا">المنيا</option>
+                                    <option value="القليوبية">القليوبية</option>
+                                    <option value="الوادي الجديد">الوادي الجديد</option>
+                                    <option value="أسوان">أسوان</option>
+                                    <option value="أسيوط">أسيوط</option>
+                                    <option value="بني سويف">بني سويف</option>
+                                    <option value="بورسعيد">بورسعيد</option>
+                                    <option value="دمياط">دمياط</option>
+                                    <option value="الشرقية">الشرقية</option>
+                                    <option value="جنوب سيناء">جنوب سيناء</option>
+                                    <option value="كفر الشيخ">كفر الشيخ</option>
+                                    <option value="مطروح">مطروح</option>
+                                    <option value="الأقصر">الأقصر</option>
+                                    <option value="قنا">قنا</option>
+                                    <option value="شمال سيناء">شمال سيناء</option>
+                                    <option value="سوهاج">سوهاج</option>
+                                    <option value="البحر الأحمر">البحر الأحمر</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="reg-gender" class="input-label">
+                                    <span class="label-text">النوع</span>
+                                    <i class="fas fa-venus-mars input-icon"></i>
+                                </label>
+                                <select id="reg-gender" class="underline-select" required>
+                                    <option value="" disabled selected>النوع</option>
+                                    <option value="ذكر">ذكر</option>
+                                    <option value="أنثى">أنثى</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Password field for account security -->
+                        <div class="input-group">
+                            <label for="reg-password" class="input-label">
+                                <span class="label-text">كلمة المرور</span>
+                                <i class="fas fa-lock input-icon"></i>
+                            </label>
+                            <input type="password" id="reg-password" class="underline-input" required placeholder="ادخل كلمة مرور لحسابك">
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn-submit-blue">طلب انشاء حساب</button>
+                    </form>
+                </div>
+
+                <!-- Right Side: Register Illustration -->
+                <div class="illustration-container">
+                    <div class="image-wrapper bg-blue-grad">
+                        <img src="صورة الواجهه.jpeg" alt="إنشاء حساب" class="illustration-img rounded-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/201028164601" class="floating-whatsapp" target="_blank" aria-label="تواصل معنا عبر واتساب">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+
+</html>
