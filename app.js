@@ -1,11 +1,34 @@
 // Single Page Application (SPA) Controller - "منصة الدكتور في اللغة العربية"
 
 document.addEventListener('DOMContentLoaded', () => {
+    initIntroSplash();
     initTheme();
     initRouting();
     initSearch();
     initForms();
 });
+
+// ================= Intro Splash Screen (Gateway) =================
+function initIntroSplash() {
+    const splash = document.getElementById('intro-splash');
+    if (!splash) return;
+
+    document.body.classList.add('intro-active');
+
+    // Let the entrance animation play, then reveal the platform
+    const MIN_DISPLAY_TIME = 2400; // ms
+
+    const hideSplash = () => {
+        splash.classList.add('intro-hidden');
+        document.body.classList.remove('intro-active');
+        setTimeout(() => splash.remove(), 800);
+    };
+
+    setTimeout(hideSplash, MIN_DISPLAY_TIME);
+
+    // Allow tapping/clicking the splash to skip it
+    splash.addEventListener('click', hideSplash);
+}
 
 // ================= Theme Switcher Management =================
 function initTheme() {
