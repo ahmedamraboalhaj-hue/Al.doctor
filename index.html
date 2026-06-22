@@ -94,6 +94,49 @@
         </div>
     </div>
 
+    <!-- Forgot Password Modal -->
+    <div id="forgot-password-overlay" class="search-overlay">
+        <div class="forgot-modal">
+            <button class="search-close" id="forgot-password-close" type="button">&times;</button>
+            <div class="forgot-modal-card">
+                <h3 class="forgot-modal-title"><i class="fas fa-key"></i> استعادة كلمة السر</h3>
+                <p class="forgot-modal-subtitle">ادخل رقم هاتفك ورقم هاتف استعادة الحساب اللي سجلتهم عندنا، وحدد كلمة سر جديدة.</p>
+                <div class="forgot-modal-alert" id="forgot-modal-alert"></div>
+                <form id="forgot-password-form" class="auth-form" onsubmit="handleForgotPasswordSubmit(event)">
+                    <div class="input-group">
+                        <label for="fp-phone" class="input-label">
+                            <span class="label-text">رقم هاتفك</span>
+                            <i class="fas fa-phone input-icon"></i>
+                        </label>
+                        <input type="tel" id="fp-phone" class="underline-input" required placeholder="01xxxxxxxxx">
+                    </div>
+                    <div class="input-group">
+                        <label for="fp-recovery-phone" class="input-label">
+                            <span class="label-text">رقم هاتف استعادة الحساب</span>
+                            <i class="fas fa-shield-halved input-icon"></i>
+                        </label>
+                        <input type="tel" id="fp-recovery-phone" class="underline-input" required placeholder="01xxxxxxxxx">
+                    </div>
+                    <div class="input-group">
+                        <label for="fp-new-password" class="input-label">
+                            <span class="label-text">كلمة السر الجديدة</span>
+                            <i class="fas fa-lock input-icon"></i>
+                        </label>
+                        <input type="password" id="fp-new-password" class="underline-input" required placeholder="6 أحرف على الأقل">
+                    </div>
+                    <div class="input-group">
+                        <label for="fp-confirm-password" class="input-label">
+                            <span class="label-text">تأكيد كلمة السر الجديدة</span>
+                            <i class="fas fa-lock input-icon"></i>
+                        </label>
+                        <input type="password" id="fp-confirm-password" class="underline-input" required placeholder="أعد كتابة كلمة السر">
+                    </div>
+                    <button type="submit" class="btn-submit-yellow">تغيير كلمة السر</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Content Container -->
     <main id="app-container">
 
@@ -106,6 +149,7 @@
                         منصة <span class="highlight">الدكتور</span>
                         <div class="hero-title-sub">في اللغة العربية</div>
                     </h1>
+                    <p class="hero-author">الدكتور إبراهيم طناني</p>
                 </div>
 
                 <!-- Left Side: Custom Blob Image Display -->
@@ -122,11 +166,17 @@
                         <div class="dotted-ring ring-1"></div>
                         <div class="dotted-ring ring-2"></div>
 
+                        <!-- Decorative Sparkle Dots -->
+                        <span class="deco-dot dot-1"></span>
+                        <span class="deco-dot dot-2"></span>
+                        <span class="deco-dot dot-3"></span>
+
                         <!-- Floating Educational Icons -->
-                        <div class="floating-icon icon-cap" style="--delay: 0s; --x: 10%; --y: 10%;"><i class="fas fa-graduation-cap"></i></div>
-                        <div class="floating-icon icon-book" style="--delay: 1.5s; --x: 85%; --y: 20%;"><i class="fas fa-book-open"></i></div>
-                        <div class="floating-icon icon-pencil" style="--delay: 3s; --x: 5%; --y: 75%;"><i class="fas fa-pencil-alt"></i></div>
-                        <div class="floating-icon icon-ruler" style="--delay: 4.5s; --x: 90%; --y: 80%;"><i class="fas fa-ruler-combined"></i></div>
+                        <div class="floating-icon icon-cap" style="--delay: 0s; --x: 6%; --y: 8%;"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="floating-icon icon-book" style="--delay: 1.5s; --x: 88%; --y: 16%;"><i class="fas fa-book-open"></i></div>
+                        <div class="floating-icon icon-pencil" style="--delay: 3s; --x: 2%; --y: 78%;"><i class="fas fa-pencil-alt"></i></div>
+                        <div class="floating-icon icon-ruler" style="--delay: 4.5s; --x: 92%; --y: 82%;"><i class="fas fa-ruler-combined"></i></div>
+                        <div class="floating-icon icon-star" style="--delay: 2.2s; --x: 46%; --y: 0%;"><i class="fas fa-star"></i></div>
                     </div>
                 </div>
             </div>
@@ -231,7 +281,7 @@
                                 </label>
                             </div>
 
-                            <a href="#" class="forgot-password" onclick="alert('برجاء التواصل مع الدعم لتغيير كلمة السر');">هل نسيت كلمة السر؟ اضغط هنا</a>
+                            <a href="#" class="forgot-password" id="forgot-password-link">هل نسيت كلمة السر؟ اضغط هنا</a>
                         </div>
 
                         <!-- Submit Button -->
@@ -311,7 +361,7 @@
                             <input type="tel" id="reg-phone" class="underline-input" required placeholder="01xxxxxxxxx">
                         </div>
 
-                        <!-- Parent Phones Row -->
+                        <!-- Parent / Recovery Phones Row -->
                         <div class="form-row">
                             <div class="input-group">
                                 <label for="reg-father-phone" class="input-label">
@@ -322,15 +372,15 @@
                             </div>
 
                             <div class="input-group">
-                                <label for="reg-mother-phone" class="input-label">
-                                    <span class="label-text">رقم هاتف الأم</span>
-                                    <i class="fas fa-phone input-icon"></i>
+                                <label for="reg-recovery-phone" class="input-label">
+                                    <span class="label-text">رقم هاتف لاستعادة الحساب</span>
+                                    <i class="fas fa-shield-halved input-icon"></i>
                                 </label>
-                                <input type="tel" id="reg-mother-phone" class="underline-input" required placeholder="01xxxxxxxxx">
+                                <input type="tel" id="reg-recovery-phone" class="underline-input" required placeholder="01xxxxxxxxx">
                             </div>
                         </div>
 
-                        <!-- School and Parent Job -->
+                        <!-- School and Grade -->
                         <div class="form-row">
                             <div class="input-group">
                                 <label for="reg-school" class="input-label">
@@ -341,11 +391,29 @@
                             </div>
 
                             <div class="input-group">
-                                <label for="reg-parent-job" class="input-label">
-                                    <span class="label-text">مهنة ولي الأمر</span>
-                                    <i class="fas fa-briefcase input-icon"></i>
+                                <label for="reg-grade" class="input-label">
+                                    <span class="label-text">الصف الدراسي</span>
+                                    <i class="fas fa-layer-group input-icon"></i>
                                 </label>
-                                <input type="text" id="reg-parent-job" class="underline-input" required placeholder="مهنة ولي الأمر">
+                                <select id="reg-grade" class="underline-select" required onchange="handleGradeChange()">
+                                    <option value="" disabled selected>اختر الصف الدراسي</option>
+                                    <!-- تُملأ ديناميكياً من grade-mapping.js -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Track (Science / Literature) - يظهر فقط لو الصف ثانوي -->
+                        <div class="form-row" id="reg-track-row" style="display:none;">
+                            <div class="input-group">
+                                <label for="reg-track" class="input-label">
+                                    <span class="label-text">الشعبة: علمي ولا أدبي؟</span>
+                                    <i class="fas fa-flask input-icon"></i>
+                                </label>
+                                <select id="reg-track" class="underline-select">
+                                    <option value="" disabled selected>اختر الشعبة</option>
+                                    <option value="علمي">علمي</option>
+                                    <option value="أدبي">أدبي</option>
+                                </select>
                             </div>
                         </div>
 
@@ -434,6 +502,12 @@
     <a href="https://wa.me/201028164601" class="floating-whatsapp" target="_blank" aria-label="تواصل معنا عبر واتساب">
         <i class="fab fa-whatsapp"></i>
     </a>
+
+    <!-- Firebase (نفس قاعدة بيانات الداشبورد) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="grade-mapping.js"></script>
 
     <!-- Custom JS -->
     <script src="app.js"></script>

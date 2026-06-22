@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول - منصة الدكتور</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Tajawal:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root { --primary:#0284c7; --primary-dark:#0369a1; --accent:#eab308; --accent2:#0ea5e9; --success:#16a34a; --danger:#dc2626; --bg:#f8fafc; --card:#fff; --text:#0f172a; --text2:#475569; --border:#e2e8f0; }
+[data-theme="dark"] { --bg:#030712; --card:#0f172a; --text:#f8fafc; --text2:#94a3b8; --border:#1e293b; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; transition:background .3s,color .3s; }
+
+nav { padding:0 48px; height:72px; background:var(--card); border-bottom:none; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 12px rgba(139,105,20,.08); position:relative; }
+nav::after {
+  content:'';
+  position:absolute; right:0; bottom:-2px; left:0;
+  height:2px;
+  background: linear-gradient(90deg,
+    var(--border) 0%,
+    var(--primary) 18%,
+    #e0f2fe 32%,
+    var(--accent) 42%,
+    var(--primary) 58%,
+    var(--border) 75%,
+    var(--border) 100%);
+  background-size: 220% 100%;
+  animation: navShine 5s linear infinite;
+}
+[data-theme="dark"] nav::after {
+  background: linear-gradient(90deg,
+    var(--border) 0%,
+    var(--primary) 18%,
+    #bae6fd 32%,
+    var(--accent) 42%,
+    var(--primary) 58%,
+    var(--border) 75%,
+    var(--border) 100%);
+  background-size: 220% 100%;
+}
+@keyframes navShine {
+  0% { background-position: 0% 0; }
+  100% { background-position: -220% 0; }
+}
+.nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+.nav-logo-box { width:46px; height:46px; background:linear-gradient(135deg,var(--primary),var(--primary-dark)); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; color:white; font-weight:900; position:relative; overflow:hidden; box-shadow:0 4px 14px rgba(139,105,20,0.3); }
+.nav-logo-box::before { content:''; position:absolute; top:-50%; left:-90%; width:50%; height:200%; background:linear-gradient(120deg,transparent,rgba(255,255,255,0.55),transparent); transform:rotate(20deg); animation:logoSheen 4.5s ease-in-out infinite; z-index: 2; }
+.nav-logo-box, .welcome-logo { overflow: hidden; }
+.nav-logo-box img, .welcome-logo img { width: 100%; height: 100%; object-fit: cover; display: block; position: relative; z-index: 1; }
+@keyframes logoSheen { 0%,60%{left:-90%} 100%{left:160%} }
+.nav-brand { font-family:'Tajawal',sans-serif; font-size:19px; font-weight:900; color:var(--primary); }
+.nav-sub { font-size:10px; color:var(--text2); display:block; margin-top:-3px; }
+.theme-btn { width:40px; height:40px; border-radius:10px; background:var(--bg); border:2px solid var(--border); cursor:pointer; font-size:17px; }
+
+.page-wrap { flex:1; display:grid; grid-template-columns:1fr 1fr; min-height:calc(100vh - 72px); }
+
+/* LEFT PANEL */
+.left-panel {
+  position:relative; overflow:hidden; padding:0;
+}
+.left-panel-img {
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.left-panel::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:30%;
+  background:linear-gradient(to top, rgba(0,0,0,0.25), transparent);
+  pointer-events:none;
+}
+
+/* RIGHT PANEL */
+.right-panel { display:flex; align-items:center; justify-content:center; padding:48px 60px; }
+.login-box { width:100%; max-width:460px; }
+
+.login-header { text-align:center; margin-bottom:36px; }
+.login-icon { width:72px; height:72px; background:linear-gradient(135deg,var(--primary),var(--primary-dark)); border-radius:20px; margin:0 auto 16px; display:flex; align-items:center; justify-content:center; font-size:32px; box-shadow:0 6px 24px rgba(139,105,20,.3); position:relative; overflow:hidden; }
+.login-icon::before { content:''; position:absolute; top:-50%; left:-90%; width:50%; height:200%; background:linear-gradient(120deg,transparent,rgba(255,255,255,0.5),transparent); transform:rotate(20deg); animation:logoSheen 4s ease-in-out infinite; }
+.login-title { font-family:'Tajawal',sans-serif; font-size:30px; font-weight:900; margin-bottom:6px; }
+.login-sub { font-size:15px; color:var(--text2); }
+
+.form-grp { margin-bottom:20px; }
+.form-label { display:block; font-weight:700; font-size:14px; margin-bottom:8px; color:var(--text); }
+.input-wrap { position:relative; }
+.input-ico { position:absolute; top:50%; transform:translateY(-50%); right:16px; font-size:17px; pointer-events:none; z-index:2; }
+.form-input {
+  width:100%; padding:14px 48px 14px 16px;
+  border:2px solid var(--border); border-radius:13px;
+  font-family:'Cairo',sans-serif; font-size:15px;
+  background:var(--bg); color:var(--text);
+  outline:none; transition:all .2s;
+}
+.form-input:focus { border-color:var(--primary); box-shadow:0 0 0 4px rgba(200,169,110,.1); background:var(--card); }
+.eye-toggle { position:absolute; top:50%; transform:translateY(-50%); left:14px; background:none; border:none; cursor:pointer; font-size:17px; color:var(--text2); z-index:2; }
+
+.forgot-row { text-align:left; margin-top:8px; }
+.forgot-link { color:var(--accent); font-size:13px; font-weight:700; text-decoration:none; }
+.forgot-link:hover { text-decoration:underline; }
+
+.remember-row { display:flex; align-items:center; gap:10px; margin:6px 0 20px; }
+.remember-row input[type="checkbox"] { width:18px; height:18px; accent-color:var(--primary); cursor:pointer; }
+.remember-row label { font-size:14px; color:var(--text2); cursor:pointer; }
+
+.btn-login-submit {
+  width:100%; padding:15px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark), var(--accent));
+  color:white; border:none; border-radius:14px;
+  font-family:'Cairo',sans-serif; font-weight:800; font-size:17px;
+  cursor:pointer;
+  transition: transform 0.12s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.12s ease;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  position:relative; overflow:hidden; isolation:isolate;
+  transform: translateY(0);
+  box-shadow:
+    0 8px 0 #5C4008,
+    0 12px 28px rgba(139,105,20,.4),
+    inset 0 1px 0 rgba(255,255,255,.25);
+  text-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+.btn-login-submit::before { content:''; position:absolute; top:0; left:-80%; width:60%; height:100%; background:linear-gradient(120deg,transparent,rgba(255,255,255,0.4),transparent); transform:skewX(-20deg); transition:left .65s ease; z-index:1; pointer-events:none; }
+.btn-login-submit:hover::before { left:120%; }
+.btn-login-submit:hover { transform:translateY(-4px); box-shadow: 0 12px 0 #4a3306, 0 20px 40px rgba(139,105,20,.5), inset 0 1px 0 rgba(255,255,255,.3); }
+.btn-login-submit:active { transform:translateY(6px); box-shadow: 0 2px 0 #5C4008, 0 4px 12px rgba(139,105,20,.3); }
+.btn-spinner { display:none; width:18px; height:18px; border:2px solid rgba(255,255,255,.3); border-top-color:white; border-radius:50%; animation:spin .6s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.divider { display:flex; align-items:center; gap:12px; margin:22px 0; color:var(--text2); font-size:13px; }
+.divider::before,.divider::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.register-row { text-align:center; font-size:15px; color:var(--text2); }
+.register-row a { color:var(--primary); font-weight:800; text-decoration:none; }
+.register-row a:hover { text-decoration:underline; }
+
+.admin-hint {
+  margin-top:24px; padding:14px 18px;
+  background:rgba(200,169,110,.06); border:1px solid rgba(200,169,110,.2);
+  border-radius:12px; font-size:13px; color:var(--text2); text-align:center;
+}
+.admin-hint strong { color:var(--primary); }
+
+/* ALERTS */
+.alert { display:none; padding:14px 18px; border-radius:12px; font-size:14px; font-weight:600; margin-bottom:20px; animation:slideDown .3s; }
+@keyframes slideDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+.alert.err { background:#fff0f3; color:#c0392b; border:1.5px solid #ffd0d8; }
+[data-theme="dark"] .alert.err { background:#2d1518; border-color:#7b2d36; color:#ff8896; }
+.alert.ok { background:#f0fff6; color:#27ae60; border:1.5px solid #b3f5d1; }
+[data-theme="dark"] .alert.ok { background:#0e2318; border-color:#1a6640; color:#4ddb8a; }
+
+@media(max-width:900px) { .page-wrap{grid-template-columns:1fr;} .left-panel{display:none;} .right-panel{padding:32px 24px;} }
+
+/* ─── Welcome Overlay ─── */
+.welcome-overlay {
+  position:fixed; inset:0; z-index:999;
+  background:var(--bg);
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+  animation:fadeInOv .4s ease;
+}
+@keyframes fadeInOv { from{opacity:0} to{opacity:1} }
+.welcome-card {
+  background:var(--card);
+  border:2px solid var(--border);
+  border-radius:28px;
+  padding:48px 40px;
+  max-width:480px; width:100%;
+  text-align:center;
+  box-shadow:0 20px 60px rgba(139,105,20,.15);
+  animation:slideUpCard .45s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes slideUpCard { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
+.welcome-logo { width:80px; height:80px; background:linear-gradient(135deg,var(--primary),var(--primary-dark)); border-radius:22px; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; font-size:36px; color:white; font-weight:900; box-shadow:0 8px 28px rgba(139,105,20,.35); }
+.welcome-title { font-family:'Tajawal',sans-serif; font-size:26px; font-weight:900; margin-bottom:8px; color:var(--text); }
+.welcome-sub { font-size:15px; color:var(--text2); margin-bottom:36px; line-height:1.7; }
+.welcome-btns { display:flex; flex-direction:column; gap:14px; }
+.wbtn {
+  padding:18px 24px; border-radius:16px; border:2px solid var(--border);
+  cursor:pointer; font-family:'Cairo',sans-serif; font-size:16px; font-weight:800;
+  display:flex; align-items:center; gap:14px;
+  transition:all .2s; background:var(--bg); color:var(--text);
+  text-align:right;
+}
+.wbtn:hover { border-color:var(--primary); background:rgba(200,169,110,.08); transform:translateY(-2px); box-shadow:0 6px 20px rgba(139,105,20,.12); }
+.wbtn .wbtn-icon { font-size:32px; flex-shrink:0; }
+.wbtn .wbtn-text { flex:1; }
+.wbtn .wbtn-text strong { display:block; font-size:16px; margin-bottom:3px; }
+.wbtn .wbtn-text span { font-size:12px; color:var(--text2); font-weight:600; }
+.wbtn.primary-btn { background:linear-gradient(135deg,var(--primary),var(--primary-dark)); color:white; border-color:transparent; box-shadow:0 8px 0 #5C4008, 0 12px 24px rgba(139,105,20,.35); }
+.wbtn.primary-btn:hover { transform:translateY(-4px); box-shadow:0 12px 0 #4a3306, 0 18px 32px rgba(139,105,20,.4); }
+.wbtn.primary-btn .wbtn-text span { color:rgba(255,255,255,.75); }
+
+/* sub-choice for center students */
+.center-sub { display:none; flex-direction:column; gap:12px; margin-top:4px; }
+.center-sub.visible { display:flex; animation:slideUpCard .3s cubic-bezier(0.34,1.56,0.64,1); }
+.back-choice { background:none; border:none; color:var(--text2); font-size:13px; font-weight:700; cursor:pointer; margin-top:8px; font-family:'Cairo',sans-serif; }
+.back-choice:hover { color:var(--primary); }
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-box">
+<img src="ايقونة الهدر.png" alt="الدكتور">
+    </div>
+    <div><span class="nav-brand">الدكتور</span><span class="nav-sub">في اللغة العربية</span></div>
+  </a>
+  <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</nav>
+
+<!-- ═══════════ WELCOME OVERLAY ═══════════ -->
+<div class="welcome-overlay" id="welcomeOverlay">
+  <div class="welcome-card">
+    <div class="welcome-logo">
+      <img src="ايقونة الهدر.png" alt="الدكتور">
+    </div>
+    <div class="welcome-title">أهلاً بيك في منصة الدكتور!</div>
+    <div class="welcome-sub">قبل ما تسجّل دخولك، عايزين نعرف أنت طالب إيه؟</div>
+
+    <div class="welcome-btns" id="mainChoices">
+      <button class="wbtn primary-btn" onclick="showCenterSub()">
+        <span class="wbtn-icon">🏫</span>
+        <span class="wbtn-text">
+          <strong>طالب من السنتر</strong>
+          <span>بتحضر مع الدكتور في السنتر</span>
+        </span>
+      </button>
+      <button class="wbtn" onclick="dismissOverlay()">
+        <span class="wbtn-icon">🌐</span>
+        <span class="wbtn-text">
+          <strong>طالب خارج السنتر</strong>
+          <span>بتتعلم أونلاين من غير ما تيجي السنتر</span>
+        </span>
+      </button>
+    </div>
+
+    <div class="center-sub" id="centerSub">
+      <button class="wbtn primary-btn" onclick="goCodeLogin()">
+        <span class="wbtn-icon">🔑</span>
+        <span class="wbtn-text">
+          <strong>عندي كود السنتر</strong>
+          <span>هدخل بالكود الخاص بيا</span>
+        </span>
+      </button>
+      <button class="wbtn" onclick="dismissOverlay()">
+        <span class="wbtn-icon">📝</span>
+        <span class="wbtn-text">
+          <strong>ما معيش كود / ضاع مني</strong>
+          <span>هسجّل دخول بالرقم وكلمة المرور عادي</span>
+        </span>
+      </button>
+      <button class="back-choice" onclick="showMainChoices()">← رجوع</button>
+    </div>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <!-- LEFT -->
+  <div class="left-panel">
+    <img class="left-panel-img" src="صورة الواجهه.jpeg" alt="منصة الدكتور في اللغة العربية">
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right-panel">
+    <div class="login-box">
+      <div class="login-header">
+        <div class="login-icon">🔐</div>
+        <div class="login-title">سجّل دخولك</div>
+        <div class="login-sub">ادخل بياناتك وابدأ المذاكرة على طول!</div>
+      </div>
+
+      <div class="alert" id="alertBox"></div>
+
+      <div class="form-grp" id="phoneGroup">
+        <label class="form-label">رقم الموبايل</label>
+        <div class="input-wrap">
+          <span class="input-ico">📱</span>
+          <input class="form-input" type="tel" id="phoneInp" placeholder="ادخل رقم الموبايل" autocomplete="tel">
+        </div>
+      </div>
+
+      <div class="form-grp" id="passGroup">
+        <label class="form-label">كلمة المرور</label>
+        <div class="input-wrap">
+          <span class="input-ico">🔒</span>
+          <input class="form-input" type="password" id="passInp" placeholder="ادخل كلمة المرور">
+          <button class="eye-toggle" onclick="toggleEye()" id="eyeBtn">👁️</button>
+        </div>
+        <div class="forgot-row"><a href="index.html#login" class="forgot-link">نسيت كلمة المرور؟</a></div>
+      </div>
+
+      <div class="form-grp" id="codeGroup" style="display:none;">
+        <label class="form-label">كود الطالب</label>
+        <div class="input-wrap">
+          <span class="input-ico">🔑</span>
+          <input class="form-input" type="text" id="codeInp" placeholder="ادخل الكود الخاص بك">
+        </div>
+      </div>
+
+      <div class="remember-row">
+        <input type="checkbox" id="rememberMe">
+        <label for="rememberMe">ابقى متسجّل دخول</label>
+      </div>
+
+      <button class="btn-login-submit" onclick="doLogin()" id="loginBtn">
+        <span id="loginBtnText">دخول 🚀</span>
+        <div class="btn-spinner" id="loginSpinner"></div>
+      </button>
+
+      <div class="divider">أو</div>
+      <div class="register-row" id="toggleLoginMode" style="cursor:pointer; color:var(--primary); font-weight:800; text-align:center; margin-bottom:10px;" onclick="toggleLoginMode()">لدي كود من السنتر؟ اضغط هنا</div>
+      <div class="register-row">مش عندك حساب؟ <a href="index.html#register">اعمل حساب جديد!</a></div>
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── Welcome Overlay ───────────────────────────────────────
+function showCenterSub(){
+  document.getElementById('mainChoices').style.display='none';
+  const sub=document.getElementById('centerSub');
+  sub.classList.add('visible');
+}
+function showMainChoices(){
+  document.getElementById('centerSub').classList.remove('visible');
+  document.getElementById('mainChoices').style.display='flex';
+}
+function dismissOverlay(){
+  const ov=document.getElementById('welcomeOverlay');
+  ov.style.animation='fadeOutOv .3s ease forwards';
+  setTimeout(()=>ov.style.display='none',280);
+}
+function goCodeLogin(){
+  // activate code mode then dismiss
+  loginMode='code';
+  document.getElementById('phoneGroup').style.display='none';
+  document.getElementById('passGroup').style.display='none';
+  document.getElementById('codeGroup').style.display='block';
+  document.getElementById('toggleLoginMode').textContent='العودة لتسجيل الدخول برقم الموبايل';
+  dismissOverlay();
+}
+// Add fadeOut keyframe via JS
+const styleEl=document.createElement('style');
+styleEl.textContent='@keyframes fadeOutOv{from{opacity:1}to{opacity:0}}';
+document.head.appendChild(styleEl);
+// ────────────────────────────────────────────────────────────
+
+function toggleTheme(){
+  const h=document.documentElement;
+  const dark=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',dark?'light':'dark');
+  document.querySelector('.theme-btn').textContent=dark?'🌙':'☀️';
+  localStorage.setItem('alamin_theme',dark?'light':'dark');
+}
+const t=localStorage.getItem('alamin_theme');
+if(t){document.documentElement.setAttribute('data-theme',t);document.querySelector('.theme-btn').textContent=t==='dark'?'☀️':'🌙';}
+
+function toggleEye(){
+  const i=document.getElementById('passInp');
+  const b=document.getElementById('eyeBtn');
+  i.type=i.type==='password'?'text':'password';
+  b.textContent=i.type==='password'?'👁️':'🙈';
+}
+
+function showAlert(msg,type){
+  const a=document.getElementById('alertBox');
+  a.textContent=msg; a.className='alert '+(type==='error'?'err':'ok');
+  a.style.display='block';
+  setTimeout(()=>a.style.display='none',4000);
+}
+
+function setLoading(v){
+  document.getElementById('loginBtnText').style.display=v?'none':'block';
+  document.getElementById('loginSpinner').style.display=v?'block':'none';
+  document.getElementById('loginBtn').disabled=v;
+}
+
+let loginMode = 'phone';
+function toggleLoginMode() {
+  if (loginMode === 'phone') {
+    loginMode = 'code';
+    document.getElementById('phoneGroup').style.display = 'none';
+    document.getElementById('passGroup').style.display = 'none';
+    document.getElementById('codeGroup').style.display = 'block';
+    document.getElementById('toggleLoginMode').textContent = 'العودة لتسجيل الدخول برقم الموبايل';
+  } else {
+    loginMode = 'phone';
+    document.getElementById('phoneGroup').style.display = 'block';
+    document.getElementById('passGroup').style.display = 'block';
+    document.getElementById('codeGroup').style.display = 'none';
+    document.getElementById('toggleLoginMode').textContent = 'لدي كود من السنتر؟ اضغط هنا';
+  }
+}
+
+async function doLogin(){
+  if (loginMode === 'code') {
+    const code = document.getElementById('codeInp').value.trim().toUpperCase();
+    if(!code){showAlert('❌ من فضلك ادخل الكود الخاص بك','error');return;}
+    setLoading(true);
+    try {
+      // ── أولاً: البحث في centerStudents بالكود (الطريقة الجديدة) ──
+      const centerSnap = await db.collection('centerStudents')
+        .where('centerCode', '==', code).limit(1).get();
+
+      if (!centerSnap.empty) {
+        const doc = centerSnap.docs[0];
+        const user = doc.data();
+        user.id        = doc.id;
+        user.role      = 'student';
+        user.type      = 'center';
+        user.centerCode = code;
+        localStorage.setItem('alamin_current', JSON.stringify(user));
+        showAlert('✅ أهلاً بيك يا ' + (user.name || user.fullName || 'طالب') + '! جاري التوجيه...', 'success');
+        setTimeout(() => window.location.href = 'dashboard.html', 1000);
+        return;
+      }
+
+      // ── ثانياً: البحث في students بالـ doc ID (الطريقة القديمة) ──
+      const docRef  = db.collection('students').doc(code);
+      const docSnap = await docRef.get();
+      if(docSnap.exists) {
+        const user = docSnap.data();
+        user.id   = code;
+        user.role = 'student';
+        localStorage.setItem('alamin_current', JSON.stringify(user));
+        showAlert('✅ أهلاً بيك يا '+ (user.name || 'طالب') +'! جاري التوجيه...','success');
+        setTimeout(() => window.location.href = 'dashboard.html', 1000);
+        return;
+      }
+
+      // ── ثالثاً: البحث في students بحقل qrCode أو offlineCode ──
+      const qrSnap = await db.collection('students')
+        .where('qrCode', '==', code).limit(1).get();
+      if (!qrSnap.empty) {
+        const doc  = qrSnap.docs[0];
+        const user = doc.data();
+        user.id   = doc.id;
+        user.role = 'student';
+        localStorage.setItem('alamin_current', JSON.stringify(user));
+        showAlert('✅ أهلاً بيك يا ' + (user.name || 'طالب') + '! جاري التوجيه...', 'success');
+        setTimeout(() => window.location.href = 'dashboard.html', 1000);
+        return;
+      }
+
+      // لا يوجد نتيجة
+      showAlert('❌ الكود غير صحيح أو غير مسجل — تأكد من الكود وحاول تاني', 'error');
+      setLoading(false);
+
+    } catch(err) {
+       console.error(err);
+       showAlert('❌ حدث خطأ في الاتصال بقاعدة البيانات','error');
+       setLoading(false);
+    }
+  } else {
+    const phone=document.getElementById('phoneInp').value.trim();
+    const pass=document.getElementById('passInp').value;
+    if(!phone||!pass){showAlert('❌ من فضلك ادخل رقم الموبايل وكلمة المرور','error');return;}
+
+    setLoading(true);
+    // Admin login
+    if(phone==='2026'&&pass==='2027'){
+      localStorage.setItem('alamin_current',JSON.stringify({id:0,name:'الأستاذ الدكتور',phone:'01000000000',role:'admin'}));
+      showAlert('✅ أهلاً بك يا أدمن! جاري التوجيه...','success');
+      setTimeout(()=>window.location.href='dashboard.html',1000);
+      return;
+    }
+    
+    // Check Firebase for phone + pass
+    try {
+      const snapshot = await db.collection('students').where('phone', '==', phone).where('password', '==', pass).get();
+      if (!snapshot.empty) {
+        const userDoc = snapshot.docs[0];
+        const user = userDoc.data();
+        user.id = userDoc.id;
+        user.role = 'student';
+        localStorage.setItem('alamin_current',JSON.stringify(user));
+        showAlert('✅ أهلاً بيك يا '+(user.name || user.firstName || 'طالب')+'! جاري التوجيه...','success');
+        setTimeout(()=>window.location.href='index.html',1000);
+      } else {
+        // Fallback to local storage users
+        const users=JSON.parse(localStorage.getItem('alamin_users')||'[]');
+        const user=users.find(u=>u.phone===phone&&u.password===pass);
+        if(user){
+          user.role='student';
+          localStorage.setItem('alamin_current',JSON.stringify(user));
+          showAlert('✅ أهلاً بيك يا '+user.firstName+'! جاري التوجيه...','success');
+          setTimeout(()=>window.location.href='index.html',1000);
+        } else {
+          showAlert('❌ رقم الموبايل أو كلمة المرور غلط!','error');
+          setLoading(false);
+        }
+      }
+    } catch (err) {
+        console.error(err);
+        showAlert('❌ حدث خطأ في الاتصال بقاعدة البيانات','error');
+        setLoading(false);
+    }
+  }
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+// ── قراءة الكود من الـ URL تلقائياً ──
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  if (code) {
+    // فعّل mode الكود
+    loginMode = 'code';
+    document.getElementById('codeGroup').style.display = 'block';
+    document.getElementById('phoneGroup') && (document.getElementById('phoneGroup').style.display = 'none');
+    document.getElementById('passGroup') && (document.getElementById('passGroup').style.display = 'none');
+    // حط الكود في الحقل
+    const inp = document.getElementById('codeInp');
+    if (inp) {
+      inp.value = code;
+      inp.style.background = '#f0fdf4';
+      inp.style.borderColor = '#34d399';
+    }
+    // لو فيه زرار toggle غيّر نصه
+    const toggle = document.getElementById('toggleLoginMode');
+    if (toggle) toggle.style.display = 'none';
+  }
+})();
+</script>
+</body>
+</html>

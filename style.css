@@ -331,6 +331,59 @@ input:checked + .slider:before {
     box-shadow: 0 6px 16px rgba(0, 159, 255, 0.25);
 }
 
+.nav-user-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-main);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    padding: 7px 12px 7px 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.nav-user-chip:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.nav-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    color: #fff;
+    font-weight: 900;
+    box-shadow: 0 6px 16px var(--primary-light);
+}
+
+.nav-user-meta {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.nav-user-meta strong {
+    font-size: 0.92rem;
+    font-weight: 800;
+    max-width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nav-user-meta small {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
 /* Search Overlay Styling */
 .search-overlay {
     position: fixed;
@@ -409,6 +462,76 @@ input:checked + .slider:before {
     background: var(--primary-hover);
 }
 
+/* Forgot Password Modal */
+.forgot-modal {
+    width: 90%;
+    max-width: 480px;
+    position: relative;
+    transform: translateY(-40px);
+    transition: 0.4s ease;
+}
+
+.forgot-password-overlay.active .forgot-modal,
+#forgot-password-overlay.active .forgot-modal {
+    transform: translateY(0);
+}
+
+.forgot-modal-card {
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 18px;
+    padding: 32px 28px;
+    box-shadow: var(--shadow-lg);
+}
+
+.forgot-modal-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.forgot-modal-title i {
+    color: var(--primary-color);
+}
+
+.forgot-modal-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.forgot-modal-alert {
+    display: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+.forgot-modal-alert.ok {
+    display: block;
+    background: rgba(22, 163, 74, 0.1);
+    color: #16a34a;
+    border: 1px solid rgba(22, 163, 74, 0.3);
+}
+
+.forgot-modal-alert.err {
+    display: block;
+    background: rgba(220, 38, 38, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.forgot-modal-card .auth-form {
+    gap: 20px;
+}
+
 /* Main Container & Page Switcher Layout */
 main {
     padding-top: 80px;
@@ -464,6 +587,25 @@ main {
     margin-top: 10px;
 }
 
+.hero-author {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hero-author::before {
+    content: '';
+    width: 22px;
+    height: 2px;
+    background: var(--primary-color);
+    display: inline-block;
+    border-radius: 2px;
+}
+
 /* Left Hero Visual Blob Layout */
 .hero-visual {
     display: flex;
@@ -474,8 +616,8 @@ main {
 
 .blob-wrapper {
     position: relative;
-    width: 420px;
-    height: 420px;
+    width: 480px;
+    height: 480px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -484,8 +626,8 @@ main {
 /* Background blob with organic border-radius and gradient */
 .blob-bg {
     position: absolute;
-    width: 380px;
-    height: 380px;
+    width: 440px;
+    height: 440px;
     background: linear-gradient(135deg, rgba(0, 159, 255, 0.45) 0%, rgba(0, 229, 255, 0.25) 100%);
     border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
     animation: blob-bounce 12s ease-in-out infinite alternate;
@@ -495,13 +637,13 @@ main {
 /* Teacher Image inside styled container */
 .blob-image-container {
     position: absolute;
-    width: 375px;
-    height: 375px;
+    width: 430px;
+    height: 430px;
     border-radius: 50%; /* Perfect circle to avoid cutting off teacher's head */
     overflow: hidden;
     z-index: 2;
     border: 6px solid var(--bg-color);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-lg), 0 0 0 3px var(--primary-light), 0 0 45px rgba(2, 132, 199, 0.25);
     animation: blob-bounce 12s ease-in-out infinite alternate-reverse;
 }
 
@@ -535,6 +677,48 @@ main {
     left: var(--x);
 }
 
+.floating-icon.icon-star {
+    color: var(--accent-yellow);
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+}
+
+.deco-dot {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent-yellow);
+    box-shadow: 0 0 12px rgba(234, 179, 8, 0.6);
+    z-index: 4;
+    animation: floating-anim 3.4s ease-in-out infinite;
+}
+
+.dot-1 {
+    top: 4%;
+    left: 78%;
+    animation-delay: 0.6s;
+    width: 9px;
+    height: 9px;
+    background: var(--primary-color);
+    box-shadow: 0 0 10px rgba(2, 132, 199, 0.6);
+}
+
+.dot-2 {
+    top: 92%;
+    left: 30%;
+    animation-delay: 1.8s;
+}
+
+.dot-3 {
+    top: 50%;
+    left: -2%;
+    animation-delay: 2.6s;
+    width: 8px;
+    height: 8px;
+}
+
 .dotted-ring {
     position: absolute;
     border: 2px dashed rgba(0, 159, 255, 0.35);
@@ -543,14 +727,14 @@ main {
 }
 
 .ring-1 {
-    width: 440px;
-    height: 440px;
+    width: 500px;
+    height: 500px;
     animation: spin 30s linear infinite;
 }
 
 .ring-2 {
-    width: 480px;
-    height: 480px;
+    width: 540px;
+    height: 540px;
     animation: spin 45s linear infinite reverse;
 }
 
@@ -572,13 +756,19 @@ main {
 
 @keyframes floating-anim {
     0% {
-        transform: translateY(0px) rotate(0deg);
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate(10px, -10px) rotate(8deg);
     }
     50% {
-        transform: translateY(-12px) rotate(10deg);
+        transform: translate(0, -16px) rotate(0deg);
+    }
+    75% {
+        transform: translate(-10px, -10px) rotate(-8deg);
     }
     100% {
-        transform: translateY(0px) rotate(0deg);
+        transform: translate(0, 0) rotate(0deg);
     }
 }
 
@@ -1080,8 +1270,8 @@ input:checked + .switch-slider:before {
     }
 
     .blob-image-container {
-        width: 250px;
-        height: 250px;
+        width: 270px;
+        height: 270px;
     }
 
     .hero-main-img {
@@ -1090,6 +1280,10 @@ input:checked + .switch-slider:before {
 
     .ring-1, .ring-2 {
         display: none; /* Simplify visuals on mobile */
+    }
+
+    .deco-dot {
+        display: none; /* Keep the small mobile circle clean */
     }
 }
 
@@ -1171,6 +1365,16 @@ input:checked + .switch-slider:before {
     box-shadow: 0 4px 10px rgba(234, 179, 8, 0.3);
 }
 
+.course-badge.paid {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    color: #fff;
+}
+
+.course-badge.free {
+    background: linear-gradient(135deg, var(--accent-yellow), var(--accent-yellow-hover));
+    color: #1a1500;
+}
+
 .course-info {
     padding: 24px;
     display: flex;
@@ -1238,10 +1442,47 @@ input:checked + .switch-slider:before {
     box-shadow: 0 6px 20px var(--primary-light);
 }
 
+.courses-loading,
+.courses-empty {
+    grid-column: 1 / -1;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--text-muted);
+    background: var(--card-bg);
+    border: 1px dashed var(--border-color);
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    padding: 32px;
+}
+
+.courses-loading i,
+.courses-empty i {
+    color: var(--primary-color);
+    font-size: 2rem;
+}
+
+.courses-empty strong {
+    color: var(--text-main);
+    font-size: 1.1rem;
+}
+
 /* Mobile responsive fixes */
 @media (max-width: 768px) {
     .courses-grid {
         grid-template-columns: 1fr;
+    }
+
+    .nav-user-meta {
+        display: none;
+    }
+
+    .nav-user-chip {
+        padding: 6px;
     }
 }
 
@@ -1396,4 +1637,3 @@ body.intro-active {
     .intro-ring-2 { width: 240px; height: 240px; }
     .intro-main { font-size: 1.6rem; }
 }
-

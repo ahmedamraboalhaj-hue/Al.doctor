@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ملف الطالب - الدكتور في اللغة العربية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ─── CSS Variables ─────────────────────────────────────── */
+:root {
+  --primary:       #0284c7;
+  --primary-light: rgba(2,132,199,.15);
+  --accent:        #f59e0b;
+  --accent-light:  rgba(245,158,11,.15);
+  --success:       #16a34a;
+  --success-light: rgba(22,163,74,.12);
+  --bg:            #f0f7ff;
+  --card:          #ffffff;
+  --text:          #0f172a;
+  --text2:         #64748b;
+  --border:        #e0f2fe;
+  --shadow:        0 4px 24px rgba(2,132,199,.10);
+  --radius:        18px;
+}
+[data-theme="dark"] {
+  --bg:      #0a0e1a;
+  --card:    #111827;
+  --text:    #e2e8f0;
+  --text2:   #94a3b8;
+  --border:  #1e293b;
+  --shadow:  0 4px 24px rgba(0,0,0,.4);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Tajawal',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* ─── Top Bar ───────────────────────────────────────────── */
+.topbar {
+  background:var(--card);
+  border-bottom:2px solid var(--border);
+  padding:14px 32px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:100;
+  box-shadow:var(--shadow);
+}
+.logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+.logo-img { width:44px; height:44px; border-radius:50%; object-fit:cover; border:2px solid var(--primary); }
+.logo-name { font-size:1rem; font-weight:900; color:var(--text); line-height:1.2; }
+.logo-sub-name { font-size:.75rem; font-weight:600; color:var(--primary); }
+.topbar-actions { display:flex; align-items:center; gap:10px; }
+.topbar-btn {
+  display:flex; align-items:center; gap:6px;
+  background:var(--bg); border:1.5px solid var(--border);
+  padding:8px 16px; border-radius:10px;
+  cursor:pointer; font-size:.85rem; font-weight:700;
+  color:var(--text2); transition:all .2s; font-family:'Tajawal',sans-serif;
+}
+.topbar-btn:hover { border-color:var(--primary); color:var(--primary); }
+.topbar-btn.danger { color:#dc2626; border-color:#fca5a5; }
+.topbar-btn.danger:hover { background:#fff0f0; }
+
+/* ─── Main Layout ───────────────────────────────────────── */
+.container { max-width:1100px; margin:0 auto; padding:36px 20px 60px; }
+
+/* ─── Loading State ─────────────────────────────────────── */
+#loading-state {
+  text-align:center; padding:80px 20px;
+  font-size:1.1rem; color:var(--text2);
+}
+.spinner {
+  width:50px; height:50px;
+  border:4px solid var(--border);
+  border-top-color:var(--primary);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+  margin:0 auto 20px;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* ─── Hero Banner ───────────────────────────────────────── */
+.profile-hero {
+  background:linear-gradient(135deg, #0284c7 0%, #0369a1 60%, #075985 100%);
+  border-radius:var(--radius);
+  padding:40px 36px;
+  color:#fff;
+  margin-bottom:28px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 32px rgba(2,132,199,.35);
+}
+.profile-hero::before {
+  content:'';
+  position:absolute; inset:0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3Ccircle cx='700' cy='50' r='200' fill='rgba(255,255,255,.05)'/%3E%3Ccircle cx='100' cy='350' r='150' fill='rgba(255,255,255,.04)'/%3E%3C/svg%3E") no-repeat center/cover;
+  pointer-events:none;
+}
+.hero-inner { display:flex; align-items:center; gap:32px; position:relative; z-index:1; }
+.hero-avatar {
+  width:120px; height:120px; flex-shrink:0;
+  background:rgba(255,255,255,.18);
+  border:4px solid rgba(255,255,255,.45);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:3.2rem;
+  box-shadow:0 0 0 8px rgba(255,255,255,.08);
+}
+.hero-info { flex:1; }
+.hero-name { font-size:2rem; font-weight:900; margin-bottom:6px; }
+.hero-phone { font-size:.9rem; opacity:.82; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+.hero-tags { display:flex; flex-wrap:wrap; gap:10px; }
+.hero-tag {
+  background:rgba(255,255,255,.18);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.25);
+  padding:6px 16px; border-radius:50px;
+  font-size:.8rem; font-weight:700; letter-spacing:.02em;
+}
+.hero-tag.gold { background:rgba(245,158,11,.35); border-color:rgba(245,158,11,.5); }
+.hero-stats { display:flex; gap:28px; margin-top:20px; }
+.hero-stat { text-align:center; }
+.hero-stat-val { font-size:1.7rem; font-weight:900; }
+.hero-stat-label { font-size:.72rem; opacity:.8; font-weight:600; margin-top:2px; }
+
+/* ─── Tabs ──────────────────────────────────────────────── */
+.tabs {
+  display:flex; gap:6px;
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:14px;
+  padding:6px;
+  margin-bottom:28px;
+  overflow-x:auto;
+}
+.tab-btn {
+  flex:1; min-width:110px;
+  padding:12px 16px; border:none; border-radius:10px;
+  background:transparent; cursor:pointer;
+  font-size:.9rem; font-weight:700;
+  color:var(--text2); transition:all .25s;
+  font-family:'Tajawal',sans-serif;
+  white-space:nowrap;
+}
+.tab-btn:hover { background:var(--primary-light); color:var(--primary); }
+.tab-btn.active { background:var(--primary); color:#fff; box-shadow:0 4px 14px rgba(2,132,199,.3); }
+
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* ─── Card Base ─────────────────────────────────────────── */
+.card {
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius);
+  padding:28px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
+.card-title {
+  font-size:1.1rem; font-weight:900;
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:20px; color:var(--text);
+}
+.card-title i { color:var(--primary); font-size:1rem; }
+
+/* ─── Info Grid (Tab 1) ─────────────────────────────────── */
+.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.info-item {}
+.info-label { font-size:.8rem; font-weight:700; color:var(--text2); margin-bottom:6px; text-transform:uppercase; letter-spacing:.04em; }
+.info-value {
+  background:rgba(2,132,199,.06);
+  border:1.5px solid var(--border);
+  border-radius:10px; padding:11px 14px;
+  font-size:.95rem; font-weight:600;
+  color:var(--text);
+}
+[data-theme="dark"] .info-value { background:rgba(255,255,255,.04); }
+
+/* ─── Stats (Tab 2) ─────────────────────────────────────── */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:18px; margin-bottom:24px; }
+.stat-box {
+  background:var(--card); border:1.5px solid var(--border);
+  border-radius:14px; padding:22px 18px; text-align:center;
+  box-shadow:var(--shadow);
+  position:relative; overflow:hidden;
+  transition:transform .2s;
+}
+.stat-box:hover { transform:translateY(-2px); }
+.stat-box::before {
+  content:''; position:absolute; inset:0;
+  background:var(--accent-color, var(--primary-light));
+  opacity:.55; pointer-events:none; border-radius:inherit;
+}
+.stat-icon { font-size:1.6rem; margin-bottom:10px; position:relative; z-index:1; }
+.stat-val { font-size:2.2rem; font-weight:900; color:var(--accent-clr, var(--primary)); position:relative; z-index:1; }
+.stat-lbl { font-size:.8rem; color:var(--text2); font-weight:700; margin-top:6px; position:relative; z-index:1; }
+
+/* Course Progress List */
+.course-list {}
+.course-row {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 0; border-bottom:1px solid var(--border);
+}
+.course-row:last-child { border-bottom:none; }
+.course-icon {
+  width:44px; height:44px; background:var(--primary-light);
+  border-radius:12px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.3rem; color:var(--primary);
+}
+.course-info { flex:1; }
+.course-name { font-size:.95rem; font-weight:800; }
+.course-meta { font-size:.78rem; color:var(--text2); margin-top:4px; }
+.course-prog-wrap { width:110px; }
+.prog-bar { height:7px; background:var(--border); border-radius:10px; overflow:hidden; margin-top:6px; }
+.prog-fill { height:100%; background:linear-gradient(90deg,var(--primary),#0ea5e9); border-radius:10px; transition:width .6s ease; }
+.prog-pct { font-size:.75rem; color:var(--primary); font-weight:800; text-align:left; }
+
+/* ─── Quiz Results (Tab 2) ──────────────────────────────── */
+.quiz-list {}
+.quiz-row {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 0; border-bottom:1px solid var(--border);
+}
+.quiz-row:last-child { border-bottom:none; }
+.quiz-score-badge {
+  width:56px; height:56px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.85rem; font-weight:900;
+  border:3px solid currentColor;
+}
+.quiz-score-badge.pass { color:var(--success); background:var(--success-light); }
+.quiz-score-badge.fail { color:#dc2626; background:rgba(220,38,38,.1); }
+.quiz-info { flex:1; }
+.quiz-name { font-size:.9rem; font-weight:800; }
+.quiz-meta { font-size:.77rem; color:var(--text2); margin-top:4px; }
+
+/* ─── Activity Log (Tab 3) ─────────────────────────────── */
+.activity-item {
+  display:flex; align-items:flex-start; gap:14px;
+  padding:14px 0; border-bottom:1px solid var(--border);
+}
+.activity-item:last-child { border-bottom:none; }
+.act-dot-col { display:flex; flex-direction:column; align-items:center; padding-top:3px; }
+.act-dot { width:12px; height:12px; border-radius:50%; background:var(--primary); flex-shrink:0; }
+.act-line { width:2px; flex:1; background:var(--border); margin-top:4px; }
+.act-body { flex:1; }
+.act-title { font-size:.9rem; font-weight:800; }
+.act-desc { font-size:.8rem; color:var(--text2); margin-top:3px; }
+.act-time { font-size:.75rem; color:var(--text2); margin-top:5px; }
+
+/* ─── Achievements (Tab 3) ─────────────────────────────── */
+.badges-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:16px; }
+.badge-card {
+  background:var(--card); border:1.5px solid var(--border);
+  border-radius:14px; padding:18px 12px; text-align:center;
+  box-shadow:var(--shadow); transition:transform .2s;
+}
+.badge-card:hover { transform:translateY(-3px); }
+.badge-card.earned { border-color:var(--accent); background:rgba(245,158,11,.06); }
+.badge-card.locked { opacity:.45; }
+.badge-emoji { font-size:2.2rem; margin-bottom:8px; }
+.badge-name { font-size:.8rem; font-weight:800; }
+.badge-desc { font-size:.72rem; color:var(--text2); margin-top:4px; }
+
+/* ─── Settings (Tab 4) ─────────────────────────────────── */
+.setting-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 0; border-bottom:1px solid var(--border); cursor:pointer;
+}
+.setting-row:last-child { border-bottom:none; }
+.setting-label { font-size:.95rem; font-weight:700; }
+.setting-arrow { color:var(--text2); font-size:.8rem; }
+.setting-row.danger { color:#dc2626; }
+.setting-row.danger .setting-arrow { color:#dc2626; }
+
+/* ─── Password Modal ────────────────────────────────────── */
+.modal-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,.55); z-index:300;
+  align-items:center; justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.open { display:flex; }
+.modal-box {
+  background:var(--card); border-radius:var(--radius);
+  padding:32px; width:90%; max-width:420px;
+  border:1.5px solid var(--border);
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+.modal-title { font-size:1.15rem; font-weight:900; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.modal-title i { color:var(--primary); }
+.modal-input-group { margin-bottom:16px; }
+.modal-input-group label { display:block; font-size:.82rem; font-weight:700; margin-bottom:7px; color:var(--text2); }
+.modal-input-group input {
+  width:100%; padding:12px 14px;
+  border:1.5px solid var(--border); border-radius:10px;
+  background:var(--bg); color:var(--text);
+  font-size:.9rem; font-family:'Tajawal',sans-serif;
+  transition:border-color .2s;
+}
+.modal-input-group input:focus { outline:none; border-color:var(--primary); }
+.modal-alert {
+  padding:10px 14px; border-radius:10px;
+  font-size:.82rem; font-weight:700;
+  margin-bottom:14px; display:none;
+}
+.modal-alert.ok { display:block; background:var(--success-light); color:var(--success); border:1px solid rgba(22,163,74,.3); }
+.modal-alert.err { display:block; background:rgba(220,38,38,.1); color:#dc2626; border:1px solid rgba(220,38,38,.3); }
+.modal-actions { display:flex; gap:10px; margin-top:20px; }
+.btn-primary {
+  flex:1; padding:12px; background:linear-gradient(135deg,var(--primary),#0369a1);
+  color:#fff; border:none; border-radius:10px;
+  font-weight:900; font-size:.9rem; cursor:pointer;
+  font-family:'Tajawal',sans-serif; transition:opacity .2s;
+}
+.btn-primary:hover { opacity:.88; }
+.btn-cancel {
+  flex:1; padding:12px; background:var(--bg);
+  border:1.5px solid var(--border); color:var(--text2);
+  border-radius:10px; font-weight:700; font-size:.9rem;
+  cursor:pointer; font-family:'Tajawal',sans-serif;
+}
+
+/* ─── Empty State ───────────────────────────────────────── */
+.empty-state { text-align:center; padding:48px 20px; color:var(--text2); }
+.empty-icon { font-size:3.2rem; margin-bottom:12px; }
+.empty-text { font-size:.95rem; font-weight:600; }
+
+/* ─── Responsive ────────────────────────────────────────── */
+@media(max-width:768px) {
+  .hero-inner { flex-direction:column; text-align:center; }
+  .hero-stats { justify-content:center; }
+  .info-grid { grid-template-columns:1fr; }
+  .topbar { padding:12px 16px; }
+  .container { padding:20px 12px 60px; }
+  .tabs { gap:4px; }
+  .tab-btn { padding:10px 12px; font-size:.82rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── Top Bar ─────────────────────────────────────────── -->
+<div class="topbar">
+  <a href="index.html" class="logo">
+    <img src="ايقونة الهدر.png" alt="الدكتور" class="logo-img" onerror="this.style.display='none'">
+    <div>
+      <div class="logo-name">الدكتور</div>
+      <div class="logo-sub-name">في اللغة العربية</div>
+    </div>
+  </a>
+  <div class="topbar-actions">
+    <button class="topbar-btn" onclick="toggleTheme()">
+      <i class="fas fa-moon" id="themeIcon"></i> <span id="themeLabel">الوضع الليلي</span>
+    </button>
+    <button class="topbar-btn danger" onclick="doLogout()">
+      <i class="fas fa-right-from-bracket"></i> خروج
+    </button>
+  </div>
+</div>
+
+<!-- ─── Main Container ──────────────────────────────────── -->
+<div class="container">
+
+  <!-- Loading State -->
+  <div id="loading-state">
+    <div class="spinner"></div>
+    <div>جاري تحميل بياناتك...</div>
+  </div>
+
+  <!-- Profile Content (shown after load) -->
+  <div id="profile-content" style="display:none;">
+
+    <!-- Hero Banner -->
+    <div class="profile-hero">
+      <div class="hero-inner">
+        <div class="hero-avatar" id="heroAvatar">👨‍🎓</div>
+        <div class="hero-info">
+          <div class="hero-name" id="heroName">---</div>
+          <div class="hero-phone"><i class="fas fa-phone"></i> <span id="heroPhone">---</span></div>
+          <div class="hero-tags">
+            <span class="hero-tag" id="heroGrade">📚 ---</span>
+            <span class="hero-tag" id="heroTrack" style="display:none;"></span>
+            <span class="hero-tag gold" id="heroStatus">🌟 طالب مسجّل</span>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat"><div class="hero-stat-val" id="hStatCourses">0</div><div class="hero-stat-label">كورس</div></div>
+            <div class="hero-stat"><div class="hero-stat-val" id="hStatHours">0</div><div class="hero-stat-label">ساعة مشاهدة</div></div>
+            <div class="hero-stat"><div class="hero-stat-val" id="hStatQuizzes">0</div><div class="hero-stat-label">اختبار</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(0)"><i class="fas fa-id-card"></i> بيانات الملف</button>
+      <button class="tab-btn" onclick="switchTab(1)"><i class="fas fa-chart-bar"></i> الإحصائيات</button>
+      <button class="tab-btn" onclick="switchTab(2)"><i class="fas fa-trophy"></i> الإنجازات</button>
+      <button class="tab-btn" onclick="switchTab(3)"><i class="fas fa-list-check"></i> النشاط</button>
+      <button class="tab-btn" onclick="switchTab(4)"><i class="fas fa-gear"></i> الإعدادات</button>
+    </div>
+
+    <!-- ─── TAB 0: Profile Info ──────────────────────────── -->
+    <div class="tab-panel active" id="tab-0">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-user-circle"></i> البيانات الشخصية</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">الاسم الأول</div>
+            <div class="info-value" id="dispFname">---</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">الاسم الثاني</div>
+            <div class="info-value" id="dispSname">---</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">الاسم الثالث</div>
+            <div class="info-value" id="dispTname">---</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">الاسم الأخير</div>
+            <div class="info-value" id="dispLname">---</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">رقم الهاتف</div>
+            <div class="info-value" id="dispPhone">---</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">رقم هاتف الأب</div>
+            <div class="info-value" id="dispFatherPhone">---</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">الصف الدراسي</div>
+            <div class="info-value" id="dispGrade">---</div>
+          </div>
+          <div class="info-item" id="dispTrackRow">
+            <div class="info-label">الشعبة</div>
+            <div class="info-value" id="dispTrack">---</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">المحافظة</div>
+            <div class="info-value" id="dispGov">---</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">المدرسة</div>
+            <div class="info-value" id="dispSchool">---</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">النوع</div>
+            <div class="info-value" id="dispGender">---</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">تاريخ التسجيل</div>
+            <div class="info-value" id="dispJoinDate">---</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── TAB 1: Statistics ────────────────────────────── -->
+    <div class="tab-panel" id="tab-1">
+
+      <!-- Summary Stats -->
+      <div class="stats-grid">
+        <div class="stat-box" style="--accent-color:rgba(2,132,199,.1); --accent-clr:var(--primary);">
+          <div class="stat-icon">🎓</div>
+          <div class="stat-val" id="statCourses">0</div>
+          <div class="stat-lbl">كورسات مشترَكة</div>
+        </div>
+        <div class="stat-box" style="--accent-color:rgba(245,158,11,.1); --accent-clr:#d97706;">
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-val" id="statHours">0</div>
+          <div class="stat-lbl">ساعة مشاهدة</div>
+        </div>
+        <div class="stat-box" style="--accent-color:rgba(22,163,74,.1); --accent-clr:var(--success);">
+          <div class="stat-icon">📝</div>
+          <div class="stat-val" id="statQuizzes">0</div>
+          <div class="stat-lbl">اختبارات مجاوَبة</div>
+        </div>
+        <div class="stat-box" style="--accent-color:rgba(168,85,247,.1); --accent-clr:#9333ea;">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-val" id="statAvg">--</div>
+          <div class="stat-lbl">متوسط الاختبارات</div>
+        </div>
+      </div>
+
+      <!-- Course Progress -->
+      <div class="card">
+        <div class="card-title"><i class="fas fa-book-open"></i> تقدّمك في الكورسات</div>
+        <div class="course-list" id="courseList">
+          <div class="empty-state"><div class="empty-icon">📚</div><div class="empty-text">لم تشترك في أي كورس بعد</div></div>
+        </div>
+      </div>
+
+      <!-- Quiz Results -->
+      <div class="card">
+        <div class="card-title"><i class="fas fa-clipboard-check"></i> نتائج الاختبارات</div>
+        <div class="quiz-list" id="quizList">
+          <div class="empty-state"><div class="empty-icon">📝</div><div class="empty-text">لم تجاوب أي اختبار بعد</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ─── TAB 2: Achievements ──────────────────────────── -->
+    <div class="tab-panel" id="tab-2">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-trophy"></i> الإنجازات والأوسمة</div>
+        <div class="badges-grid" id="badgesGrid">
+          <!-- Filled dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── TAB 3: Activity Log ──────────────────────────── -->
+    <div class="tab-panel" id="tab-3">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-clock-rotate-left"></i> آخر الأنشطة</div>
+        <div id="activityList">
+          <div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">لا يوجد نشاط مسجّل بعد</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── TAB 4: Settings ──────────────────────────────── -->
+    <div class="tab-panel" id="tab-4">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-shield-halved"></i> الأمان والحساب</div>
+        <div class="setting-row" onclick="openPwdModal()">
+          <div class="setting-label"><i class="fas fa-lock" style="color:var(--primary);margin-left:8px;"></i> تغيير كلمة المرور</div>
+          <div class="setting-arrow"><i class="fas fa-chevron-left"></i></div>
+        </div>
+        <div class="setting-row danger" onclick="if(confirm('هل متأكد من تسجيل الخروج؟')) doLogout()">
+          <div class="setting-label"><i class="fas fa-right-from-bracket" style="margin-left:8px;"></i> تسجيل الخروج</div>
+          <div class="setting-arrow"><i class="fas fa-chevron-left"></i></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end #profile-content -->
+</div><!-- end .container -->
+
+<!-- ─── Password Change Modal ───────────────────────────── -->
+<div class="modal-overlay" id="pwdModal">
+  <div class="modal-box">
+    <div class="modal-title"><i class="fas fa-lock"></i> تغيير كلمة المرور</div>
+    <div class="modal-alert" id="pwdAlert"></div>
+    <div class="modal-input-group">
+      <label>كلمة المرور الحالية</label>
+      <input type="password" id="oldPwd" placeholder="ادخل كلمة المرور الحالية">
+    </div>
+    <div class="modal-input-group">
+      <label>كلمة المرور الجديدة</label>
+      <input type="password" id="newPwd" placeholder="6 أحرف على الأقل">
+    </div>
+    <div class="modal-input-group">
+      <label>تأكيد كلمة المرور الجديدة</label>
+      <input type="password" id="confirmPwd" placeholder="أعد كتابة كلمة المرور الجديدة">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="doChangePwd()"><i class="fas fa-save"></i> حفظ</button>
+      <button class="btn-cancel" onclick="closePwdModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Firebase ─────────────────────────────────────────── -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="grade-mapping.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// قراءة الجلسة الحالية (مخزنة عند تسجيل الدخول / التسجيل)
+// ═══════════════════════════════════════════════════════════
+const sessionRaw = localStorage.getItem('alamin_current');
+if (!sessionRaw) { window.location.href = 'index.html'; }
+const sessionUser = JSON.parse(sessionRaw);
+const STUDENT_PHONE = sessionUser.phone || sessionUser.id;
+
+// ─── Theme ───────────────────────────────────────────────
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('theme', 'light');
+    document.getElementById('themeIcon').className = 'fas fa-moon';
+    document.getElementById('themeLabel').textContent = 'الوضع الليلي';
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    localStorage.setItem('theme', 'dark');
+    document.getElementById('themeIcon').className = 'fas fa-sun';
+    document.getElementById('themeLabel').textContent = 'الوضع النهاري';
+  }
+}
+const savedTheme = localStorage.getItem('theme') || 'light';
+if (savedTheme === 'dark') {
+  document.documentElement.setAttribute('data-theme', 'dark');
+  document.getElementById('themeIcon').className = 'fas fa-sun';
+  document.getElementById('themeLabel').textContent = 'الوضع النهاري';
+}
+
+// ─── Tabs ─────────────────────────────────────────────────
+function switchTab(idx) {
+  document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + idx).classList.add('active');
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+}
+
+// ─── Helpers ─────────────────────────────────────────────
+function glabel(g) {
+  if (typeof gradeLabel === 'function') return gradeLabel(g);
+  const m = { '1':'أولى ثانوي','2':'ثانية ثانوي','3':'ثالثة ثانوي','prep1':'أولى إعدادي','prep2':'ثانية إعدادي','prep3':'ثالثة إعدادي' };
+  return m[g] || g || 'غير محدد';
+}
+function formatDuration(seconds) {
+  if (!seconds) return '0 د';
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  if (hrs > 0) return `${hrs} س ${mins} د`;
+  return `${mins} د`;
+}
+function hoursFromSeconds(seconds) {
+  return Math.round((seconds || 0) / 3600 * 10) / 10;
+}
+
+// ─── Achievements / Badges Definition ────────────────────
+function buildBadges(stats) {
+  return [
+    {
+      emoji: '🚀', name: 'البداية', desc: 'اشتركت في أول كورس',
+      earned: stats.courses >= 1
+    },
+    {
+      emoji: '📚', name: 'مثابر', desc: 'اشتركت في 3 كورسات',
+      earned: stats.courses >= 3
+    },
+    {
+      emoji: '⏱️', name: 'ساعة تعلّم', desc: 'شاهدت ساعة كاملة',
+      earned: stats.watchHours >= 1
+    },
+    {
+      emoji: '🔥', name: 'عاشق التعلم', desc: 'شاهدت 10 ساعات',
+      earned: stats.watchHours >= 10
+    },
+    {
+      emoji: '📝', name: 'أول اختبار', desc: 'أجبت على اختبار',
+      earned: stats.quizzes >= 1
+    },
+    {
+      emoji: '🏆', name: 'متفوق', desc: 'متوسط اختباراتك 80%+',
+      earned: stats.avgScore !== null && stats.avgScore >= 80
+    },
+    {
+      emoji: '💯', name: 'نجم المنصة', desc: 'أجبت على 10 اختبارات',
+      earned: stats.quizzes >= 10
+    },
+    {
+      emoji: '🌟', name: 'الإتقان', desc: 'متوسط اختباراتك 95%+',
+      earned: stats.avgScore !== null && stats.avgScore >= 95
+    },
+  ];
+}
+
+// ─── Main Load ────────────────────────────────────────────
+async function loadProfile() {
+  try {
+    const db = window.db;
+
+    // 1) Fetch fresh student data from Firestore
+    let student = sessionUser;
+    if (db) {
+      const snap = await db.collection('students').doc(STUDENT_PHONE).get();
+      if (snap.exists) student = { id: snap.id, ...snap.data() };
+    }
+
+    // 2) Fetch quiz attempts (subcollection of the student doc)
+    let attempts = [];
+    if (db) {
+      try {
+        const attSnap = await db.collection('students').doc(STUDENT_PHONE).collection('attempts').get();
+        attSnap.forEach(d => attempts.push({ id: d.id, ...d.data() }));
+      } catch (e) { /* لو subcollection مش موجودة */ }
+    }
+
+    // 3) Fetch activity from student_activity collection
+    let activities = [];
+    if (db) {
+      try {
+        const actSnap = await db.collection('student_activity')
+          .where('studentId', '==', STUDENT_PHONE)
+          .orderBy('createdAt', 'desc')
+          .limit(30)
+          .get();
+        actSnap.forEach(d => activities.push({ id: d.id, ...d.data() }));
+      } catch (e) { /* ignore */ }
+    }
+
+    // 4) Fetch course list from Firestore to get course names
+    let coursesMap = {};
+    if (db) {
+      try {
+        const cSnap = await db.collection('platform_data').doc('courses_list').get();
+        if (cSnap.exists) {
+          const data = cSnap.data();
+          const list = data.items || data.courses || data.list || [];
+          list.forEach(c => { coursesMap[c.id || c.courseId] = c; });
+        }
+      } catch (e) { /* ignore */ }
+    }
+
+    // ─── Compute aggregate stats ───────────────────────────
+    const enrolledCourses = student.enrolledCourses || [];
+
+    // Watch time: sum from each enrolled course's watchedSeconds field
+    let totalWatchedSeconds = 0;
+    enrolledCourses.forEach(ec => {
+      const sec = typeof ec === 'object' ? (ec.watchedSeconds || 0) : 0;
+      totalWatchedSeconds += sec;
+    });
+
+    // Quiz stats
+    const quizCount = attempts.length;
+    let totalScore = 0, totalMax = 0;
+    attempts.forEach(a => {
+      totalScore += (a.score || 0);
+      totalMax += (a.maxScore || a.total || 100);
+    });
+    const avgScore = quizCount > 0 ? Math.round((totalScore / totalMax) * 100) : null;
+    const watchHours = hoursFromSeconds(totalWatchedSeconds);
+
+    const stats = {
+      courses: enrolledCourses.length,
+      watchHours,
+      quizzes: quizCount,
+      avgScore
+    };
+
+    // ─── Populate Hero ─────────────────────────────────────
+    const fullName = student.fullName || student.name ||
+      [student.firstName || student.fname, student.lastName || student.lname].filter(Boolean).join(' ') || 'طالب';
+    const grade = student.grade || '';
+    const track = student.track || '';
+
+    document.getElementById('heroName').textContent = fullName;
+    document.getElementById('heroPhone').textContent = student.phone || STUDENT_PHONE;
+    document.getElementById('heroGrade').textContent = '📚 ' + glabel(grade);
+    if (track) {
+      const trackEl = document.getElementById('heroTrack');
+      trackEl.textContent = track === 'علمي' ? '🔬 علمي' : '📖 أدبي';
+      trackEl.style.display = '';
+    }
+    document.getElementById('heroStatus').textContent = student.status === 'active' ? '✅ حساب مفعَّل' : '⏳ بانتظار التفعيل';
+
+    document.getElementById('hStatCourses').textContent = stats.courses;
+    document.getElementById('hStatHours').textContent = watchHours;
+    document.getElementById('hStatQuizzes').textContent = quizCount;
+
+    // Avatar initial
+    const initial = (fullName || 'ط')[0];
+    document.getElementById('heroAvatar').innerHTML =
+      `<div style="font-size:3rem;font-weight:900;">${initial}</div>`;
+
+    // ─── Populate Tab 0: Info ──────────────────────────────
+    document.getElementById('dispFname').textContent = student.firstName || student.fname || '---';
+    document.getElementById('dispSname').textContent = student.secondName || student.sname || '---';
+    document.getElementById('dispTname').textContent = student.thirdName || student.tname || '---';
+    document.getElementById('dispLname').textContent = student.lastName || student.lname || '---';
+    document.getElementById('dispPhone').textContent = student.phone || '---';
+    document.getElementById('dispFatherPhone').textContent = student.fatherPhone || '---';
+    document.getElementById('dispGrade').textContent = glabel(grade);
+    if (track) {
+      document.getElementById('dispTrack').textContent = track;
+    } else {
+      document.getElementById('dispTrackRow').style.display = 'none';
+    }
+    document.getElementById('dispGov').textContent = student.gov || '---';
+    document.getElementById('dispSchool').textContent = student.school || '---';
+    document.getElementById('dispGender').textContent = student.gender || '---';
+    document.getElementById('dispJoinDate').textContent = student.joinDate || (student.registeredAt ? new Date(student.registeredAt).toLocaleDateString('ar-EG') : '---');
+
+    // ─── Populate Tab 1: Stats ─────────────────────────────
+    document.getElementById('statCourses').textContent = stats.courses;
+    document.getElementById('statHours').textContent = watchHours;
+    document.getElementById('statQuizzes').textContent = quizCount;
+    document.getElementById('statAvg').textContent = avgScore !== null ? avgScore + '%' : '--';
+
+    // Course progress list
+    const courseListEl = document.getElementById('courseList');
+    if (enrolledCourses.length) {
+      courseListEl.innerHTML = enrolledCourses.map(ec => {
+        const cid = typeof ec === 'object' ? (ec.id || ec.courseId) : ec;
+        const cInfo = coursesMap[cid] || {};
+        const cName = cInfo.title || cInfo.name || `كورس #${cid}`;
+        const watched = typeof ec === 'object' ? (ec.watchedSeconds || 0) : 0;
+        const total = cInfo.totalSeconds || cInfo.duration || 0;
+        const pct = total > 0 ? Math.min(100, Math.round((watched / total) * 100)) : 0;
+        return `
+          <div class="course-row">
+            <div class="course-icon"><i class="fas fa-book"></i></div>
+            <div class="course-info">
+              <div class="course-name">${cName}</div>
+              <div class="course-meta">وقت المشاهدة: ${formatDuration(watched)}</div>
+            </div>
+            <div class="course-prog-wrap">
+              <div class="prog-pct">${pct}%</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // Quiz results list
+    const quizListEl = document.getElementById('quizList');
+    if (attempts.length) {
+      quizListEl.innerHTML = attempts.slice(0, 20).map(a => {
+        const pct = a.maxScore || a.total
+          ? Math.round(((a.score || 0) / (a.maxScore || a.total)) * 100)
+          : (a.percentage || 0);
+        const pass = pct >= 50;
+        const dateStr = a.submittedAt
+          ? new Date(a.submittedAt).toLocaleDateString('ar-EG')
+          : (a.date || '');
+        return `
+          <div class="quiz-row">
+            <div class="quiz-score-badge ${pass ? 'pass' : 'fail'}">${pct}%</div>
+            <div class="quiz-info">
+              <div class="quiz-name">${a.quizTitle || a.title || 'اختبار'}</div>
+              <div class="quiz-meta">
+                <i class="fas fa-check-circle" style="color:var(--success);"></i>
+                ${a.score || 0} / ${a.maxScore || a.total || 100} درجة
+                ${dateStr ? '&nbsp;·&nbsp;' + dateStr : ''}
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ─── Populate Tab 2: Achievements ─────────────────────
+    const badgesGrid = document.getElementById('badgesGrid');
+    const badges = buildBadges(stats);
+    badgesGrid.innerHTML = badges.map(b => `
+      <div class="badge-card ${b.earned ? 'earned' : 'locked'}">
+        <div class="badge-emoji">${b.emoji}</div>
+        <div class="badge-name">${b.name}</div>
+        <div class="badge-desc">${b.desc}</div>
+        ${!b.earned ? '<div style="font-size:.7rem;margin-top:6px;color:var(--text2);">🔒 لم تحقق بعد</div>' : '<div style="font-size:.7rem;margin-top:6px;color:var(--success);font-weight:700;">✅ تم تحقيقه!</div>'}
+      </div>
+    `).join('');
+
+    // ─── Populate Tab 3: Activity ─────────────────────────
+    const actList = document.getElementById('activityList');
+    if (activities.length) {
+      actList.innerHTML = activities.map((a, i) => {
+        const iconMap = { quiz: '📝', video: '▶️', login: '🔑', enroll: '🎓' };
+        const icon = iconMap[a.type] || '📌';
+        const dateStr = a.createdAt
+          ? (a.createdAt.toDate ? a.createdAt.toDate().toLocaleDateString('ar-EG') : new Date(a.createdAt).toLocaleDateString('ar-EG'))
+          : '';
+        return `
+          <div class="activity-item">
+            <div class="act-dot-col">
+              <div class="act-dot"></div>
+              ${i < activities.length - 1 ? '<div class="act-line"></div>' : ''}
+            </div>
+            <div class="act-body">
+              <div class="act-title">${icon} ${a.title || a.action || 'نشاط'}</div>
+              <div class="act-desc">${a.desc || a.description || ''}</div>
+              <div class="act-time">${dateStr}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // Update session with fresh data
+    localStorage.setItem('alamin_current', JSON.stringify({ ...sessionUser, ...student }));
+
+    // Show content
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('profile-content').style.display = 'block';
+
+  } catch (err) {
+    console.error('Profile load error:', err);
+    // Still show the profile with session data even if Firestore call fails
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('profile-content').style.display = 'block';
+  }
+}
+
+// ─── Password Modal ───────────────────────────────────────
+function openPwdModal() {
+  document.getElementById('oldPwd').value = '';
+  document.getElementById('newPwd').value = '';
+  document.getElementById('confirmPwd').value = '';
+  const al = document.getElementById('pwdAlert');
+  al.className = 'modal-alert'; al.textContent = '';
+  document.getElementById('pwdModal').classList.add('open');
+}
+function closePwdModal() {
+  document.getElementById('pwdModal').classList.remove('open');
+}
+function showPwdAlert(msg, type) {
+  const al = document.getElementById('pwdAlert');
+  al.textContent = msg;
+  al.className = 'modal-alert ' + (type === 'ok' ? 'ok' : 'err');
+}
+async function doChangePwd() {
+  const oldP = document.getElementById('oldPwd').value.trim();
+  const newP = document.getElementById('newPwd').value.trim();
+  const confP = document.getElementById('confirmPwd').value.trim();
+  if (!oldP || !newP || !confP) { showPwdAlert('❌ يرجى ملء جميع الحقول', 'err'); return; }
+  if (newP.length < 6) { showPwdAlert('❌ كلمة المرور الجديدة 6 أحرف على الأقل', 'err'); return; }
+  if (newP !== confP) { showPwdAlert('❌ كلمة المرور الجديدة وتأكيدها غير متطابقتين', 'err'); return; }
+
+  const session = JSON.parse(localStorage.getItem('alamin_current') || '{}');
+  if (session.password !== oldP) {
+    showPwdAlert('❌ كلمة المرور الحالية غير صحيحة', 'err'); return;
+  }
+
+  if (!window.db) { showPwdAlert('❌ لا يوجد اتصال بقاعدة البيانات', 'err'); return; }
+  try {
+    await window.db.collection('students').doc(STUDENT_PHONE).update({ password: newP });
+    const upd = { ...session, password: newP };
+    localStorage.setItem('alamin_current', JSON.stringify(upd));
+    showPwdAlert('✅ تم تغيير كلمة المرور بنجاح!', 'ok');
+    setTimeout(closePwdModal, 1600);
+  } catch (err) {
+    showPwdAlert('❌ حدث خطأ أثناء حفظ كلمة المرور. حاول مرة أخرى.', 'err');
+  }
+}
+document.getElementById('pwdModal').addEventListener('click', function (e) {
+  if (e.target === this) closePwdModal();
+});
+
+// ─── Logout ───────────────────────────────────────────────
+function doLogout() {
+  localStorage.removeItem('alamin_current');
+  window.location.href = 'index.html';
+}
+
+// ─── Boot ─────────────────────────────────────────────────
+loadProfile();
+</script>
+</body>
+</html>
