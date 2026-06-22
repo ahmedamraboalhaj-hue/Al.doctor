@@ -1282,6 +1282,9 @@ tr:hover td{background:rgba(200,169,110,.03);}
       <div class="form-group">
         <label>الصف المستهدف</label>
         <select id="acGrade">
+          <option value="prep1">الصف الأول الإعدادي</option>
+          <option value="prep2">الصف الثاني الإعدادي</option>
+          <option value="prep3">الصف الثالث الإعدادي</option>
           <option value="1">الصف الأول الثانوي</option>
           <option value="2">الصف الثاني الثانوي</option>
           <option value="3">الصف الثالث الثانوي</option>
@@ -1662,6 +1665,12 @@ if(!courses.length) {
 }
 
 // ---- FIREBASE COURSE SYNC ----
+// ✅ FIX (Race Condition): علم بيتفعّل لحظة ما الأدمن يضيف/يعدّل/يحذف كورس،
+// عشان لو طلب تحميل الكورسات القديم من Firebase (اللي بدأ قبل الإضافة) يرجع
+// بعد ما الأدمن خلّص إضافة، الكود يتجاهله ومايمسحش الكورس الجديد.
+let _coursesDirty = false;
+let _coursesSyncVersion = 0;
+
 async function pushCoursesToFirebase(coursesArray) {
   if (!window.db) return;
   try {
@@ -1686,7 +1695,15 @@ async function loadCoursesFromFirebase() {
 
 // Load courses from Firebase on startup and refresh UI
 (async () => {
+  const _myVersion = ++_coursesSyncVersion;
   const fbCourses = await loadCoursesFromFirebase();
+
+  // ✅ لو الأدمن عدّل/أضاف كورس محليًا (_coursesDirty) وهو الطلب ده لسه شغال،
+  // أو لو فيه طلب أحدث بدأ بعد الطلب ده، تجاهل النتيجة القديمة دي تمامًا.
+  if (_coursesDirty || _myVersion !== _coursesSyncVersion) {
+    return;
+  }
+
   if (fbCourses && fbCourses.length) {
     courses = fbCourses;
     localStorage.setItem('alamin_courses', JSON.stringify(courses));
@@ -1796,6 +1813,9 @@ function getCourses(){
   return courses.length ? courses : JSON.parse(localStorage.getItem('alamin_courses')||'[]');
 }
 function saveCourses(c){
+  // ✅ FIX: فعّل علم "تم التعديل محليًا" قبل أي حفظ، عشان أي تحميل قديم
+  // من Firebase كان شغال في الخلفية وقت الإضافة ميمسحش الكورس الجديد.
+  _coursesDirty = true;
   localStorage.setItem('alamin_courses', JSON.stringify(c));
   courses = c;
   pushCoursesToFirebase(c);
@@ -3140,9 +3160,9 @@ async function renderStudentCourses() {
 
   // تحميل الكورسات من Firebase لو مش موجودة محلياً
   let allCourses = getCourses();
-  if(!allCourses.length && window.db){
+  if(!allCourses.length && window.db && !_coursesDirty){
     const fb = await loadCoursesFromFirebase();
-    if(fb && fb.length){
+    if(fb && fb.length && !_coursesDirty){
       courses = fb;
       localStorage.setItem('alamin_courses', JSON.stringify(fb));
       allCourses = fb;
