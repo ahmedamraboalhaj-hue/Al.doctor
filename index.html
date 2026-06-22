@@ -109,6 +109,7 @@
                             <i class="fas fa-phone input-icon"></i>
                         </label>
                         <input type="tel" id="fp-phone" class="underline-input" required placeholder="01xxxxxxxxx">
+                        <span class="focus-line"></span>
                     </div>
                     <div class="input-group">
                         <label for="fp-recovery-phone" class="input-label">
@@ -116,6 +117,7 @@
                             <i class="fas fa-shield-halved input-icon"></i>
                         </label>
                         <input type="tel" id="fp-recovery-phone" class="underline-input" required placeholder="01xxxxxxxxx">
+                        <span class="focus-line"></span>
                     </div>
                     <div class="input-group">
                         <label for="fp-new-password" class="input-label">
@@ -123,6 +125,7 @@
                             <i class="fas fa-lock input-icon"></i>
                         </label>
                         <input type="password" id="fp-new-password" class="underline-input" required placeholder="6 أحرف على الأقل">
+                        <span class="focus-line"></span>
                     </div>
                     <div class="input-group">
                         <label for="fp-confirm-password" class="input-label">
@@ -130,6 +133,7 @@
                             <i class="fas fa-lock input-icon"></i>
                         </label>
                         <input type="password" id="fp-confirm-password" class="underline-input" required placeholder="أعد كتابة كلمة السر">
+                        <span class="focus-line"></span>
                     </div>
                     <button type="submit" class="btn-submit-yellow">تغيير كلمة السر</button>
                 </form>
@@ -243,6 +247,10 @@
 
         <!-- 2. Login View -->
         <section id="login-view" class="view-section">
+            <!-- Mobile Hero Image (shown only on small screens, above form) -->
+            <div class="mobile-hero-img">
+                <img src="تسجيل الخول .jpeg" alt="تسجيل الدخول">
+            </div>
             <div class="split-container">
                 <!-- Left Side: Login Form -->
                 <div class="form-container">
@@ -260,6 +268,7 @@
                                 <i class="fas fa-phone input-icon"></i>
                             </label>
                             <input type="tel" id="login-phone" class="underline-input" required placeholder="01xxxxxxxxx">
+                            <span class="focus-line"></span>
                         </div>
 
                         <!-- Password -->
@@ -269,6 +278,7 @@
                                 <i class="fas fa-lock input-icon"></i>
                             </label>
                             <input type="password" id="login-password" class="underline-input" required placeholder="••••••••">
+                            <span class="focus-line"></span>
                         </div>
 
                         <!-- Options -->
@@ -304,6 +314,10 @@
 
         <!-- 3. Register View -->
         <section id="register-view" class="view-section">
+            <!-- Mobile Hero Image (shown only on small screens, above form) -->
+            <div class="mobile-hero-img">
+                <img src="انشاء حساب.jpeg" alt="إنشاء حساب">
+            </div>
             <div class="split-container">
                 <!-- Left Side: Registration Form -->
                 <div class="form-container">
@@ -314,69 +328,45 @@
                     </div>
 
                     <form id="register-form" class="auth-form" onsubmit="handleRegisterSubmit(event)">
-                        <!-- Name Row 1 -->
-                        <div class="form-row">
-                            <div class="input-group">
-                                <label for="reg-fname" class="input-label">
-                                    <span class="label-text">الاسم الأول</span>
-                                    <i class="fas fa-user input-icon"></i>
-                                </label>
-                                <input type="text" id="reg-fname" class="underline-input" required placeholder="الاسم الأول">
-                            </div>
-
-                            <div class="input-group">
-                                <label for="reg-sname" class="input-label">
-                                    <span class="label-text">الاسم الثاني</span>
-                                    <i class="fas fa-user input-icon"></i>
-                                </label>
-                                <input type="text" id="reg-sname" class="underline-input" required placeholder="الاسم الثاني">
-                            </div>
-                        </div>
-
-                        <!-- Name Row 2 -->
-                        <div class="form-row">
-                            <div class="input-group">
-                                <label for="reg-tname" class="input-label">
-                                    <span class="label-text">الاسم الثالث</span>
-                                    <i class="fas fa-user input-icon"></i>
-                                </label>
-                                <input type="text" id="reg-tname" class="underline-input" required placeholder="الاسم الثالث">
-                            </div>
-
-                            <div class="input-group">
-                                <label for="reg-lname" class="input-label">
-                                    <span class="label-text">الاسم الأخير</span>
-                                    <i class="fas fa-user input-icon"></i>
-                                </label>
-                                <input type="text" id="reg-lname" class="underline-input" required placeholder="الاسم الأخير">
-                            </div>
+                        <!-- Name Input Group -->
+                        <div class="input-group">
+                            <label for="reg-fullname" class="input-label">
+                                <span class="label-text">أدخل اسمك الثلاثي</span>
+                                <i class="fas fa-user input-icon"></i>
+                            </label>
+                            <input type="text" id="reg-fullname" class="underline-input" required placeholder="الاسم الثلاثي">
+                            <span class="focus-line"></span>
                         </div>
 
                         <!-- Student Phone -->
                         <div class="input-group">
                             <label for="reg-phone" class="input-label">
-                                <span class="label-text">رقم الهاتف</span>
+                                <span class="label-text">رقم هاتف الطالب</span>
                                 <i class="fas fa-phone input-icon"></i>
                             </label>
                             <input type="tel" id="reg-phone" class="underline-input" required placeholder="01xxxxxxxxx">
+                            <span class="focus-line"></span>
                         </div>
 
                         <!-- Parent / Recovery Phones Row -->
                         <div class="form-row">
                             <div class="input-group">
                                 <label for="reg-father-phone" class="input-label">
-                                    <span class="label-text">رقم هاتف الأب</span>
+                                    <span class="label-text">رقم هاتف ولي الأمر</span>
                                     <i class="fas fa-phone input-icon"></i>
                                 </label>
                                 <input type="tel" id="reg-father-phone" class="underline-input" required placeholder="01xxxxxxxxx">
+                                <span class="focus-line"></span>
                             </div>
 
                             <div class="input-group">
                                 <label for="reg-recovery-phone" class="input-label">
-                                    <span class="label-text">رقم هاتف لاستعادة الحساب</span>
+                                    <span class="label-text">رقم هاتف استرداد الحساب</span>
                                     <i class="fas fa-shield-halved input-icon"></i>
                                 </label>
                                 <input type="tel" id="reg-recovery-phone" class="underline-input" required placeholder="01xxxxxxxxx">
+                                <span class="focus-line"></span>
+                                <small class="recovery-hint-text">هذا الرقم يُستخدم لاسترداد الحساب في حال نسيت كلمة المرور</small>
                             </div>
                         </div>
 
@@ -388,6 +378,7 @@
                                     <i class="fas fa-school input-icon"></i>
                                 </label>
                                 <input type="text" id="reg-school" class="underline-input" required placeholder="اسم المدرسة">
+                                <span class="focus-line"></span>
                             </div>
 
                             <div class="input-group">
@@ -399,6 +390,7 @@
                                     <option value="" disabled selected>اختر الصف الدراسي</option>
                                     <!-- تُملأ ديناميكياً من grade-mapping.js -->
                                 </select>
+                                <span class="focus-line"></span>
                             </div>
                         </div>
 
@@ -414,6 +406,7 @@
                                     <option value="علمي">علمي</option>
                                     <option value="أدبي">أدبي</option>
                                 </select>
+                                <span class="focus-line"></span>
                             </div>
                         </div>
 
@@ -454,6 +447,7 @@
                                     <option value="سوهاج">سوهاج</option>
                                     <option value="البحر الأحمر">البحر الأحمر</option>
                                 </select>
+                                <span class="focus-line"></span>
                             </div>
 
                             <div class="input-group">
@@ -466,6 +460,7 @@
                                     <option value="ذكر">ذكر</option>
                                     <option value="أنثى">أنثى</option>
                                 </select>
+                                <span class="focus-line"></span>
                             </div>
                         </div>
 
@@ -476,6 +471,7 @@
                                 <i class="fas fa-lock input-icon"></i>
                             </label>
                             <input type="password" id="reg-password" class="underline-input" required placeholder="ادخل كلمة مرور لحسابك">
+                            <span class="focus-line"></span>
                         </div>
 
                         <!-- Submit Button -->
@@ -489,8 +485,8 @@
                     <span class="visual-badge badge-2"><i class="fas fa-book-open"></i></span>
                     <span class="visual-badge badge-3"><i class="fas fa-pen-nib"></i></span>
                     <span class="visual-badge badge-4"><i class="fas fa-ruler"></i></span>
-                    <div class="image-wrapper bg-blue-grad">
-                        <img src="صورة الواجهه.jpeg" alt="إنشاء حساب" class="illustration-img rounded-img">
+                    <div class="image-wrapper">
+                        <img src="انشاء حساب.jpeg" alt="إنشاء حساب" class="illustration-img">
                     </div>
                 </div>
             </div>

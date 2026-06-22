@@ -1,0 +1,46 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ══════════════════════════════════════════════
+    //  قواعد الأمان - منصة الدكتور في اللغة العربية
+    //  تاريخ التحديث: 2026
+    // ══════════════════════════════════════════════
+
+    // ── طلاب السنتر: القراءة للكل، الكتابة مغلقة ──
+    match /centerStudents/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ── الطلاب: القراءة للكل (للتسجيل والبحث بالكود)، الكتابة مغلقة ──
+    match /students/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ── بيانات المنصة (الكورسات، الإعدادات): القراءة للكل، الكتابة مغلقة ──
+    match /platform_data/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ── الدروس: القراءة للكل، الكتابة مغلقة ──
+    match /lessons/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ── أكواد التفعيل: القراءة للكل (للتحقق من الكود)، الكتابة مغلقة ──
+    match /activationCodes/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ── كل المجموعات الأخرى: مغلقة تماماً ──
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -791,12 +791,44 @@ main {
 }
 
 .form-container {
-    padding: 60px 48px;
+    padding: 50px 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     opacity: 0;
     animation: form-entrance 0.7s ease forwards;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    transition: all 0.4s ease;
+    margin: 40px 20px;
+}
+
+.form-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-yellow), var(--primary-color));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 5;
+}
+
+.form-container:focus-within {
+    border-color: transparent;
+    box-shadow: 0 0 35px rgba(2, 132, 199, 0.18), 0 0 15px rgba(234, 179, 8, 0.1);
+}
+
+.form-container:focus-within::after {
+    opacity: 1;
 }
 
 @keyframes form-entrance {
@@ -889,7 +921,7 @@ main {
 }
 
 .underline-input:focus {
-    border-bottom-color: var(--input-focus-border);
+    border-bottom-color: transparent;
 }
 
 /* Select Dropdown Underlines */
@@ -906,12 +938,48 @@ main {
 }
 
 .underline-select:focus {
-    border-bottom-color: var(--input-focus-border);
+    border-bottom-color: transparent;
 }
 
 .underline-select option {
     background-color: var(--card-bg);
     color: var(--text-main);
+}
+
+/* Animated focus line */
+.focus-line {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-yellow), var(--primary-color));
+    background-size: 200% auto;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), left 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.underline-input:focus ~ .focus-line,
+.underline-select:focus ~ .focus-line {
+    width: 100%;
+    box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--accent-yellow);
+    animation: flowGradient 2s linear infinite;
+}
+
+@keyframes flowGradient {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+.recovery-hint-text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+    display: block;
+    line-height: 1.4;
+    font-weight: 600;
 }
 
 /* Form Options & Toggle Switches */
@@ -1009,14 +1077,40 @@ input:checked + .switch-slider:before {
     padding: 16px;
     border-radius: 10px;
     cursor: pointer;
-    transition: 0.3s;
     box-shadow: 0 4px 15px rgba(248, 194, 26, 0.2);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+}
+
+.btn-submit-yellow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.45),
+        transparent
+    );
+    transform: skewX(-20deg);
+    animation: buttonShine 4s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 2;
 }
 
 .btn-submit-yellow:hover {
     background-color: var(--accent-yellow-hover);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(248, 194, 26, 0.3);
+    box-shadow: 0 8px 25px rgba(248, 194, 26, 0.4);
+}
+
+.btn-submit-yellow:hover::before {
+    animation: buttonShine 1.5s infinite ease-in-out;
 }
 
 .btn-submit-blue {
@@ -1028,14 +1122,46 @@ input:checked + .switch-slider:before {
     padding: 16px;
     border-radius: 10px;
     cursor: pointer;
-    transition: 0.3s;
     box-shadow: 0 4px 15px rgba(0, 159, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+}
+
+.btn-submit-blue::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.35),
+        transparent
+    );
+    transform: skewX(-20deg);
+    animation: buttonShine 4s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 2;
 }
 
 .btn-submit-blue:hover {
     background-color: var(--primary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 159, 255, 0.3);
+    box-shadow: 0 8px 25px rgba(2, 132, 199, 0.4);
+}
+
+.btn-submit-blue:hover::before {
+    animation: buttonShine 1.5s infinite ease-in-out;
+}
+
+@keyframes buttonShine {
+    0% { left: -150%; }
+    50% { left: 150%; }
+    100% { left: 150%; }
 }
 
 /* Right Column Illustration Containers */
@@ -1046,6 +1172,36 @@ input:checked + .switch-slider:before {
     align-items: center;
     justify-content: center;
     overflow: visible;
+}
+
+/* Mobile Hero Image - hidden on desktop, shows on mobile above the form */
+.mobile-hero-img {
+    display: none;
+    width: 100%;
+    height: 50vh;
+    min-height: 220px;
+    max-height: 380px;
+    overflow: hidden;
+    position: relative;
+}
+
+.mobile-hero-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+}
+
+.mobile-hero-img::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, var(--bg-color));
+    pointer-events: none;
 }
 
 /* Soft pulsing glow behind the visual */
@@ -1213,11 +1369,29 @@ input:checked + .switch-slider:before {
     }
 
     .illustration-container {
-        display: none; /* Hide illustrations on mobile/tablets for form clarity */
+        display: none; /* Hide desktop illustrations on mobile/tablets */
+    }
+
+    /* Show mobile hero image on tablets and below */
+    .mobile-hero-img {
+        display: block;
     }
 
     .form-container {
-        padding: 40px 24px;
+        padding: 32px 20px 40px;
+        margin: -32px 0 0 0; /* Pull card up to overlap the hero image */
+        border-radius: 24px 24px 0 0; /* Rounded top corners only */
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        box-shadow: 0 -8px 30px rgba(0,0,0,0.08);
+        position: relative;
+        z-index: 2; /* Sit above the hero image */
+    }
+
+    /* Disable gradient border animation on mobile */
+    .form-container::after {
+        display: none;
     }
 }
 

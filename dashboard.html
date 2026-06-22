@@ -500,7 +500,7 @@ tr:hover td{background:rgba(200,169,110,.03);}
     <div class="topbar-actions">
       <button onclick="window.open('index.html','_blank')">🌐 الموقع</button>
       <button class="theme-toggle" onclick="toggleTheme()">☀️ 🌙</button>
-      <button onclick="window.location='login.html'">🚪 خروج</button>
+      <button onclick="localStorage.removeItem('alamin_current');window.location.replace('login.html')">🚪 خروج</button>
     </div>
   </div>
 
@@ -1641,11 +1641,11 @@ tr:hover td{background:rgba(200,169,110,.03);}
 var AI_QUIZ_TEXT_MAX = 28000;
 
 let currentUser = JSON.parse(localStorage.getItem('alamin_current'));
-if(!currentUser) {
-  // لوحة التحكم دي أداة داخلية للمدير بس، فبنفعّل جلسة أدمن تلقائياً
-  // بدل التحويل لصفحة تسجيل دخول مش موجودة في المنصة
-  currentUser = { name: 'الأستاذ الدكتور', role: 'admin', id: 'admin' };
-  localStorage.setItem('alamin_current', JSON.stringify(currentUser));
+// ── حماية الداشبورد: لازم يكون أدمن ──
+if (!currentUser || currentUser.role !== 'admin') {
+  // مش مسجّل دخول أو مش أدمن → ارجع لصفحة تسجيل الدخول
+  window.location.replace('login.html');
+  throw new Error('Unauthorized');
 }
 
 // ✅ تسجيل زيارة الداشبورد
