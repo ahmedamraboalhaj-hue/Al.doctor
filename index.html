@@ -91,43 +91,41 @@
     <!-- Navigation Bar -->
     <header id="header">
         <div class="header-container">
-            <!-- Left Side: Logo & Theme Toggle -->
+            <!-- Left Side: Logo -->
             <div class="header-left">
                 <a href="#home" class="logo" id="logo-link">
                     <img src="ايقونة الهدر.png" alt="شعار الدكتور" class="logo-img">
-                    <div class="logo-text">
+                    <div class="logo-text logo-text-inline">
                         <span class="logo-main">الدكتور</span>
-                        <span class="logo-sub">في اللغة العربية</span>
+                        <span class="logo-sep"> </span>
+                        <span class="logo-sub logo-sub-inline">في اللغة العربية</span>
                     </div>
                 </a>
-
-                <!-- Theme Toggle Switch -->
-                <div class="theme-switch-container">
-                    <label class="theme-switch" for="checkbox">
-                        <input type="checkbox" id="checkbox" />
-                        <div class="slider round">
-                            <span class="sun-icon"><i class="fas fa-sun"></i></span>
-                            <span class="moon-icon"><i class="fas fa-moon"></i></span>
-                        </div>
-                    </label>
-                </div>
             </div>
 
-            <!-- Right Side: Search and Authentication Buttons -->
+            <!-- Right Side: Hamburger Menu -->
             <div class="header-right">
-                <button class="search-btn" id="search-toggle" aria-label="بحث">
-                    <i class="fas fa-search"></i>
+                <!-- زرار الـ 3 شورت الملونة -->
+                <button class="hamburger-btn" id="hamburger-btn" aria-label="القائمة" aria-expanded="false">
+                    <span class="hb-line hb-line-1"></span>
+                    <span class="hb-line hb-line-2"></span>
+                    <span class="hb-line hb-line-3"></span>
                 </button>
 
-                <a href="#login" class="nav-login-link" id="nav-login-btn">
-                    <i class="fas fa-accessibility"></i>
-                    <span>سجل دخولك</span>
-                </a>
-
-                <a href="#register" class="btn-signup" id="nav-register-btn">
-                    <i class="fas fa-user-plus"></i>
-                    <span>اعمل حساب جديد!</span>
-                </a>
+                <!-- القايمة المنسدلة -->
+                <div class="hb-dropdown" id="hb-dropdown">
+                    <a href="#login" class="hb-item hb-login" id="nav-login-btn">
+                        <span class="hb-item-icon"><i class="fas fa-sign-in-alt"></i></span>
+                        <span class="hb-item-text">سجل دخولك</span>
+                        <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
+                    </a>
+                    <div class="hb-divider"></div>
+                    <a href="#register" class="hb-item hb-register" id="nav-register-btn">
+                        <span class="hb-item-icon"><i class="fas fa-user-plus"></i></span>
+                        <span class="hb-item-text">اعمل حساب جديد!</span>
+                        <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
+                    </a>
+                </div>
             </div>
         </div>
     </header>
@@ -208,12 +206,20 @@
                 <!-- Left Side: Custom Blob Image Display -->
                 <div class="hero-visual">
                     <div class="blob-wrapper">
+                        <!-- حلقات نبض خلف الدائرة -->
+                        <div class="blob-pulse-ring blob-pulse-ring-1"></div>
+                        <div class="blob-pulse-ring blob-pulse-ring-2"></div>
+                        <div class="blob-pulse-ring blob-pulse-ring-3"></div>
+
                         <!-- Background Blob Shape -->
                         <div class="blob-bg"></div>
                         <!-- Student/Teacher Image -->
                         <div class="blob-image-container">
                             <img src="صورة الواجهه.jpeg" alt="الدكتور" class="hero-main-img">
                         </div>
+
+                        <!-- الحلقة الملونة الدوّارة ذهبي/سماوي -->
+                        <div class="blob-color-ring"></div>
 
                         <!-- Decorative Floating Dotted Rings -->
                         <div class="dotted-ring ring-1"></div>
@@ -230,6 +236,39 @@
                         <div class="floating-icon icon-pencil" style="--delay: 3s; --x: 2%; --y: 78%;"><i class="fas fa-pencil-alt"></i></div>
                         <div class="floating-icon icon-ruler" style="--delay: 4.5s; --x: 92%; --y: 82%;"><i class="fas fa-ruler-combined"></i></div>
                         <div class="floating-icon icon-star" style="--delay: 2.2s; --x: 46%; --y: 0%;"><i class="fas fa-star"></i></div>
+
+                        <!-- بطاقات ميزات عائمة حول الدائرة -->
+                        <div class="hero-feature-card fc-nahw">
+                            <div class="fc-icon"><i class="fas fa-pencil-alt"></i></div>
+                            <div class="fc-text">
+                                <strong>النحو والصرف</strong>
+                                <span>قواعد مبسطة واحترافية</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-feature-card fc-balag">
+                            <div class="fc-icon"><i class="fas fa-feather-alt"></i></div>
+                            <div class="fc-text">
+                                <strong>البلاغة والأدب</strong>
+                                <span>تذوق وتحليل نصوص</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-feature-card fc-adab">
+                            <div class="fc-icon"><i class="fas fa-book-open"></i></div>
+                            <div class="fc-text">
+                                <strong>الإملاء والكتابة</strong>
+                                <span>إتقان القواعد الإملائية</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-feature-card fc-imla">
+                            <div class="fc-icon"><i class="fas fa-graduation-cap"></i></div>
+                            <div class="fc-text">
+                                <strong>إعدادي وثانوي</strong>
+                                <span>كل الصفوف الدراسية</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -595,7 +634,7 @@
 
         var pct = document.getElementById('is-bar-pct');
         if(pct){
-            var st=null, dur=4800;
+            var st=null, dur=6800;
             function ap(ts){
                 if(!st) st=ts;
                 var raw=Math.min((ts-st)/dur,1);
@@ -623,10 +662,44 @@
                 sp.classList.add('intro-hidden');
                 document.body.classList.remove('intro-active');
                 clearInterval(iv);
-            },5500);
+            },7500);
         }
     })();
     </script>
+    <!-- Hamburger Menu JS -->
+    <script>
+    (function(){
+        var btn = document.getElementById('hamburger-btn');
+        var drop = document.getElementById('hb-dropdown');
+        if(!btn || !drop) return;
+
+        btn.addEventListener('click', function(e){
+            e.stopPropagation();
+            var open = btn.classList.toggle('is-open');
+            drop.classList.toggle('is-open', open);
+            btn.setAttribute('aria-expanded', open);
+        });
+
+        // إغلاق لما يضغط برا
+        document.addEventListener('click', function(e){
+            if(!btn.contains(e.target) && !drop.contains(e.target)){
+                btn.classList.remove('is-open');
+                drop.classList.remove('is-open');
+                btn.setAttribute('aria-expanded','false');
+            }
+        });
+
+        // إغلاق لما يضغط على أي لينك جوا القايمة
+        drop.querySelectorAll('a').forEach(function(a){
+            a.addEventListener('click', function(){
+                btn.classList.remove('is-open');
+                drop.classList.remove('is-open');
+                btn.setAttribute('aria-expanded','false');
+            });
+        });
+    })();
+    </script>
+
 </body>
 
 </html>
