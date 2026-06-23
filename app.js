@@ -502,8 +502,16 @@ async function handleLoginSubmit(e) {
     if (phone === '2026' && pass === '2027') {
         const admin = { id: 0, name: 'الأستاذ الدكتور', phone: '01000000000', role: 'admin' };
         saveSession(admin);
-        alert('✅ أهلاً بك يا أدمن!');
+        alert('✅ مرحباً بك يا أستاذ الدكتور! جاري الانتقال للوحة التحكم...');
         window.location.href = 'dashboard.html'; return;
+    }
+
+    // التحقق من رقم الهاتف (11 رقم)
+    if (!/^[0-9]{11}$/.test(phone)) {
+        const phoneInp2 = document.getElementById('login-phone');
+        if (phoneInp2) { phoneInp2.style.borderBottomColor = '#ef4444'; phoneInp2.focus(); }
+        alert('⚠️ رقم الهاتف يجب أن يكون 11 رقماً بالظبط');
+        return;
     }
 
     try {
@@ -514,7 +522,8 @@ async function handleLoginSubmit(e) {
             const userDoc = snapshot.docs[0];
             const user = { ...userDoc.data(), id: userDoc.id, role: 'student' };
             saveSession(user);
-            alert('✅ أهلاً بيك يا ' + (user.name || user.firstName || 'طالب') + '! تم تسجيل الدخول.');
+            const greetName = user.firstName || (user.name||'').split(' ')[0] || 'طالب';
+            alert('✅ مرحباً بك يا ' + greetName + '! تم تسجيل الدخول بنجاح.');
             document.getElementById('login-form') && document.getElementById('login-form').reset();
             window.location.hash = '#home'; initAuthHeader();
         } else {
@@ -524,7 +533,8 @@ async function handleLoginSubmit(e) {
             if (user) {
                 user.role = 'student';
                 saveSession(user);
-                alert('✅ أهلاً بيك يا ' + (user.firstName || 'طالب') + '! تم تسجيل الدخول.');
+                const greetName2 = user.firstName || (user.name||'').split(' ')[0] || 'طالب';
+                alert('✅ مرحباً بك يا ' + greetName2 + '! تم تسجيل الدخول بنجاح.');
                 window.location.hash = '#home'; initAuthHeader();
             } else {
                 alert('❌ رقم الموبايل أو كلمة المرور غلط!');
@@ -536,94 +546,142 @@ async function handleLoginSubmit(e) {
     }
 }
 
+// ================= Inline Field Error Helpers =================
+function showFieldError(fieldId, errId, message) {
+    const input = document.getElementById(fieldId);
+    const errEl = document.getElementById(errId);
+    if (input) { input.classList.add('input-error'); }
+    if (errEl) { errEl.textContent = message; errEl.style.display = 'block'; }
+    if (input && !document.querySelector('.input-error:focus')) {
+        input.focus(); input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+function clearFieldError(fieldId, errId) {
+    const input = document.getElementById(fieldId);
+    const errEl = document.getElementById(errId);
+    if (input) input.classList.remove('input-error');
+    if (errEl) { errEl.textContent = ''; errEl.style.display = 'none'; }
+}
+function clearAllRegisterErrors() {
+    [['reg-fname','err-fname'],['reg-sname','err-sname'],
+     ['reg-tname','err-tname'],['reg-lname','err-lname'],
+     ['reg-phone','err-phone'],['reg-father-phone','err-father-phone'],
+     ['reg-recovery-phone','err-recovery-phone'],['reg-grade','err-grade'],
+     ['reg-track','err-track'],['reg-password','err-password']
+    ].forEach(([f,e]) => clearFieldError(f, e));
+    const a = document.getElementById('reg-form-alert');
+    if (a) { a.style.display = 'none'; a.textContent = ''; }
+}
+function showFormAlert(message, type) {
+    const a = document.getElementById('reg-form-alert');
+    if (!a) return;
+    a.textContent = message;
+    a.className = 'form-alert form-alert-' + (type || 'error');
+    a.style.display = 'block';
+    a.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function addInlineErr(errId, message) {
+    const fieldMap = {
+        'err-fname':'reg-fname','err-sname':'reg-sname','err-tname':'reg-tname',
+        'err-lname':'reg-lname','err-phone':'reg-phone',
+        'err-father-phone':'reg-father-phone','err-recovery-phone':'reg-recovery-phone',
+        'err-grade':'reg-grade','err-track':'reg-track','err-password':'reg-password'
+    };
+    const e = document.getElementById(errId);
+    if (e) { e.textContent = message; e.style.display = 'block'; }
+    const inp = document.getElementById(fieldMap[errId]);
+    if (inp) inp.classList.add('input-error');
+}
+
 // Submit Handler for Registration
 async function handleRegisterSubmit(e) {
     e.preventDefault();
     if (!ensureDb()) return;
 
-    const fname = document.getElementById('reg-fname').value.trim();
-    const sname = document.getElementById('reg-sname').value.trim();
-    const tname = document.getElementById('reg-tname').value.trim();
-    const lname = document.getElementById('reg-lname').value.trim();
+    clearAllRegisterErrors();
 
-    const phone = document.getElementById('reg-phone').value.trim();
-    const fatherPhone = document.getElementById('reg-father-phone').value.trim();
-    const recoveryPhone = document.getElementById('reg-recovery-phone').value.trim();
+    const fname = (document.getElementById('reg-fname')?.value || '').trim();
+    const sname = (document.getElementById('reg-sname')?.value || '').trim();
+    const tname = (document.getElementById('reg-tname')?.value || '').trim();
+    const lname = (document.getElementById('reg-lname')?.value || '').trim();
 
-    const school = document.getElementById('reg-school').value.trim();
-    const grade = document.getElementById('reg-grade').value;
-    const track = document.getElementById('reg-track').value;
-    const gov = document.getElementById('reg-gov').value;
-    const gender = document.getElementById('reg-gender').value;
-    const password = document.getElementById('reg-password').value.trim();
+    const phone         = (document.getElementById('reg-phone')?.value || '').trim();
+    const fatherPhone   = (document.getElementById('reg-father-phone')?.value || '').trim();
+    const recoveryPhone = (document.getElementById('reg-recovery-phone')?.value || '').trim();
 
-    // Validations
+    const school   = (document.getElementById('reg-school')?.value || '').trim();
+    const grade    = document.getElementById('reg-grade')?.value || '';
+    const track    = document.getElementById('reg-track')?.value || '';
+    const gov      = document.getElementById('reg-gov')?.value || '';
+    const gender   = document.getElementById('reg-gender')?.value || '';
+    const password = (document.getElementById('reg-password')?.value || '').trim();
+
+    // ─── Inline Validations ────────────────────────────────────
+    let firstErrorField = null;
+    function markErr(fid, eid, msg) {
+        addInlineErr(eid, msg);
+        if (!firstErrorField) firstErrorField = fid;
+    }
+
+    if (!fname)  markErr('reg-fname', 'err-fname', '⚠️ الاسم الأول مطلوب');
+    if (!sname)  markErr('reg-sname', 'err-sname', '⚠️ الاسم الثاني مطلوب');
+    if (!tname)  markErr('reg-tname', 'err-tname', '⚠️ الاسم الثالث مطلوب');
+
     if (!EGYPT_PHONE_REGEX.test(phone)) {
-        alert('برجاء إدخال رقم هاتف الطالب بشكل صحيح (11 رقماً)');
-        return;
+        markErr('reg-phone', 'err-phone', '⚠️ رقم هاتف الطالب يجب أن يكون 11 رقماً ويبدأ بـ 010/011/012/015');
     }
     if (!EGYPT_PHONE_REGEX.test(fatherPhone)) {
-        alert('برجاء إدخال رقم هاتف الأب بشكل صحيح (11 رقماً)');
-        return;
+        markErr('reg-father-phone', 'err-father-phone', '⚠️ رقم هاتف ولي الأمر يجب أن يكون 11 رقماً');
     }
     if (!EGYPT_PHONE_REGEX.test(recoveryPhone)) {
-        alert('برجاء إدخال رقم هاتف صحيح لاستعادة الحساب (11 رقماً)');
-        return;
+        markErr('reg-recovery-phone', 'err-recovery-phone', '⚠️ رقم الاسترداد يجب أن يكون 11 رقماً');
     }
     if (!grade) {
-        alert('برجاء اختيار الصف الدراسي');
-        return;
+        markErr('reg-grade', 'err-grade', '⚠️ برجاء اختيار الصف الدراسي');
     }
+
     const isSecondary = typeof isSecondaryGrade === 'function'
         ? isSecondaryGrade(grade)
         : ['1', '2', '3'].includes(grade);
+
     if (isSecondary && !track) {
-        alert('برجاء تحديد الشعبة: علمي ولا أدبي؟');
-        return;
+        markErr('reg-track', 'err-track', '⚠️ برجاء تحديد الشعبة: علمي ولا أدبي؟');
     }
     if (password.length < 6) {
-        alert('يجب ألا تقل كلمة المرور عن 6 أحرف أو أرقام');
+        markErr('reg-password', 'err-password', '⚠️ كلمة المرور يجب ألا تقل عن 6 خانات');
+    }
+
+    if (firstErrorField) {
+        const el = document.getElementById(firstErrorField);
+        if (el) { el.focus(); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
         return;
     }
 
+    // ─── Check duplicate phone ─────────────────────────────────
     let existing;
     try {
         existing = await findStudentByPhone(phone);
     } catch (err) {
         console.error('Registration lookup failed:', err);
-        alert('حدث خطأ أثناء الاتصال بقاعدة البيانات. حاول مرة أخرى.');
+        showFormAlert('❌ حدث خطأ أثناء الاتصال بقاعدة البيانات. حاول مرة أخرى.', 'error');
         return;
     }
 
     if (existing) {
-        alert('هذا الرقم مسجل بالفعل. برجاء الانتقال لصفحة تسجيل الدخول.');
-        window.location.hash = '#login';
+        addInlineErr('err-phone', '❌ هذا الرقم مسجل بالفعل — انتقل لصفحة تسجيل الدخول');
+        document.getElementById('reg-phone')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => { window.location.hash = '#login'; }, 1500);
         return;
     }
 
-    // Build student document - متوافق مع الحقول اللي بيستخدمها الداشبورد
+    // ─── Build student document ────────────────────────────────
     const fullName = `${fname} ${sname} ${tname} ${lname}`.replace(/\s+/g, ' ').trim();
     const newStudent = {
-        firstName: fname,
-        secondName: sname,
-        thirdName: tname,
-        lastName: lname,
-        name: fullName,
-        fullName,
-        phone,
-        fatherPhone,
-        recoveryPhone,
-        school,
-        grade,
-        track: isSecondary ? track : null,
-        gov,
-        gender,
-        password,
-        studentType: 'outside', // طالب اتسجل من المنصة مباشرة (مش طالب سنتر)
-        role: 'student',
-        status: 'pending', // هيتفعّل بعد التواصل من فريق المنصة
-        enrolledCourses: [],
-        qrCode: phone,
+        firstName: fname, secondName: sname, thirdName: tname, lastName: lname,
+        name: fullName, fullName, phone, fatherPhone, recoveryPhone,
+        school, grade, track: isSecondary ? track : null, gov, gender, password,
+        studentType: 'outside', role: 'student', status: 'pending',
+        enrolledCourses: [], qrCode: phone,
         joinDate: new Date().toLocaleDateString('ar-EG'),
         registeredAt: new Date().toISOString()
     };
@@ -632,20 +690,19 @@ async function handleRegisterSubmit(e) {
         await window.db.collection(STUDENTS_COLLECTION).doc(phone).set(newStudent);
     } catch (err) {
         console.error('Registration save failed:', err);
-        alert('حدث خطأ أثناء حفظ بياناتك. حاول مرة أخرى.');
+        showFormAlert('❌ حدث خطأ أثناء حفظ بياناتك. حاول مرة أخرى.', 'error');
         return;
     }
 
-    // Save active session
     saveSession({ id: phone, ...newStudent });
+    showFormAlert(`✅ تهانينا يا ${fname}! تم إرسال طلب إنشاء الحساب بنجاح. سيتم التواصل معك لتفعيل الحساب.`, 'success');
 
-    alert(`تهانينا يا ${fname}! تم إنشاء حسابك بنجاح.\nسيتم التواصل معك لتفعيل الحساب.`);
-
-    // Reset form and go home
-    document.getElementById('register-form').reset();
-    handleGradeChange();
-    window.location.hash = '#home';
-    initAuthHeader();
+    setTimeout(() => {
+        document.getElementById('register-form').reset();
+        handleGradeChange();
+        window.location.hash = '#home';
+        initAuthHeader();
+    }, 2500);
 }
 
 // Submit Handler for Forgot Password

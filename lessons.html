@@ -653,6 +653,30 @@ function animateCards(){
 // ═══════════════════════════════════════════════════════════
 // PROGRESS DISPLAY
 // ═══════════════════════════════════════════════════════════
+function getOpenedLessonsKey(courseId){
+  const user = getCurrentUser();
+  const uid = user ? (user.phone || user.id || 'guest') : 'guest';
+  return `alamin_opened_${uid}_${courseId}`;
+}
+function loadOpenedLessons(courseId){
+  try { return new Set(JSON.parse(localStorage.getItem(getOpenedLessonsKey(courseId)) || '[]')); }
+  catch(e){ return new Set(); }
+}
+function saveOpenedLesson(courseId, lessonId){
+  const key = getOpenedLessonsKey(courseId);
+  const set = loadOpenedLessons(courseId);
+  set.add(String(lessonId));
+  localStorage.setItem(key, JSON.stringify([...set]));
+  // Also sync to Firestore
+  const user = getCurrentUser();
+  if(window.db && user && (user.phone || user.id)){
+    const docId = String(user.phone || user.id);
+    const progressKey = `progress_${courseId}`;
+    window.db.collection('students').doc(docId).set(
+      { [progressKey]: [...set] }, { merge: true }
+    ).catch(e => console.warn('[progress sync]', e));
+  }
+}
 function updateProgress(done, total){
   const section = document.getElementById('progressSection');
   if(!section) return;
@@ -1012,7 +1036,21 @@ function toggleLesson(courseId, lessonId){
     return;
   }
   const card = document.querySelector(`.lecture-card[data-lesson-unit="${lessonId}"]`);
-  if(card) card.classList.toggle('open');
+  if(card){
+    const wasOpen = card.classList.contains('open');
+    card.classList.toggle('open');
+    // Mark lesson as opened/visited for progress tracking
+    if(!wasOpen){
+      saveOpenedLesson(courseId, lessonId);
+      // Recalculate progress
+      const courses = JSON.parse(localStorage.getItem('alamin_courses')||'[]');
+      const course  = courses.find(c=>String(c.id)===String(courseId));
+      if(course && course.lessons){
+        const opened = loadOpenedLessons(courseId);
+        updateProgress(opened.size, course.lessons.length);
+      }
+    }
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1279,8 +1317,14 @@ async function renderCoursePage(){
     // Staggered animation
     setTimeout(animateCards, 100);
 
-    // Progress
-    updateProgress(0, lessons.length);
+    // Progress — load saved opened lessons
+    const openedSet = loadOpenedLessons(courseId);
+    updateProgress(openedSet.size, lessons.length);
+    // Also restore open state visually
+    openedSet.forEach(lid => {
+      const card = document.querySelector(`.lecture-card[data-lesson-unit="${lid}"]`);
+      if(card) card.classList.add('open');
+    });
   }
 
   // ─── Access Gate ─────────────────────────────────────────

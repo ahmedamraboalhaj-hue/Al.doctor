@@ -577,20 +577,52 @@
                 <!-- Left Side: Registration Form -->
                 <div class="form-container">
                     <div class="form-header">
-                        <h2 class="form-title"><i class="fas fa-user-plus"></i> طلب انشاء حساب :</h2>
+                        <h2 class="form-title"><i class="fas fa-user-plus"></i> إنشاء حساب :</h2>
                         <p class="form-subtitle">ادخل بياناتك بشكل صحيح وسيتم التواصل معك خلال ساعات قليلة لتفعيل الحساب !</p>
                         <a href="#login" class="form-link-btn" id="go-to-login">يوجد لديك حساب بالفعل؟ ادخل إلى حسابك الآن !</a>
                     </div>
 
                     <form id="register-form" class="auth-form" onsubmit="handleRegisterSubmit(event)">
-                        <!-- Name Input Group -->
-                        <div class="input-group">
-                            <label for="reg-fullname" class="input-label">
-                                <span class="label-text">أدخل اسمك الثلاثي</span>
-                                <i class="fas fa-user input-icon"></i>
-                            </label>
-                            <input type="text" id="reg-fullname" class="underline-input" required placeholder="الاسم الثلاثي">
-                            <span class="focus-line"></span>
+                        <!-- Name Input Group — 4 separate fields -->
+                        <div class="form-row" id="name-fields-row">
+                            <div class="input-group">
+                                <label for="reg-fname" class="input-label">
+                                    <span class="label-text">الاسم الأول</span>
+                                    <i class="fas fa-user input-icon"></i>
+                                </label>
+                                <input type="text" id="reg-fname" class="underline-input" required placeholder="الاسم الأول">
+                                <span class="focus-line"></span>
+                                <span class="field-error" id="err-fname"></span>
+                            </div>
+                            <div class="input-group">
+                                <label for="reg-sname" class="input-label">
+                                    <span class="label-text">الاسم الثاني</span>
+                                    <i class="fas fa-user input-icon"></i>
+                                </label>
+                                <input type="text" id="reg-sname" class="underline-input" required placeholder="الاسم الثاني">
+                                <span class="focus-line"></span>
+                                <span class="field-error" id="err-sname"></span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="reg-tname" class="input-label">
+                                    <span class="label-text">الاسم الثالث</span>
+                                    <i class="fas fa-user input-icon"></i>
+                                </label>
+                                <input type="text" id="reg-tname" class="underline-input" required placeholder="الاسم الثالث">
+                                <span class="focus-line"></span>
+                                <span class="field-error" id="err-tname"></span>
+                            </div>
+                            <div class="input-group">
+                                <label for="reg-lname" class="input-label">
+                                    <span class="label-text">الاسم الرابع</span>
+                                    <i class="fas fa-user input-icon"></i>
+                                </label>
+                                <input type="text" id="reg-lname" class="underline-input" placeholder="الاسم الرابع (اختياري)">
+                                <span class="focus-line"></span>
+                                <span class="field-error" id="err-lname"></span>
+                            </div>
                         </div>
 
                         <!-- Student Phone -->
@@ -601,6 +633,7 @@
                             </label>
                             <input type="tel" id="reg-phone" class="underline-input" required placeholder="01xxxxxxxxx">
                             <span class="focus-line"></span>
+                            <span class="field-error" id="err-phone"></span>
                         </div>
 
                         <!-- Parent / Recovery Phones Row -->
@@ -612,6 +645,7 @@
                                 </label>
                                 <input type="tel" id="reg-father-phone" class="underline-input" required placeholder="01xxxxxxxxx">
                                 <span class="focus-line"></span>
+                                <span class="field-error" id="err-father-phone"></span>
                             </div>
 
                             <div class="input-group">
@@ -622,6 +656,7 @@
                                 <input type="tel" id="reg-recovery-phone" class="underline-input" required placeholder="01xxxxxxxxx">
                                 <span class="focus-line"></span>
                                 <small class="recovery-hint-text">هذا الرقم يُستخدم لاسترداد الحساب في حال نسيت كلمة المرور</small>
+                                <span class="field-error" id="err-recovery-phone"></span>
                             </div>
                         </div>
 
@@ -646,6 +681,7 @@
                                     <!-- تُملأ ديناميكياً من grade-mapping.js -->
                                 </select>
                                 <span class="focus-line"></span>
+                                <span class="field-error" id="err-grade"></span>
                             </div>
                         </div>
 
@@ -662,6 +698,7 @@
                                     <option value="أدبي">أدبي</option>
                                 </select>
                                 <span class="focus-line"></span>
+                                <span class="field-error" id="err-track"></span>
                             </div>
                         </div>
 
@@ -727,10 +764,14 @@
                             </label>
                             <input type="password" id="reg-password" class="underline-input" required placeholder="ادخل كلمة مرور لحسابك">
                             <span class="focus-line"></span>
+                            <span class="field-error" id="err-password"></span>
                         </div>
 
+                        <!-- Form-level alert -->
+                        <div id="reg-form-alert" class="form-alert" style="display:none;"></div>
+
                         <!-- Submit Button -->
-                        <button type="submit" class="btn-submit-blue">طلب انشاء حساب</button>
+                        <button type="submit" class="btn-submit-blue">إنشاء حساب</button>
                     </form>
                 </div>
 

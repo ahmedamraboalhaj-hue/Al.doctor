@@ -6100,3 +6100,49 @@ body.intro-active { overflow: hidden; }
 .course-stats      { order: 4; }
 .btn-course-action { order: 5; }
 
+
+/* ═══════════════════════════════════════════════
+   Field Inline Errors + Form Alert (إضافة جديدة)
+   ═══════════════════════════════════════════════ */
+.field-error {
+    display: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #ef4444;
+    margin-top: 5px;
+    padding: 4px 10px;
+    background: rgba(239,68,68,.08);
+    border-radius: 6px;
+    border-right: 3px solid #ef4444;
+    animation: shake-err 0.3s ease;
+}
+@keyframes shake-err {
+    0%,100% { transform: translateX(0); }
+    25%      { transform: translateX(-4px); }
+    75%      { transform: translateX(4px); }
+}
+
+.input-error {
+    border-bottom-color: #ef4444 !important;
+    box-shadow: 0 2px 0 #ef4444 !important;
+}
+
+.form-alert {
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    text-align: center;
+}
+.form-alert-error {
+    background: rgba(239,68,68,.1);
+    border: 1.5px solid #ef4444;
+    color: #b91c1c;
+}
+.form-alert-success {
+    background: rgba(22,163,74,.1);
+    border: 1.5px solid #16a34a;
+    color: #15803d;
+}
