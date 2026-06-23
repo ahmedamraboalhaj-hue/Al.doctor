@@ -573,6 +573,11 @@ tr:hover td{background:rgba(200,169,110,.03);}
           <h3>جميع الطلاب المسجّلين 👨‍🎓</h3>
           <div class="table-search">
             <input type="text" id="searchStudents" placeholder="ابحث عن طالب..." oninput="filterStudents()">
+            <select id="studentsSourceFilter" onchange="filterStudents()" style="padding:9px 12px;border:2px solid var(--border);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
+              <option value="all">كل الطلاب</option>
+              <option value="platform">طلاب المنصة</option>
+              <option value="center">طلاب السيستم / السنتر</option>
+            </select>
             <select id="studentsGradeFilter" onchange="filterStudents()" style="padding:9px 12px;border:2px solid var(--border);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
               <option value="all">كل الصفوف</option>
               <!-- تُملأ ديناميكياً من grade-mapping.js عند التحميل -->
@@ -588,13 +593,15 @@ tr:hover td{background:rgba(200,169,110,.03);}
               <th>الطالب</th>
               <th>رقم الموبايل</th>
               <th>الصف</th>
+              <th>الشُعبة</th>
+              <th>نوع الطالب</th>
               <th>تاريخ التسجيل</th>
               <th>الحالة</th>
               <th>الإجراءات</th>
             </tr>
           </thead>
           <tbody id="studentsTableBody">
-            <tr><td colspan="7"><div class="empty-state"><div class="icon">👥</div><p>لا يوجد طلاب مسجلين بعد</p></div></td></tr>
+            <tr><td colspan="9"><div class="empty-state"><div class="icon">👥</div><p>لا يوجد طلاب مسجلين بعد</p></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -635,32 +642,8 @@ tr:hover td{background:rgba(200,169,110,.03);}
           </div>
         </div>
       </div>
-      <!-- إحصائيات الصفوف بالشُعب (علمي/أدبي) -->
-      <div class="table-card" style="margin-top:24px">
-        <div class="table-header">
-          <h3>🏫 توزيع الطلاب على الصفوف والشُعب</h3>
-        </div>
-        <div id="analytics-grade-section-breakdown" style="padding:20px 24px"></div>
-      </div>
-
-      <!-- إحصائيات الكورسات: عدد المسجلين والإيرادات -->
-      <div class="table-card" style="margin-top:24px">
-        <div class="table-header">
-          <h3>📚 إحصائيات الكورسات والمدفوعات</h3>
-        </div>
-        <div id="analytics-courses-stats"></div>
-      </div>
-
-      <!-- إحصائيات الاختبارات العامة -->
-      <div class="table-card" style="margin-top:24px">
-        <div class="table-header">
-          <h3>📝 إحصائيات الاختبارات العامة</h3>
-        </div>
-        <div id="analytics-quizzes-stats" style="padding:20px 24px"></div>
-      </div>
-
       <!-- نشاط الطلاب اليومي + الزيارات -->
-      <div id="analytics-student-activity" style="margin-top:24px"></div>
+      <div id="analytics-student-activity"></div>
     </div>
 
     <!-- PAYMENTS PAGE -->
@@ -1000,6 +983,9 @@ tr:hover td{background:rgba(200,169,110,.03);}
       <div id="vc-tab-generate" class="vc-pane">
         <div class="table-card" style="padding:28px">
           <h3 style="font-size:19px;font-weight:900;margin-bottom:24px">🔧 توليد أكواد تفعيل جديدة</h3>
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:var(--text2)">
+            💡 كود التفعيل يُستخدم داخل الكورس نفسه لفتحه — لا علاقة له بتسجيل الدخول. كل كود مربوط باسم طالب واحد فقط ولا يصلح لطالب آخر.
+          </div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:20px">
             <div class="modal-form">
               <div class="form-group">
@@ -1010,11 +996,13 @@ tr:hover td{background:rgba(200,169,110,.03);}
             <div class="modal-form">
               <div class="form-group">
                 <label>الصف الدراسي</label>
-                <select id="vcGrade" onchange="populateVoucherCourses();populateVoucherStudents();toggleGenType()" style="padding:12px 14px;border:2px solid var(--border);border-radius:10px;width:100%;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
+                <select id="vcGrade" onchange="populateVoucherCourses();toggleGenType()" style="padding:12px 14px;border:2px solid var(--border);border-radius:10px;width:100%;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
                   <option value="">اختر الصف الدراسي</option>
                   <option value="1">الصف الأول الثانوي</option>
                   <option value="2">الصف الثاني الثانوي</option>
                   <option value="3">الصف الثالث الثانوي</option>
+                  <option value="prep1">الأول الإعدادي</option>
+                  <option value="prep2">الثاني الإعدادي</option>
                   <option value="prep3">الثالث الإعدادي</option>
                 </select>
               </div>
@@ -1029,37 +1017,29 @@ tr:hover td{background:rgba(200,169,110,.03);}
             </div>
           </div>
 
+          <div id="vcTrackInfo" style="display:none;margin-bottom:20px;padding:12px 18px;border-radius:10px;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.25);font-size:14px;font-weight:700;color:#7c3aed"></div>
+
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:24px">
             <div class="modal-form">
               <div class="form-group">
                 <label>طريقة توليد الأكواد</label>
                 <select id="vcGenType" onchange="toggleGenType()" style="padding:12px 14px;border:2px solid var(--border);border-radius:10px;width:100%;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
-                  <option value="count">عدد محدد من الأكواد</option>
-                  <option value="students">على عدد طلاب صف معين</option>
-                  <option value="list">قائمة طلاب مختارة</option>
-                </select>
-              </div>
-            </div>
-            <div class="modal-form">
-              <div class="form-group">
-                <label>نوع الطالب</label>
-                <select id="vcStudentType" onchange="populateVoucherStudents();toggleGenType()" style="padding:12px 14px;border:2px solid var(--border);border-radius:10px;width:100%;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
-                  <option value="center">طلاب السيستم</option>
-                  <option value="outside">طلاب خارج السيستم</option>
+                  <option value="students">لكل الطلاب المطابقين تلقائياً (الصف + الشُعبة)</option>
+                  <option value="list">قائمة طلاب مختارة يدوياً</option>
                 </select>
               </div>
             </div>
             <div id="vcCountWrap" class="modal-form">
               <div class="form-group">
-                <label>عدد الأكواد المراد توليدها</label>
-                <input type="number" id="vcCount" value="10" min="1" max="500" style="padding:12px 14px;border:2px solid var(--border);border-radius:10px;width:100%;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
+                <label id="vcCountLabel">عدد الطلاب المطابقين</label>
+                <input type="number" id="vcCount" value="0" min="1" max="2000" readonly style="padding:12px 14px;border:2px solid var(--border);border-radius:10px;width:100%;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
               </div>
             </div>
           </div>
 
           <!-- Student list selector (shown when type=list) -->
           <div id="vcStudentListWrap" style="display:none;margin-bottom:20px">
-            <label style="display:block;font-weight:700;font-size:14px;margin-bottom:8px">اختر الطلاب من القائمة</label>
+            <label style="display:block;font-weight:700;font-size:14px;margin-bottom:8px">اختر الطلاب من القائمة (الطلاب المطابقين للصف والشُعبة المختارة)</label>
             <div style="border:2px solid var(--border);border-radius:12px;max-height:240px;overflow-y:auto;padding:12px" id="vcStudentCheckList"></div>
             <div style="margin-top:10px;display:flex;gap:10px">
               <button onclick="selectAllStudents(true)" style="padding:7px 14px;background:var(--primary);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:13px;font-family:'Tajawal',sans-serif">تحديد الكل</button>
@@ -1070,8 +1050,6 @@ tr:hover td{background:rgba(200,169,110,.03);}
 
           <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
             <button onclick="generateVouchers()" style="padding:13px 28px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:white;border:none;border-radius:12px;font-family:'Tajawal',sans-serif;font-weight:800;font-size:16px;cursor:pointer;box-shadow:0 4px 16px rgba(139,105,20,.3)">🎟️ توليد الأكواد الآن</button>
-            <button onclick="generateMissingCenterCourseCodes()" style="padding:13px 24px;background:#e8fff3;color:#0f5132;border:2px solid #b7f0cc;border-radius:12px;font-family:'Tajawal',sans-serif;font-weight:800;font-size:15px;cursor:pointer">توليد أكواد طلاب السيستم الناقصين</button>
-            <button onclick="exportPlatformCourseCodesToSystem()" style="padding:13px 24px;background:#fff8e8;color:#8a5a00;border:2px solid #f3d79a;border-radius:12px;font-family:'Tajawal',sans-serif;font-weight:800;font-size:15px;cursor:pointer">تصدير الأكواد للسيستم</button>
             <button onclick="gotoPrintFromGenerate()" style="padding:13px 24px;background:var(--bg);border:2px solid var(--border);border-radius:12px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:15px;cursor:pointer;color:var(--text)">🖨️ اذهب للطباعة</button>
           </div>
 
@@ -1103,9 +1081,9 @@ tr:hover td{background:rgba(200,169,110,.03);}
                 <option value="all">كل الصفوف</option>
               </select>
               <select id="vcFilterType" onchange="renderVouchersTable()" style="padding:9px 12px;border:2px solid var(--border);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
-                <option value="all">كل الطلاب</option>
-                <option value="center">طلاب السيستم</option>
-                <option value="outside">خارج السيستم</option>
+                <option value="all">كل الشُعب</option>
+                <option value="علمي">علمي</option>
+                <option value="أدبي">أدبي</option>
               </select>
               <button onclick="deleteAllUsed()" style="padding:9px 14px;background:#fff0f3;color:#c0392b;border:1px solid #ffd0d8;border-radius:10px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:13px;cursor:pointer">🗑️ حذف المستخدمة</button>
             </div>
@@ -1148,9 +1126,9 @@ tr:hover td{background:rgba(200,169,110,.03);}
                 <option value="">كل الكورسات</option>
               </select>
               <select id="printStudentType" onchange="renderPrintPreview()" style="padding:9px 14px;border:2px solid var(--border);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
-                <option value="all">كل الطلاب</option>
-                <option value="center">طلاب السيستم</option>
-                <option value="outside">خارج السيستم</option>
+                <option value="all">كل الشُعب</option>
+                <option value="علمي">علمي</option>
+                <option value="أدبي">أدبي</option>
               </select>
               <select id="printMonth" onchange="renderPrintPreview()" style="padding:9px 14px;border:2px solid var(--border);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
                 <option value="">كل الشهور</option>
@@ -1218,11 +1196,10 @@ tr:hover td{background:rgba(200,169,110,.03);}
         </select>
       </div>
       <div class="form-group">
-        <label>الشُعبة (للصفوف الثانوية)</label>
-        <select id="asSection">
-          <option value="">— غير محدد —</option>
-          <option value="scientific">علمي</option>
-          <option value="literary">أدبي</option>
+        <label>نوع الطالب</label>
+        <select id="asType">
+          <option value="center">طالب سنتر</option>
+          <option value="outside">خارج السنتر</option>
         </select>
       </div>
       <div class="form-group"><label>كلمة المرور</label><input type="password" id="asPW" value="123456"></div>
@@ -1300,7 +1277,7 @@ tr:hover td{background:rgba(200,169,110,.03);}
       <div class="form-group"><label>وصف الكورس</label><textarea id="acDesc" rows="3" style="resize:vertical"></textarea></div>
       <div class="form-group">
         <label>الصف المستهدف</label>
-        <select id="acGrade">
+        <select id="acGrade" onchange="updateCourseTrackVisibility()">
           <option value="prep1">الصف الأول الإعدادي</option>
           <option value="prep2">الصف الثاني الإعدادي</option>
           <option value="prep3">الصف الثالث الإعدادي</option>
@@ -1309,6 +1286,15 @@ tr:hover td{background:rgba(200,169,110,.03);}
           <option value="3">الصف الثالث الثانوي</option>
           <option value="all">جميع الصفوف</option>
         </select>
+      </div>
+      <div class="form-group" id="acTrackGroup" style="display:none">
+        <label>الشُعبة المستهدفة (للصفوف الثانوية)</label>
+        <select id="acTrack">
+          <option value="both">علمي وأدبي (الاثنين معاً)</option>
+          <option value="علمي">علمي فقط</option>
+          <option value="أدبي">أدبي فقط</option>
+        </select>
+        <div class="field-hint">هذا الكورس يخص طلاب الصف الثانوي من الشُعبة المحددة فقط. مهم لتوليد أكواد التفعيل بدقة.</div>
       </div>
       <input type="hidden" id="acId">
       <div class="form-group">
@@ -1808,13 +1794,10 @@ if (typeof gradeClass === 'undefined') {
     return {1:'grade1','1':'grade1',2:'grade2','2':'grade2',3:'grade3','3':'grade3'}[g]||'grade1';
   };
 }
-function studentTypeLabel(type){return{'center':'طلاب السيستم','outside':'خارج السيستم','all':'كل الطلاب'}[type]||'غير محدد';}
+function studentTypeLabel(type){return{'center':'طلاب السنتر','outside':'خارج السنتر','all':'كل الطلاب'}[type]||'غير محدد';}
 function getStudentType(user){return user.studentType||'outside';}
 function filterUsersByGradeAndType(users, grade, type){
   return users.filter(u => (grade==='all'||u.grade===grade) && (type==='all'||getStudentType(u)===type));
-}
-function sectionLabel(section){
-  return {'scientific':'علمي 🔬','literary':'أدبي 📜'}[section] || 'غير محدد';
 }
 
 // ---- COURSE & LESSONS DATA MODEL ----
@@ -2213,12 +2196,17 @@ function renderOverview(){
 
 // ---- STUDENTS TABLE ----
 function normalizeStudentId(id){return String(id);}
+function getStudentsSourceFilter(){
+  return document.getElementById('studentsSourceFilter')?.value || 'all';
+}
 function getStudentsGradeFilter(){
   return document.getElementById('studentsGradeFilter')?.value || 'all';
 }
 function renderStudentsGradeSummary(users){
   const wrap = document.getElementById('studentsGradeSummary');
   if(!wrap) return;
+  const source = getStudentsSourceFilter();
+  const base = users.filter(u => source === 'all' || (source === 'center' ? getStudentType(u) === 'center' : getStudentType(u) !== 'center'));
   const cards = [
     ['1','الأول الثانوي'],
     ['2','الثاني الثانوي'],
@@ -2226,7 +2214,7 @@ function renderStudentsGradeSummary(users){
     ['prep3','الثالث الإعدادي']
   ];
   wrap.innerHTML = cards.map(([grade,label]) => {
-    const count = users.filter(u => String(u.grade) === grade).length;
+    const count = base.filter(u => String(u.grade) === grade).length;
     return `<button onclick="document.getElementById('studentsGradeFilter').value='${grade}';filterStudents()" style="text-align:right;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--bg);cursor:pointer;font-family:'Tajawal',sans-serif;color:var(--text)">
       <div style="font-size:13px;color:var(--text2);font-weight:700">${label}</div>
       <div style="font-size:24px;font-weight:900;color:var(--primary);margin-top:4px">${count}</div>
@@ -2238,17 +2226,23 @@ function renderStudentsTable(filter=''){
   const users=getUsers();
   const tbody=document.getElementById('studentsTableBody');
   document.getElementById('studentsBadge').textContent=users.length;
+  const sourceFilter = getStudentsSourceFilter();
   const gradeFilter = getStudentsGradeFilter();
   renderStudentsGradeSummary(users);
   let filtered=users.filter(u=>!filter||(u.name&&u.name.includes(filter))||(u.phone&&u.phone.includes(filter))||(u.email&&u.email.includes(filter))||(u.qrCode&&String(u.qrCode).includes(filter)));
+  if(sourceFilter !== 'all') {
+    filtered = filtered.filter(u => sourceFilter === 'center' ? getStudentType(u) === 'center' : getStudentType(u) !== 'center');
+  }
   if(gradeFilter !== 'all') filtered = filtered.filter(u => String(u.grade) === gradeFilter);
-  if(!filtered.length){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><div class="icon">👥</div><p>لا يوجد نتائج</p></div></td></tr>';return;}
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="9"><div class="empty-state"><div class="icon">👥</div><p>لا يوجد نتائج</p></div></td></tr>';return;}
   tbody.innerHTML=filtered.map((u,i)=>`
     <tr>
       <td>${i+1}</td>
       <td><div class="avatar-cell"><div class="avatar-sm">${u.name?u.name[0]:'؟'}</div>${u.name}</div></td>
       <td>${u.phone||u.email||'-'}</td>
       <td><span class="badge ${gradeClass(u.grade)}">${gradeLabel(u.grade)}</span></td>
+      <td>${u.track || '-'}</td>
+      <td>${studentTypeLabel(getStudentType(u))}</td>
       <td>${u.joinDate||'-'}</td>
       <td><span class="badge active">نشط ✅</span></td>
       <td><div class="action-btns">
@@ -2276,7 +2270,8 @@ function viewStudent(id){
       <div><strong>الاسم الكامل:</strong><br>${u.name}</div>
       <div><strong>رقم الموبايل:</strong><br>${u.phone||u.email||'-'}</div>
       <div><strong>الصف الدراسي:</strong><br>${gradeLabel(u.grade)}</div>
-      <div><strong>الشُعبة:</strong><br>${sectionLabel(u.section)}</div>
+      <div><strong>الشُعبة:</strong><br>${u.track || 'غير محدد (إعدادي أو لم يُسجَّل)'}</div>
+      <div><strong>نوع الطالب:</strong><br>${studentTypeLabel(getStudentType(u))}</div>
       <div><strong>تاريخ التسجيل:</strong><br>${u.joinDate||'-'}</div>
       <div><strong>آخر دخول:</strong><br>${u.lastLogin||'-'}</div>
       <div><strong>الحالة:</strong><br><span class="badge active">نشط ✅</span></div>
@@ -2358,7 +2353,7 @@ function renderCoursesAdmin(){
         <div class="course-admin-thumb" style="background:${c.color || 'linear-gradient(135deg,var(--primary),var(--primary-dark))'}">${thumbHTML}</div>
         <div class="course-admin-body">
           <div class="course-admin-title">${c.title}</div>
-          <div class="course-admin-meta">${c.desc||''}<br>الصف: ${gradeLabel(c.grade)} | عدد الدروس: ${(c.lessons||[]).length}<br>${typeBadge}</div>
+          <div class="course-admin-meta">${c.desc||''}<br>الصف: ${gradeLabel(c.grade)}${(typeof isSecondaryGrade === 'function' && isSecondaryGrade(c.grade) && c.track && c.track !== 'both') ? ' (' + c.track + ')' : ''} | عدد الدروس: ${(c.lessons||[]).length}<br>${typeBadge}</div>
         <div class="course-admin-footer">
           <button class="btn-view" onclick="openEditCourse(${c.id})">تعديل</button>
           <button class="btn-view" onclick="openAddLessonModal(${c.id})">➕ إضافة درس</button>
@@ -2386,6 +2381,8 @@ function openEditCourse(id){
   document.getElementById('acGrade').value = c.grade || '';
   document.getElementById('acType').value = c.type || 'free';
   document.getElementById('acPrice').value = c.price != null ? c.price : '';
+  document.getElementById('acTrack').value = c.track || 'both';
+  updateCourseTrackVisibility();
 
   // ✅ FIX: تحميل العنوان الثابت واللون الملون
   const savedColor = c.headerColor || c.color || c.bg || 'linear-gradient(135deg,#8B6F47,#A0826D)';
@@ -2419,12 +2416,12 @@ function saveNewStudent(){
   const ln=document.getElementById('asLN').value.trim();
   const ph=document.getElementById('asPH').value.trim();
   const gr=document.getElementById('asGR').value;
-  const section=document.getElementById('asSection').value || '';
+  const type=document.getElementById('asType').value;
   const pw=document.getElementById('asPW').value;
-  if(!fn||!ln||!ph||!gr){alert('من فضلك اكمل البيانات');return;}
+  if(!fn||!ln||!ph||!gr||!type){alert('من فضلك اكمل البيانات');return;}
   const users=getUsers();
   const base = {id:Date.now(),firstName:fn,lastName:ln,name:fn+' '+ln,
-    phone:ph,grade:gr,section,password:pw,
+    phone:ph,grade:gr,studentType:type,password:pw,
     joinDate:new Date().toLocaleDateString('ar-EG'),status:'active',enrolledCourses:[]};
   const student = typeof buildStudentExportPayload === 'function'
     ? buildStudentExportPayload(base)
@@ -2437,6 +2434,14 @@ function saveNewStudent(){
 }
 
 // ---- ADD COURSE ----
+function updateCourseTrackVisibility(){
+  const grade = document.getElementById('acGrade').value;
+  const trackGroup = document.getElementById('acTrackGroup');
+  if(!trackGroup) return;
+  const isSecondary = typeof isSecondaryGrade === 'function' ? isSecondaryGrade(grade) : ['1','2','3'].includes(grade);
+  trackGroup.style.display = isSecondary ? 'block' : 'none';
+  if(!isSecondary) document.getElementById('acTrack').value = 'both';
+}
 function openAddCourseModal(){
   document.getElementById('acId').value='';
   document.getElementById('acTitle').value='';
@@ -2444,6 +2449,8 @@ function openAddCourseModal(){
   document.getElementById('acGrade').value='1';
   document.getElementById('acType').value='free';
   document.getElementById('acPrice').value='';
+  document.getElementById('acTrack').value='both';
+  updateCourseTrackVisibility();
   document.getElementById('acHeaderTitle').value='';
   document.getElementById('acHeaderColor').value='linear-gradient(135deg,#8B6F47,#A0826D)';
   const colorPreview = document.getElementById('colorPreview');
@@ -2460,6 +2467,8 @@ function saveNewCourse(){
   const grade=document.getElementById('acGrade').value;
   const type=document.getElementById('acType').value;
   const price = parseFloat(document.getElementById('acPrice').value) || 0;
+  const isSecondary = typeof isSecondaryGrade === 'function' ? isSecondaryGrade(grade) : ['1','2','3'].includes(grade);
+  const track = isSecondary ? (document.getElementById('acTrack').value || 'both') : 'both';
 
   // قراءة قيم التغطية والتموضع المخصص
   const thumbnail = document.getElementById('acThumbnail').value;
@@ -2483,6 +2492,7 @@ function saveNewCourse(){
         grade,
         type,
         price,
+        track,
         thumbnail,
         thumbnailX,
         thumbnailY,
@@ -2516,6 +2526,7 @@ function saveNewCourse(){
     grade,
     type,
     price,
+    track,
     thumbnail,
     thumbnailX,
     thumbnailY,
@@ -2651,7 +2662,7 @@ function addLessonSegmentField(title='', videoUrl='', locked=false, duration='',
   row.innerHTML = `
     <div class="seg-row-top">
       <input type="text" class="segment-title" placeholder="عنوان المقطع (مثال: شرح الفاعل)" value="${escapeHTML(title)}">
-      <input type="text" class="segment-duration" placeholder="المدة" value="${escapeHTML(duration)}" style="width:80px">
+      <input type="text" class="segment-duration" placeholder="المدة" value="${escapeHTML(duration)}" style="width:80px" readonly title="تُحسب تلقائياً من الفيديو">
       ${locked ? '<span></span>' : '<button type="button" class="seg-del-btn" onclick="this.closest(\'.lesson-segment-row\').remove()">🗑️</button>'}
     </div>
 
@@ -2673,6 +2684,28 @@ function addLessonSegmentField(title='', videoUrl='', locked=false, duration='',
   container.appendChild(row);
 }
 
+// ✅ FIX: حساب مدة الفيديو تلقائياً من الملف نفسه (بدون أي تدخل يدوي من الأدمن)
+function readVideoDurationFromFile(file){
+  return new Promise((resolve) => {
+    try {
+      const videoEl = document.createElement('video');
+      videoEl.preload = 'metadata';
+      videoEl.onloadedmetadata = () => {
+        const totalSeconds = Math.round(videoEl.duration || 0);
+        URL.revokeObjectURL(videoEl.src);
+        if (!totalSeconds || !isFinite(totalSeconds)) { resolve(''); return; }
+        const mins = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+        resolve(`${mins}:${String(secs).padStart(2, '0')}`);
+      };
+      videoEl.onerror = () => resolve('');
+      videoEl.src = URL.createObjectURL(file);
+    } catch (e) {
+      resolve('');
+    }
+  });
+}
+
 async function uploadSegmentVideo(input, segId){
   const file = input.files[0];
   if(!file) return;
@@ -2685,6 +2718,13 @@ async function uploadSegmentVideo(input, segId){
   const readyBadge   = document.getElementById('sready_' + segId);
   const urlInput     = row.querySelector('.segment-url');
   const bunnyInput   = row.querySelector('.segment-bunny-id');
+  const durationInput = row.querySelector('.segment-duration');
+
+  // احسب مدة الفيديو تلقائياً من الملف فوراً، قبل أي رفع
+  if (durationInput) {
+    durationInput.value = '...';
+    readVideoDurationFromFile(file).then(d => { if (d) durationInput.value = d; });
+  }
 
   uploadBtn.disabled = true;
   progressWrap.style.display = 'block';
@@ -4338,15 +4378,12 @@ function switchVcTab(id) {
 function gotoPrintFromGenerate() {
   const grade = document.getElementById('vcGrade').value;
   const courseId = document.getElementById('vcCourseId').value;
-  const studentType = document.getElementById('vcStudentType').value;
   const month = document.getElementById('vcMonth').value.trim();
   const printGrade = document.getElementById('printGrade');
   const printCourse = document.getElementById('printCourse');
-  const printStudentType = document.getElementById('printStudentType');
   const printMonth = document.getElementById('printMonth');
   if(printGrade) printGrade.value = grade || 'all';
   if(printCourse) printCourse.value = courseId || '';
-  if(printStudentType) printStudentType.value = studentType || 'all';
   if(printMonth) {
     if(month) {
       if(!Array.from(printMonth.options).some(opt => opt.value === month)) {
@@ -4360,36 +4397,50 @@ function gotoPrintFromGenerate() {
   switchVcTab('print');
   doPrint();
 }
-function toggleGenType() {
-  const genTypeSelect = document.getElementById('vcGenType');
-  const studentType = document.getElementById('vcStudentType')?.value || 'center';
-  const type = studentType === 'center' ? 'students' : 'count';
-  if(genTypeSelect) {
-    genTypeSelect.value = type;
-    const genTypeWrap = genTypeSelect.closest('.modal-form');
-    if(genTypeWrap) genTypeWrap.style.display = 'none';
+// ✅ دالة مركزية: ترجع الطلاب المطابقين لصف وكورس معين (بما فيها شُعبة الكورس لو ثانوي)
+function getMatchingStudentsForCourse(grade, course) {
+  let users = getUsers().filter(u => u.name && String(u.grade) === String(grade));
+  const isSecondary = typeof isSecondaryGrade === 'function' ? isSecondaryGrade(grade) : ['1','2','3'].includes(grade);
+  if (isSecondary && course && course.track && course.track !== 'both') {
+    users = users.filter(u => u.track === course.track);
   }
+  return users;
+}
+function updateVcTrackInfo(course) {
+  const info = document.getElementById('vcTrackInfo');
+  if (!info) return;
+  if (!course) { info.style.display = 'none'; return; }
+  const isSecondary = typeof isSecondaryGrade === 'function' ? isSecondaryGrade(course.grade) : ['1','2','3'].includes(course.grade);
+  if (!isSecondary) { info.style.display = 'none'; return; }
+  const track = course.track || 'both';
+  info.style.display = 'block';
+  info.textContent = track === 'both'
+    ? '📌 هذا الكورس متاح لطلاب علمي وأدبي معاً — سيتم توليد أكواد لكل طلاب الصف.'
+    : `📌 هذا الكورس مخصص لطلاب "${track}" فقط — سيتم توليد الأكواد لهم فقط دون الشُعبة الأخرى.`;
+}
+function toggleGenType() {
+  const genType = document.getElementById('vcGenType')?.value || 'students';
+  const grade = document.getElementById('vcGrade').value;
+  const courseId = document.getElementById('vcCourseId').value;
+  const course = courses.find(c => String(c.id) === String(courseId));
+  updateVcTrackInfo(course);
+
   const countWrap = document.getElementById('vcCountWrap');
   const studentListWrap = document.getElementById('vcStudentListWrap');
-  const countLabel = document.querySelector('#vcCountWrap label');
+  const countLabel = document.getElementById('vcCountLabel');
   const countInput = document.getElementById('vcCount');
-  if(type === 'list') {
+  if(genType === 'list') {
     countWrap.style.display = 'none';
     studentListWrap.style.display = 'block';
-  } else if(type === 'students') {
-    countWrap.style.display = 'block';
-    studentListWrap.style.display = 'none';
-    countLabel.textContent = 'عدد طلاب السيستم المطابقين';
-    const grade = document.getElementById('vcGrade').value;
-    const courseId = document.getElementById('vcCourseId').value;
-    const count = filterStudentsMissingCourseCode(filterUsersByGradeAndType(getUsers(), grade, 'center'), courseId).length;
-    countInput.value = count || 0;
-    countInput.readOnly = true;
+    populateVoucherStudents();
   } else {
     countWrap.style.display = 'block';
     studentListWrap.style.display = 'none';
-    countLabel.textContent = 'عدد الأكواد المراد توليدها';
-    countInput.readOnly = false;
+    countLabel.textContent = 'عدد الطلاب المطابقين';
+    const matching = grade ? getMatchingStudentsForCourse(grade, course) : [];
+    const remaining = course ? filterStudentsMissingCourseCode(matching, course.id) : matching;
+    countInput.value = remaining.length || 0;
+    countInput.readOnly = true;
   }
 }
 function selectAllStudents(selectAll) {
@@ -4409,23 +4460,28 @@ function populateVoucherCourses() {
   const grade = document.getElementById('vcGrade')?.value || '';
   const filteredCourses = grade ? courses.filter(c => String(c.grade) === String(grade)) : [];
   select.innerHTML = '<option value="">' + (grade ? 'اختر الكورس' : 'اختر الصف أولاً') + '</option>' +
-    filteredCourses.map(c => `<option value="${c.id}">${c.title} (${c.type==='paid' ? 'مدفوع' : 'مجاني'})</option>`).join('');
+    filteredCourses.map(c => {
+      const isSecondary = typeof isSecondaryGrade === 'function' ? isSecondaryGrade(c.grade) : ['1','2','3'].includes(c.grade);
+      const trackSuffix = isSecondary && c.track && c.track !== 'both' ? ` - ${c.track}` : '';
+      return `<option value="${c.id}">${c.title}${trackSuffix} (${c.type==='paid' ? 'مدفوع' : 'مجاني'})</option>`;
+    }).join('');
   if(filteredCourses.length === 1) select.value = filteredCourses[0].id;
 }
 function populateVoucherStudents() {
   const wrap = document.getElementById('vcStudentCheckList');
   if(!wrap) return;
   const grade = document.getElementById('vcGrade').value;
-  const typeFilter = document.getElementById('vcStudentType')?.value || 'all';
-  const users = filterUsersByGradeAndType(getUsers().filter(u => u.name), grade, typeFilter);
+  const courseId = document.getElementById('vcCourseId').value;
+  const course = courses.find(c => String(c.id) === String(courseId));
+  const users = grade ? getMatchingStudentsForCourse(grade, course) : [];
   if(!users.length) {
-    wrap.innerHTML = '<p style="color:#888">لا يوجد طلاب متاحين.</p>';
+    wrap.innerHTML = '<p style="color:#888">لا يوجد طلاب متاحين. اختر الصف والكورس أولاً.</p>';
     return;
   }
   wrap.innerHTML = users.map(u => `
     <label style="display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer">
       <input type="checkbox" class="vc-student-checkbox" data-userid="${u.id}" onchange="updateSelectedCount()">
-      <span>${u.name} - <span style="color:#555">${gradeLabel(u.grade)} | ${studentTypeLabel(getStudentType(u))}</span></span>
+      <span>${u.name} - <span style="color:#555">${gradeLabel(u.grade)}${u.track ? ' | ' + u.track : ''}</span></span>
     </label>`).join('');
   updateSelectedCount();
 }
@@ -4469,11 +4525,11 @@ function buildStudentVoucher(user, course, month, fallbackGrade, offset = 0) {
     courseTitle: course ? course.title : 'غير مرتبط بكورس',
     linkedStudentId: user ? user.id : '',
     linkedStudentName: user ? user.name : 'غير مرتبط',
-    linkedStudentType: user ? getStudentType(user) : '',
+    linkedStudentPhone: user ? (user.phone || '') : '',
+    linkedStudentTrack: user ? (user.track || '') : '',
     date: new Date().toLocaleDateString('ar-EG'),
     createdAt: new Date().toISOString(),
-    status: 'غير مستخدم',
-    exportedToSystem: false
+    status: 'غير مستخدم'
   };
 }
 function filterStudentsMissingCourseCode(users, courseId) {
@@ -4488,7 +4544,6 @@ async function generateMissingCenterCourseCodes() {
   document.getElementById('vcGrade').value = course.grade || 'all';
   populateVoucherCourses();
   document.getElementById('vcCourseId').value = course.id;
-  document.getElementById('vcStudentType').value = 'center';
   document.getElementById('vcGenType').value = 'students';
   toggleGenType();
   generateVouchers();
@@ -4533,15 +4588,11 @@ async function exportPlatformCourseCodesToSystem() {
   alert(`تم تصدير ${exportable.length} كود للسيستم بنجاح.`);
 }
 async function generateVouchers() {
-  await syncCenterStudentsFromFirebase();
   const month = document.getElementById('vcMonth').value.trim() || 'غير محدد';
   const grade = document.getElementById('vcGrade').value;
   const courseId = document.getElementById('vcCourseId').value;
   const course = courses.find(c => c.id.toString() === courseId);
-  const courseTitle = course ? course.title : 'غير مرتبط بكورس';
-  const studentType = document.getElementById('vcStudentType').value;
-  const genType = studentType === 'center' ? 'students' : 'count';
-  const countInput = parseInt(document.getElementById('vcCount').value, 10) || 0;
+  const genType = document.getElementById('vcGenType').value;
   const selectedStudentIds = getSelectedStudentIds();
   let batch = [];
   if (!month || month === 'غير محدد') { alert('اكتب اسم الشهر / الفترة أولاً'); return; }
@@ -4551,30 +4602,13 @@ async function generateVouchers() {
     if (!selectedStudentIds.length) { alert('اختر طالب واحد على الأقل'); return; }
     const users = getUsers();
     const selectedUsers = selectedStudentIds.map(studentId => users.find(u => u.id.toString() === studentId)).filter(Boolean);
-    const missingUsers = filterStudentsMissingCourseCode(selectedUsers, course ? course.id : '');
+    const missingUsers = filterStudentsMissingCourseCode(selectedUsers, course.id);
     batch = missingUsers.map((user, i) => buildStudentVoucher(user, course, month, grade, i));
-  } else if (genType === 'students') {
-    const users = filterStudentsMissingCourseCode(filterUsersByGradeAndType(getUsers(), grade, 'center'), course.id);
-    if (!users.length) { alert('لا يوجد طلاب متطابقين مع الفلتر'); return; }
-    batch = users.map((user, i) => buildStudentVoucher(user, course, month, grade, i));
   } else {
-    if (countInput < 1) { alert('ادخل عدد صحيح من الأكواد'); return; }
-    for (let i = 0; i < countInput; i++) {
-      batch.push({
-        id: Date.now() + i,
-        code: generateUniqueCode(),
-        month,
-        grade,
-        courseId: course.id,
-        courseTitle,
-        linkedStudentId: '',
-        linkedStudentName: 'غير مرتبط',
-        linkedStudentType: 'outside',
-        date: new Date().toLocaleDateString('ar-EG'),
-        createdAt: new Date().toISOString(),
-        status: 'غير مستخدم'
-      });
-    }
+    const matching = getMatchingStudentsForCourse(grade, course);
+    const users = filterStudentsMissingCourseCode(matching, course.id);
+    if (!users.length) { alert('لا يوجد طلاب متطابقين مع الصف والشُعبة المحددة، أو كلهم لديهم أكواد بالفعل.'); return; }
+    batch = users.map((user, i) => buildStudentVoucher(user, course, month, grade, i));
   }
   if (!batch.length) {
     alert('كل الطلاب المختارين لديهم أكواد بالفعل لهذا الكورس. لم يتم توليد أكواد جديدة.');
@@ -4591,10 +4625,11 @@ async function generateVouchers() {
     const grid = document.getElementById('vcPreviewGrid');
     preview.style.display = 'block';
     grid.innerHTML = batch.slice(0, 10).map(v => `
-      <span style="display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--border);border-radius:12px;background:var(--bg);font-weight:700;font-family:'monospace'">${v.code}</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--border);border-radius:12px;background:var(--bg);font-weight:700;font-family:'monospace'">${v.linkedStudentName}: ${v.code}</span>
     `).join('');
   }
-  alert(`تم توليد ${batch.length} رمز تفعيل بنجاح!`);
+  toggleGenType();
+  alert(`تم توليد ${batch.length} كود تفعيل بنجاح! كل كود مرتبط باسم طالب ولا يصلح إلا له.`);
 }
 function renderVouchersTable() {
   const tbody = document.getElementById('vouchersTableBody');
@@ -4606,7 +4641,7 @@ function renderVouchersTable() {
   if (statusFilter) filtered = filtered.filter(v => statusFilter === 'used' ? v.status === 'مستخدم' : v.status === 'غير مستخدم');
   if (gradeFilter && gradeFilter !== 'all') filtered = filtered.filter(v => v.grade === gradeFilter);
   const typeFilter = document.getElementById('vcFilterType')?.value || 'all';
-  if (typeFilter && typeFilter !== 'all') filtered = filtered.filter(v => v.linkedStudentType === typeFilter);
+  if (typeFilter && typeFilter !== 'all') filtered = filtered.filter(v => v.linkedStudentTrack === typeFilter);
   if (!filtered.length) {
     tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="icon">🎟️</div><p>لا توجد أكواد مطابقة للبحث</p></div></td></tr>';
     return;
@@ -4618,7 +4653,7 @@ function renderVouchersTable() {
       <td>${v.month || 'غير محدد'}</td>
       <td><span class="badge ${gradeClass(v.grade)}">${gradeLabel(v.grade)}</span></td>
       <td>${v.courseTitle || '-'}</td>
-      <td>${v.linkedStudentType ? studentTypeLabel(v.linkedStudentType) : '-'}</td>
+      <td>${v.linkedStudentTrack || '-'}</td>
       <td>${v.linkedStudentName || '-'}</td>
       <td>${v.date}</td>
       <td><span class="badge ${v.status === 'مستخدم' ? 'inactive' : 'active'}">${v.status}</span></td>
@@ -4664,8 +4699,8 @@ function verifyCode(code = '') {
       <div><strong>الشهر / الفترة:</strong> ${voucher.month || 'غير محدد'}</div>
       <div><strong>الصف:</strong> ${gradeLabel(voucher.grade)}</div>
       <div><strong>الكورس:</strong> ${voucher.courseTitle || '-'}</div>
-      <div><strong>نوع الطالب:</strong> ${voucher.linkedStudentType ? studentTypeLabel(voucher.linkedStudentType) : 'غير مرتبط'}</div>
       <div><strong>مرتبط بطالب:</strong> ${voucher.linkedStudentName || '-'}</div>
+      <div><strong>رقم الموبايل:</strong> ${voucher.linkedStudentPhone || '-'}</div>
       <div><strong>تاريخ التوليد:</strong> ${voucher.date}</div>
       <div><strong>الحالة:</strong> ${voucher.status}</div>
       ${activateButton}
@@ -4694,7 +4729,7 @@ function renderPrintPreview() {
   if(status) filtered = filtered.filter(v => status === 'unused' ? v.status === 'غير مستخدم' : true);
   if(grade && grade !== 'all') filtered = filtered.filter(v => v.grade === grade);
   if(courseId) filtered = filtered.filter(v => v.courseId && v.courseId.toString() === courseId);
-  if(studentType && studentType !== 'all') filtered = filtered.filter(v => v.linkedStudentType === studentType);
+  if(studentType && studentType !== 'all') filtered = filtered.filter(v => v.linkedStudentTrack === studentType);
   if(month) filtered = filtered.filter(v => v.month === month);
   const preview = document.getElementById('printArea');
   preview.innerHTML = filtered.length ? filtered.map(v => `
@@ -4702,8 +4737,9 @@ function renderPrintPreview() {
       <div style="font-size:13px;color:#888">الكود</div>
       <div style="font-family:monospace;font-size:18px;font-weight:900;letter-spacing:2px">${v.code}</div>
       ${v.linkedStudentName ? `<div style="font-size:13px"><strong>اسم الطالب:</strong> ${v.linkedStudentName}</div>` : ''}
+      ${v.linkedStudentPhone ? `<div style="font-size:13px"><strong>الموبايل:</strong> ${v.linkedStudentPhone}</div>` : ''}
       <div style="font-size:13px"><strong>الصف:</strong> ${gradeLabel(v.grade)}</div>
-      <div style="font-size:13px"><strong>نوع الطالب:</strong> ${v.linkedStudentType ? studentTypeLabel(v.linkedStudentType) : 'غير مرتبط'}</div>
+      ${v.linkedStudentTrack ? `<div style="font-size:13px"><strong>الشُعبة:</strong> ${v.linkedStudentTrack}</div>` : ''}
       <div style="font-size:13px"><strong>الفترة:</strong> ${v.month || 'غير محدد'}</div>
       <div style="font-size:13px"><strong>الكورس:</strong> ${v.courseTitle || 'غير مرتبط'}</div>
       <div style="font-size:13px"><span class="badge ${v.status === 'مستخدم' ? 'inactive' : 'active'}">${v.status}</span></div>
@@ -4715,7 +4751,7 @@ function renderPrintPreview() {
     const course = courses.find(c => c.id.toString() === courseId);
     if(course) parts.push(`الكورس: ${course.title}`);
   }
-  if(studentType && studentType !== 'all') parts.push(`نوع الطالب: ${studentTypeLabel(studentType)}`);
+  if(studentType && studentType !== 'all') parts.push(`الشُعبة: ${studentType}`);
   if(month) parts.push(`الفترة: ${month}`);
   if(status) parts.push(status === 'unused' ? 'غير مستخدمة فقط' : 'الكل');
   info.textContent = `عرض ${filtered.length} أكواد${parts.length ? ' - ' + parts.join(' | ') : ''}`;
@@ -4764,196 +4800,6 @@ function renderAnalytics(){
 
   // ─── إحصائيات اليوم للطلاب ───
   renderStudentTodayStats();
-
-  // ─── توزيع الطلاب على الصفوف والشُعب ───
-  renderGradeSectionBreakdown(users);
-
-  // ─── إحصائيات الكورسات والمدفوعات ───
-  renderCoursesStats();
-
-  // ─── إحصائيات الاختبارات العامة ───
-  renderQuizzesGeneralStats();
-}
-
-function renderGradeSectionBreakdown(users){
-  const container = document.getElementById('analytics-grade-section-breakdown');
-  if(!container) return;
-  users = users || getUsers();
-
-  // الصفوف الثانوية بتاخد تفصيل علمي/أدبي، الإعدادي والباقي يظهروا بإجمالي بس
-  const secondaryGrades = [
-    ['1','الأول الثانوي'],
-    ['2','الثاني الثانوي'],
-    ['3','الثالث الثانوي']
-  ];
-  const otherGrades = [
-    ['prep1','الأول الإعدادي'],
-    ['prep2','الثاني الإعدادي'],
-    ['prep3','الثالث الإعدادي']
-  ];
-
-  const rows = secondaryGrades.map(([grade,label]) => {
-    const gradeUsers = users.filter(u => String(u.grade) === grade);
-    const scientific = gradeUsers.filter(u => u.section === 'scientific').length;
-    const literary = gradeUsers.filter(u => u.section === 'literary').length;
-    const unspecified = gradeUsers.length - scientific - literary;
-    return `
-      <tr>
-        <td><strong>${label}</strong></td>
-        <td><span style="font-weight:800;color:var(--primary)">${gradeUsers.length}</span></td>
-        <td><span style="font-weight:700;color:#2563eb">🔬 ${scientific}</span></td>
-        <td><span style="font-weight:700;color:#16a34a">📜 ${literary}</span></td>
-        <td><span style="font-weight:700;color:#888">${unspecified}</span></td>
-      </tr>`;
-  }).join('');
-
-  const otherRows = otherGrades.map(([grade,label]) => {
-    const count = users.filter(u => String(u.grade) === grade).length;
-    return `<div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div>${label} (${count})</div>`;
-  }).join('');
-
-  const totalAll = users.length;
-
-  container.innerHTML = `
-    <div style="margin-bottom:18px;font-size:14px;color:var(--text2)">إجمالي عدد الطلاب المسجلين في كل الصفوف: <strong style="color:var(--primary);font-size:16px">${totalAll}</strong> طالب</div>
-    <div style="overflow-x:auto">
-      <table>
-        <thead>
-          <tr>
-            <th>الصف الدراسي</th>
-            <th>إجمالي الطلاب</th>
-            <th>علمي 🔬</th>
-            <th>أدبي 📜</th>
-            <th>غير محدد</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
-    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:16px">${otherRows}</div>
-  `;
-}
-
-function renderCoursesStats(){
-  const container = document.getElementById('analytics-courses-stats');
-  if(!container) return;
-  const courses = getCourses();
-  const users = getUsers();
-
-  if(!courses.length){
-    container.innerHTML = '<div class="empty-state"><div class="icon">📚</div><p>لا توجد كورسات بعد</p></div>';
-    return;
-  }
-
-  let totalRevenue = 0;
-  let totalEnrollments = 0;
-
-  const rows = courses.map(c => {
-    const enrolledCount = users.filter(u => (u.enrolledCourses||[]).map(String).includes(String(c.id))).length;
-    const price = c.type === 'free' ? 0 : (parseFloat(c.price) || 0);
-    const revenue = enrolledCount * price;
-    totalRevenue += revenue;
-    totalEnrollments += enrolledCount;
-    const typeBadge = c.type === 'free'
-      ? `<span style="background:rgba(46,213,115,0.12);color:#2ed573;padding:3px 10px;border-radius:8px;font-weight:700;font-size:12px">مجاني 🆓</span>`
-      : `<span style="background:rgba(245,166,35,0.12);color:#f5a623;padding:3px 10px;border-radius:8px;font-weight:700;font-size:12px">${price} ج.م</span>`;
-    return `
-      <tr>
-        <td><strong>${c.title}</strong></td>
-        <td><span class="badge ${gradeClass(c.grade)}">${gradeLabel(c.grade)}</span></td>
-        <td>${typeBadge}</td>
-        <td><span style="font-weight:800;color:var(--primary)">${enrolledCount}</span> طالب</td>
-        <td><strong style="color:${revenue>0?'#16a34a':'#888'}">${revenue.toLocaleString('ar-EG')} ج.م</strong></td>
-      </tr>`;
-  }).join('');
-
-  container.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;padding:20px 24px 0">
-      <div class="stat-card"><div class="stat-icon" style="background:#e8f4ff">📚</div><div>
-        <div class="stat-label">عدد الكورسات</div>
-        <div class="stat-val">${courses.length}</div>
-      </div></div>
-      <div class="stat-card"><div class="stat-icon" style="background:#fff8e8">🧑‍🎓</div><div>
-        <div class="stat-label">إجمالي الاشتراكات</div>
-        <div class="stat-val">${totalEnrollments}</div>
-      </div></div>
-      <div class="stat-card"><div class="stat-icon" style="background:#e8fff3">💰</div><div>
-        <div class="stat-label">إجمالي الإيرادات المتوقعة</div>
-        <div class="stat-val" style="font-size:20px">${totalRevenue.toLocaleString('ar-EG')} ج.م</div>
-      </div></div>
-    </div>
-    <div style="overflow-x:auto;padding:20px 24px">
-      <table>
-        <thead>
-          <tr>
-            <th>الكورس</th>
-            <th>الصف</th>
-            <th>السعر</th>
-            <th>عدد المشتركين</th>
-            <th>الإيراد المتوقع</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
-    <div style="padding:0 24px 20px;font-size:12px;color:var(--text2)">💡 الإيراد المتوقع = عدد المشتركين × سعر الكورس. الكورسات المجانية لا تُحتسب ضمن الإيرادات.</div>
-  `;
-}
-
-function renderQuizzesGeneralStats(){
-  const container = document.getElementById('analytics-quizzes-stats');
-  if(!container) return;
-  const quizzes = JSON.parse(localStorage.getItem('alamin_quizzes') || '[]');
-  const localAttempts = JSON.parse(localStorage.getItem('alamin_quiz_attempts') || '{}');
-
-  let totalAttempts = 0, totalPassed = 0, totalFailed = 0;
-  const quizRows = quizzes.map(q => {
-    const attemptsList = Object.values(localAttempts).filter(a => String(a.quizId) === String(q.id));
-    const total = attemptsList.length;
-    const passed = attemptsList.filter(a => a.score >= (q.totalPoints * (q.passingGrade / 100))).length;
-    const failed = total - passed;
-    totalAttempts += total; totalPassed += passed; totalFailed += failed;
-    return { title: q.title, grade: q.grade, total, passed, failed };
-  }).filter(q => q.total > 0);
-
-  const passRate = totalAttempts ? Math.round((totalPassed/totalAttempts)*100) : 0;
-
-  const rows = quizRows.map(q => `
-    <tr>
-      <td><strong>${q.title}</strong></td>
-      <td><span class="badge ${gradeClass(q.grade)}">${gradeLabel(q.grade)}</span></td>
-      <td>${q.total}</td>
-      <td><span style="font-weight:800;color:var(--success)">${q.passed}</span></td>
-      <td><span style="font-weight:800;color:#e74c3c">${q.failed}</span></td>
-    </tr>`).join('');
-
-  container.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px">
-      <div class="stat-card"><div class="stat-icon" style="background:#fce8ff">📝</div><div>
-        <div class="stat-label">إجمالي المحاولات</div>
-        <div class="stat-val">${totalAttempts}</div>
-      </div></div>
-      <div class="stat-card"><div class="stat-icon" style="background:#e8fff3">✅</div><div>
-        <div class="stat-label">إجمالي الناجحين</div>
-        <div class="stat-val" style="color:var(--success)">${totalPassed}</div>
-      </div></div>
-      <div class="stat-card"><div class="stat-icon" style="background:#ffe8ea">❌</div><div>
-        <div class="stat-label">إجمالي الفاشلين</div>
-        <div class="stat-val" style="color:#e74c3c">${totalFailed}</div>
-      </div></div>
-      <div class="stat-card"><div class="stat-icon" style="background:#e8f4ff">📊</div><div>
-        <div class="stat-label">نسبة النجاح العامة</div>
-        <div class="stat-val">${passRate}%</div>
-      </div></div>
-    </div>
-    ${rows ? `
-    <div style="overflow-x:auto">
-      <table>
-        <thead><tr><th>الاختبار</th><th>الصف</th><th>عدد المحاولات</th><th>ناجح ✅</th><th>فاشل ❌</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>` : `<div class="empty-state"><div class="icon">📝</div><p>لا توجد محاولات اختبارات مسجّلة بعد</p></div>`}
-  `;
 }
 
 function renderStudentTodayStats() {

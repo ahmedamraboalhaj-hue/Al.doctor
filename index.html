@@ -91,55 +91,49 @@
     <!-- Navigation Bar -->
     <header id="header">
         <div class="header-container">
-            <!-- Left Side: Logo -->
+            <!-- Left Side: Logo + Theme Toggle -->
             <div class="header-left">
                 <a href="#home" class="logo" id="logo-link">
                     <img src="ايقونة الهدر.png" alt="شعار الدكتور" class="logo-img">
-                    <div class="logo-text logo-text-inline">
+                    <div class="logo-text">
                         <span class="logo-main">الدكتور</span>
-                        <span class="logo-sep"> </span>
-                        <span class="logo-sub logo-sub-inline">في اللغة العربية</span>
+                        <span class="logo-sub">في اللغة العربية</span>
                     </div>
                 </a>
             </div>
 
-            <!-- Right Side: Hamburger Menu -->
+            <!-- Center: Theme Toggle دايمًا ظاهر -->
+            <div class="header-theme-wrap">
+                <input type="checkbox" id="checkbox" style="display:none">
+                <button class="header-theme-btn" id="header-theme-btn" aria-label="تغيير الوضع">
+                    <span class="htb-icon" id="htb-icon"><i class="fas fa-sun"></i></span>
+                    <div class="htb-pill" id="htb-pill">
+                        <div class="htb-dot"></div>
+                    </div>
+                    <span class="htb-label" id="htb-label">نهاري</span>
+                </button>
+            </div>
+
+            <!-- Right Side: Hamburger - فيها اعمل حساب وسجل دخول بس -->
             <div class="header-right">
-                <!-- زرار الـ 3 شورت الملونة -->
                 <button class="hamburger-btn" id="hamburger-btn" aria-label="القائمة" aria-expanded="false">
                     <span class="hb-line hb-line-1"></span>
                     <span class="hb-line hb-line-2"></span>
                     <span class="hb-line hb-line-3"></span>
                 </button>
 
-                <!-- القايمة المنسدلة -->
                 <div class="hb-dropdown" id="hb-dropdown">
-                    <!-- سجل دخولك -->
                     <a href="#login" class="hb-item hb-login" id="nav-login-btn">
                         <span class="hb-item-icon"><i class="fas fa-sign-in-alt"></i></span>
                         <span class="hb-item-text">سجل دخولك</span>
                         <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
                     </a>
                     <div class="hb-divider"></div>
-                    <!-- اعمل حساب -->
                     <a href="#register" class="hb-item hb-register" id="nav-register-btn">
                         <span class="hb-item-icon"><i class="fas fa-user-plus"></i></span>
                         <span class="hb-item-text">اعمل حساب جديد!</span>
                         <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
                     </a>
-                    <div class="hb-divider"></div>
-                    <!-- الوضع الليلي / النهاري -->
-                    <div class="hb-item hb-theme" id="hb-theme-toggle">
-                        <span class="hb-item-icon hb-theme-icon" id="hb-theme-icon">
-                            <i class="fas fa-sun"></i>
-                        </span>
-                        <span class="hb-item-text" id="hb-theme-label">الوضع النهاري</span>
-                        <!-- hidden checkbox للـ app.js -->
-                        <input type="checkbox" id="checkbox" style="display:none">
-                        <div class="hb-theme-pill" id="hb-theme-pill">
-                            <div class="hb-theme-dot"></div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -221,14 +215,7 @@
                 <!-- Left Side: Custom Blob Image Display -->
                 <div class="hero-visual">
                     <div class="blob-wrapper">
-                        <!-- حلقات نبض خلف الدائرة -->
-                        <div class="blob-pulse-ring blob-pulse-ring-1"></div>
-                        <div class="blob-pulse-ring blob-pulse-ring-2"></div>
-                        <div class="blob-pulse-ring blob-pulse-ring-3"></div>
-
-                        <!-- Background Blob Shape -->
-                        <div class="blob-bg"></div>
-                        <!-- Student/Teacher Image -->
+                        <!-- صورة الدكتور -->
                         <div class="blob-image-container">
                             <img src="صورة الواجهه.jpeg" alt="الدكتور" class="hero-main-img">
                         </div>
@@ -236,16 +223,7 @@
                         <!-- الحلقة الملونة الدوّارة ذهبي/سماوي -->
                         <div class="blob-color-ring"></div>
 
-                        <!-- Decorative Floating Dotted Rings -->
-                        <div class="dotted-ring ring-1"></div>
-                        <div class="dotted-ring ring-2"></div>
-
-                        <!-- Decorative Sparkle Dots -->
-                        <span class="deco-dot dot-1"></span>
-                        <span class="deco-dot dot-2"></span>
-                        <span class="deco-dot dot-3"></span>
-
-                        <!-- Floating Educational Icons -->
+                        <!-- أيقونات عائمة -->
                         <div class="floating-icon icon-cap" style="--delay: 0s; --x: 6%; --y: 8%;"><i class="fas fa-graduation-cap"></i></div>
                         <div class="floating-icon icon-book" style="--delay: 1.5s; --x: 88%; --y: 16%;"><i class="fas fa-book-open"></i></div>
                         <div class="floating-icon icon-pencil" style="--delay: 3s; --x: 2%; --y: 78%;"><i class="fas fa-pencil-alt"></i></div>

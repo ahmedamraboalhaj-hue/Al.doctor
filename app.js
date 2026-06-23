@@ -43,31 +43,40 @@ function initTheme() {
     const themeCheckbox = document.getElementById('checkbox');
     const savedTheme = localStorage.getItem('theme') || 'light';
 
-    // Apply saved theme on startup
     const applyTheme = (theme) => {
         if (theme === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             if (themeCheckbox) themeCheckbox.checked = true;
-            updateThemeUI('dark');
         } else {
             document.documentElement.removeAttribute('data-theme');
             if (themeCheckbox) themeCheckbox.checked = false;
-            updateThemeUI('light');
         }
-    };
-
-    const updateThemeUI = (theme) => {
-        const label = document.getElementById('hb-theme-label');
-        const icon  = document.getElementById('hb-theme-icon');
-        if (label) label.textContent = theme === 'dark' ? 'الوضع الليلي' : 'الوضع النهاري';
-        if (icon)  icon.innerHTML    = theme === 'dark'
-            ? '<i class="fas fa-moon"></i>'
-            : '<i class="fas fa-sun"></i>';
+        // تحديث واجهة الزرار في الهيدر
+        const htbIcon  = document.getElementById('htb-icon');
+        const htbLabel = document.getElementById('htb-label');
+        if (htbIcon)  htbIcon.innerHTML   = theme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        if (htbLabel) htbLabel.textContent = theme === 'dark' ? 'ليلي' : 'نهاري';
+        // دعم القديم
+        const oldLabel = document.getElementById('hb-theme-label');
+        const oldIcon  = document.getElementById('hb-theme-icon');
+        if (oldLabel) oldLabel.textContent = theme === 'dark' ? 'الوضع الليلي' : 'الوضع النهاري';
+        if (oldIcon)  oldIcon.innerHTML    = theme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
     };
 
     applyTheme(savedTheme);
 
-    // Toggle via hidden checkbox (legacy support)
+    // زرار الهيدر الجديد
+    const headerThemeBtn = document.getElementById('header-theme-btn');
+    if (headerThemeBtn) {
+        headerThemeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+    }
+
+    // checkbox legacy
     if (themeCheckbox) {
         themeCheckbox.addEventListener('change', () => {
             const newTheme = themeCheckbox.checked ? 'dark' : 'light';
@@ -76,7 +85,7 @@ function initTheme() {
         });
     }
 
-    // Toggle via new hb-theme row
+    // القايمة القديمة لو موجودة
     const themeRow = document.getElementById('hb-theme-toggle');
     if (themeRow) {
         themeRow.addEventListener('click', () => {
@@ -440,52 +449,100 @@ function initForms() {
 // Egyptian Phone number validation regex
 const EGYPT_PHONE_REGEX = /^(010|011|012|015)[0-9]{8}$/;
 
-// Submit Handler for Login
+// Submit Handler for Login — backend كامل مأخوذ من login.html
 async function handleLoginSubmit(e) {
     e.preventDefault();
     if (!ensureDb()) return;
 
-    const phone = document.getElementById('login-phone').value.trim();
-    const password = document.getElementById('login-password').value.trim();
-    const loginByCode = document.getElementById('login-by-code').checked;
+    const phoneInp = document.getElementById('login-phone');
+    const passInp  = document.getElementById('login-password');
+    const codeChk  = document.getElementById('login-by-code');
 
-    if (!EGYPT_PHONE_REGEX.test(phone)) {
-        alert('برجاء إدخال رقم هاتف مصري صحيح مكون من 11 رقماً (مثال: 01012345678)');
-        return;
-    }
+    const phone = (phoneInp ? phoneInp.value.trim() : '');
+    const pass  = (passInp  ? passInp.value         : '');
+    const loginByCode = codeChk ? codeChk.checked : false;
 
-    let student;
-    try {
-        student = await findStudentByPhone(phone);
-    } catch (err) {
-        console.error('Login lookup failed:', err);
-        alert('حدث خطأ أثناء الاتصال بقاعدة البيانات. حاول مرة أخرى.');
-        return;
-    }
-
-    if (!student) {
-        alert('هذا الحساب غير مسجل لدينا. برجاء إنشاء حساب جديد.');
-        return;
-    }
-
+    // ── وضع الكود ──
     if (loginByCode) {
-        // محاكاة لتسجيل الدخول بالكود (مفيش نظام إرسال SMS حقيقي متصل لسه)
-        alert(`تم إرسال كود تسجيل الدخول إلى الرقم ${phone}.\nتم تسجيل الدخول بنجاح لمحاكاة العرض!`);
-    } else {
-        if (student.password !== password) {
-            alert('كلمة المرور غير صحيحة. برجاء إعادة المحاولة.');
-            return;
+        const code = pass.toUpperCase();
+        if (!code) { alert('❌ من فضلك ادخل الكود الخاص بك'); return; }
+
+        try {
+            // 1) centerStudents
+            const centerSnap = await window.db.collection('centerStudents')
+                .where('centerCode', '==', code).limit(1).get();
+            if (!centerSnap.empty) {
+                const doc  = centerSnap.docs[0];
+                const user = { ...doc.data(), id: doc.id, role: 'student', type: 'center', centerCode: code };
+                saveSession(user);
+                alert('✅ أهلاً بيك يا ' + (user.name || user.fullName || 'طالب') + '! تم تسجيل الدخول.');
+                window.location.hash = '#home'; initAuthHeader(); return;
+            }
+            // 2) students doc id
+            const docSnap = await window.db.collection('students').doc(code).get();
+            if (docSnap.exists) {
+                const user = { ...docSnap.data(), id: code, role: 'student' };
+                saveSession(user);
+                alert('✅ أهلاً بيك يا ' + (user.name || 'طالب') + '! تم تسجيل الدخول.');
+                window.location.hash = '#home'; initAuthHeader(); return;
+            }
+            // 3) qrCode field
+            const qrSnap = await window.db.collection('students')
+                .where('qrCode', '==', code).limit(1).get();
+            if (!qrSnap.empty) {
+                const doc  = qrSnap.docs[0];
+                const user = { ...doc.data(), id: doc.id, role: 'student' };
+                saveSession(user);
+                alert('✅ أهلاً بيك يا ' + (user.name || 'طالب') + '! تم تسجيل الدخول.');
+                window.location.hash = '#home'; initAuthHeader(); return;
+            }
+            alert('❌ الكود غير صحيح أو غير مسجل — تأكد من الكود وحاول تاني');
+        } catch (err) {
+            console.error(err);
+            alert('❌ حدث خطأ في الاتصال بقاعدة البيانات');
         }
+        return;
     }
 
-    // Save session
-    saveSession(student);
-    alert(`أهلاً بك مجدداً، ${student.fname || student.firstName || student.name} 🎉\nتم تسجيل دخولك بنجاح.`);
+    // ── وضع رقم + كلمة مرور ──
+    if (!phone || !pass) { alert('❌ من فضلك ادخل رقم الموبايل وكلمة المرور'); return; }
 
-    // Reset form and go home
-    document.getElementById('login-form').reset();
-    window.location.hash = '#home';
-    initAuthHeader();
+    // أدمن
+    if (phone === '2026' && pass === '2027') {
+        const admin = { id: 0, name: 'الأستاذ الدكتور', phone: '01000000000', role: 'admin' };
+        saveSession(admin);
+        alert('✅ أهلاً بك يا أدمن!');
+        window.location.href = 'dashboard.html'; return;
+    }
+
+    try {
+        // Firestore
+        const snapshot = await window.db.collection('students')
+            .where('phone', '==', phone).where('password', '==', pass).get();
+        if (!snapshot.empty) {
+            const userDoc = snapshot.docs[0];
+            const user = { ...userDoc.data(), id: userDoc.id, role: 'student' };
+            saveSession(user);
+            alert('✅ أهلاً بيك يا ' + (user.name || user.firstName || 'طالب') + '! تم تسجيل الدخول.');
+            document.getElementById('login-form') && document.getElementById('login-form').reset();
+            window.location.hash = '#home'; initAuthHeader();
+        } else {
+            // localStorage fallback
+            const users = JSON.parse(localStorage.getItem('alamin_users') || '[]');
+            const user  = users.find(u => u.phone === phone && u.password === pass);
+            if (user) {
+                user.role = 'student';
+                saveSession(user);
+                alert('✅ أهلاً بيك يا ' + (user.firstName || 'طالب') + '! تم تسجيل الدخول.');
+                window.location.hash = '#home'; initAuthHeader();
+            } else {
+                alert('❌ رقم الموبايل أو كلمة المرور غلط!');
+            }
+        }
+    } catch (err) {
+        console.error(err);
+        alert('❌ حدث خطأ في الاتصال بقاعدة البيانات');
+    }
 }
 
 // Submit Handler for Registration

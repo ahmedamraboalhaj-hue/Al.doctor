@@ -206,7 +206,86 @@ body {
     position: relative;
 }
 
-/* ══ زرار الـ 3 شورت الملونة ══ */
+/* ══ Theme Toggle في الهيدر ══ */
+.header-theme-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.header-theme-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--card-bg);
+    border: 1.5px solid var(--border-color);
+    border-radius: 20px;
+    padding: 5px 10px 5px 6px;
+    cursor: pointer;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    color: var(--text-main);
+}
+
+.header-theme-btn:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(2,132,199,0.2);
+}
+
+.htb-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fcd34d, #eab308);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+    transition: background 0.3s;
+}
+
+[data-theme="dark"] .htb-icon {
+    background: linear-gradient(135deg, #1e293b, #38bdf8);
+}
+
+.htb-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.htb-pill {
+    width: 32px;
+    height: 17px;
+    border-radius: 9px;
+    background: #cbd5e1;
+    position: relative;
+    transition: background 0.3s;
+    flex-shrink: 0;
+}
+
+.htb-dot {
+    position: absolute;
+    top: 2.5px;
+    left: 2.5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    transition: transform 0.3s ease;
+}
+
+[data-theme="dark"] .htb-pill {
+    background: #0284c7;
+}
+
+[data-theme="dark"] .htb-dot {
+    transform: translateX(15px);
+}
+
+
 .hamburger-btn {
     background: none;
     border: none;
@@ -887,16 +966,8 @@ main {
     justify-content: center;
 }
 
-/* Background blob */
-.blob-bg {
-    position: absolute;
-    width: 580px;
-    height: 580px;
-    background: linear-gradient(135deg, rgba(0, 159, 255, 0.35) 0%, rgba(0, 229, 255, 0.18) 100%);
-    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-    animation: blob-bounce 12s ease-in-out infinite alternate;
-    z-index: 1;
-}
+/* Background blob - مش محتاجينه */
+.blob-bg { display: none; }
 
 /* Teacher Image inside styled container */
 .blob-image-container {
@@ -907,23 +978,19 @@ main {
     overflow: hidden;
     z-index: 2;
     border: 5px solid var(--bg-color);
-    /* الحلقة الملونة الدوّارة عبر outline/box-shadow */
-    box-shadow:
-        var(--shadow-lg),
-        0 0 0 5px transparent,
-        0 0 55px rgba(2, 132, 199, 0.3);
+    box-shadow: var(--shadow-lg), 0 0 55px rgba(2, 132, 199, 0.3);
     animation: blob-bounce 12s ease-in-out infinite alternate-reverse;
 }
 
-/* الصورة: زوم للخارج عشان الأستاذ كله يبان */
+/* الصورة: تظهر الأستاذ كله من فوق لتحت */
 .hero-main-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 15%;
-    transform: scale(0.88);
+    object-position: center 10%;
+    transform: scale(0.82);
     display: block;
-    transform-origin: center bottom;
+    transform-origin: center center;
 }
 
 /* ══ الحلقة الملونة الدوّارة (gradient conic spin) ══ */
@@ -934,7 +1001,6 @@ main {
     border-radius: 50%;
     z-index: 3;
     pointer-events: none;
-    /* Conic gradient يدور - ذهبي وسماوي */
     background: conic-gradient(
         #eab308 0deg,
         #fde68a 40deg,
@@ -947,7 +1013,6 @@ main {
         #eab308 360deg
     );
     animation: colorRingSpin 4s linear infinite;
-    /* الحلقة فقط — الوسط شفاف */
     -webkit-mask: radial-gradient(circle, transparent 255px, black 258px, black 279px, transparent 282px);
     mask:         radial-gradient(circle, transparent 255px, black 258px, black 279px, transparent 282px);
     filter: blur(0.5px) brightness(1.15);
@@ -958,23 +1023,8 @@ main {
     to   { transform: rotate(360deg); }
 }
 
-/* ── حلقات نبض خلفية ── */
-.blob-pulse-ring {
-    position: absolute;
-    border-radius: 50%;
-    border: 2px solid rgba(2,132,199,0.25);
-    animation: blobRingPulse ease-out infinite;
-    pointer-events: none;
-    z-index: 0;
-}
-.blob-pulse-ring-1 { width: 580px; height: 580px; animation-duration: 3s; animation-delay: 0s; }
-.blob-pulse-ring-2 { width: 620px; height: 620px; animation-duration: 3s; animation-delay: 1s; border-color: rgba(234,179,8,0.2); }
-.blob-pulse-ring-3 { width: 660px; height: 660px; animation-duration: 3s; animation-delay: 2s; }
-
-@keyframes blobRingPulse {
-    0%   { transform: scale(0.9); opacity: 0.6; }
-    100% { transform: scale(1.06); opacity: 0; }
-}
+/* حلقات النبض - مخفية */
+.blob-pulse-ring { display: none; }
 
 /* ── بطاقات ميزات عائمة حول الدائرة ── */
 .hero-feature-card {
@@ -2061,114 +2111,111 @@ input:checked + .switch-slider:before {
         padding: 6px;
     }
 
+    /* الهيدر على الموبايل */
+    .header-container {
+        padding: 0 12px;
+    }
+
+    .htb-label {
+        display: none;
+    }
+
+    .header-theme-btn {
+        padding: 5px 6px;
+        gap: 5px;
+    }
+
+    .logo-main { font-size: 1rem; }
+    .logo-sub  { font-size: 0.7rem; }
+    .logo-img  { height: 36px; width: 36px; }
+
     /* ══ Hero على الموبايل ══ */
     .hero-container {
         grid-template-columns: 1fr;
-        padding: 32px 20px 60px;
-        gap: 20px;
+        padding: 24px 16px 50px;
+        gap: 16px;
         min-height: unset;
         text-align: center;
     }
 
-    /* النص فوق */
     .hero-content {
         order: 1;
         align-items: center;
     }
 
-    .hero-title {
-        font-size: 2.4rem;
-    }
+    .hero-title     { font-size: 2.2rem; }
+    .hero-title-sub { font-size: 1.8rem; }
+    .hero-author    { justify-content: center; font-size: 0.88rem; }
 
-    .hero-title-sub {
-        font-size: 2rem;
-    }
-
-    .hero-author {
-        justify-content: center;
-        font-size: 0.92rem;
-    }
-
-    /* الدائرة تحت */
     .hero-visual {
         order: 2;
         width: 100%;
         overflow: visible;
+        display: flex;
+        justify-content: center;
     }
 
-    /* الـ wrapper بيتضبط على حسب عرض الشاشة */
+    /* الدائرة على الموبايل */
     .blob-wrapper {
-        width: 320px;
-        height: 320px;
-    }
-
-    .blob-bg {
-        width: 290px;
-        height: 290px;
+        width: 300px;
+        height: 300px;
     }
 
     .blob-image-container {
-        width: 270px;
-        height: 270px;
+        width: 272px;
+        height: 272px;
         border-width: 3px;
     }
 
-    /* حلقة الألوان الدوارة */
-    .blob-color-ring {
-        width: 280px;
-        height: 280px;
-        -webkit-mask: radial-gradient(circle, transparent 126px, black 129px, black 140px, transparent 143px);
-        mask:         radial-gradient(circle, transparent 126px, black 129px, black 140px, transparent 143px);
+    /* الصورة على الموبايل - الأستاذ كله يبان */
+    .hero-main-img {
+        object-position: center 5%;
+        transform: scale(0.80);
+        transform-origin: center center;
     }
 
-    /* حلقات النبض */
-    .blob-pulse-ring-1 { width: 290px; height: 290px; }
-    .blob-pulse-ring-2 { width: 310px; height: 310px; }
-    .blob-pulse-ring-3 { width: 330px; height: 330px; }
+    /* حلقة الألوان الدوارة على الموبايل */
+    .blob-color-ring {
+        width: 284px;
+        height: 284px;
+        -webkit-mask: radial-gradient(circle, transparent 128px, black 131px, black 142px, transparent 145px);
+        mask:         radial-gradient(circle, transparent 128px, black 131px, black 142px, transparent 145px);
+    }
 
-    /* الأيقونات العائمة الصغيرة */
+    /* الأيقونات العائمة - أصغر على الموبايل */
     .floating-icon {
-        width: 36px;
-        height: 36px;
-        font-size: 1rem;
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
     }
 
     .floating-icon.icon-star {
-        width: 28px;
-        height: 28px;
-        font-size: 0.75rem;
+        width: 24px;
+        height: 24px;
+        font-size: 0.65rem;
     }
 
-    /* البطاقات الأربعة — تصغير وإعادة تموضع */
+    /* البطاقات الأربعة على الموبايل */
     .hero-feature-card {
-        padding: 7px 10px;
-        gap: 7px;
+        padding: 6px 9px;
+        gap: 6px;
         border-radius: 10px;
     }
 
     .hero-feature-card .fc-icon {
-        width: 28px;
-        height: 28px;
-        font-size: 0.8rem;
+        width: 26px;
+        height: 26px;
+        font-size: 0.75rem;
         border-radius: 7px;
     }
 
-    .hero-feature-card .fc-text strong {
-        font-size: 0.68rem;
-    }
+    .hero-feature-card .fc-text strong { font-size: 0.65rem; }
+    .hero-feature-card .fc-text span   { font-size: 0.55rem; }
 
-    .hero-feature-card .fc-text span {
-        font-size: 0.58rem;
-    }
-
-    /* أماكن البطاقات على الموبايل */
-    .fc-nahw  { top: -6%;  right: -10%; }
-    .fc-balag { top: 30%;  left: -12%; }
-    .fc-adab  { bottom: 8%; right: -10%; }
-    .fc-imla  { bottom: -4%; left: -8%; }
-
-    /* الـ deco dots */
-    .deco-dot { width: 8px; height: 8px; }
+    .fc-nahw  { top: -8%;  right: -8%; }
+    .fc-balag { top: 28%;  left: -10%; }
+    .fc-adab  { bottom: 6%; right: -8%; }
+    .fc-imla  { bottom: -6%; left: -6%; }
 }
 
 /* ═══════════════════════════════════════════════════════════
