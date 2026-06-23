@@ -573,11 +573,6 @@ tr:hover td{background:rgba(200,169,110,.03);}
           <h3>جميع الطلاب المسجّلين 👨‍🎓</h3>
           <div class="table-search">
             <input type="text" id="searchStudents" placeholder="ابحث عن طالب..." oninput="filterStudents()">
-            <select id="studentsSourceFilter" onchange="filterStudents()" style="padding:9px 12px;border:2px solid var(--border);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
-              <option value="all">كل الطلاب</option>
-              <option value="platform">طلاب المنصة</option>
-              <option value="center">طلاب السيستم / السنتر</option>
-            </select>
             <select id="studentsGradeFilter" onchange="filterStudents()" style="padding:9px 12px;border:2px solid var(--border);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
               <option value="all">كل الصفوف</option>
               <!-- تُملأ ديناميكياً من grade-mapping.js عند التحميل -->
@@ -593,14 +588,13 @@ tr:hover td{background:rgba(200,169,110,.03);}
               <th>الطالب</th>
               <th>رقم الموبايل</th>
               <th>الصف</th>
-              <th>نوع الطالب</th>
               <th>تاريخ التسجيل</th>
               <th>الحالة</th>
               <th>الإجراءات</th>
             </tr>
           </thead>
           <tbody id="studentsTableBody">
-            <tr><td colspan="8"><div class="empty-state"><div class="icon">👥</div><p>لا يوجد طلاب مسجلين بعد</p></div></td></tr>
+            <tr><td colspan="7"><div class="empty-state"><div class="icon">👥</div><p>لا يوجد طلاب مسجلين بعد</p></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -641,8 +635,32 @@ tr:hover td{background:rgba(200,169,110,.03);}
           </div>
         </div>
       </div>
+      <!-- إحصائيات الصفوف بالشُعب (علمي/أدبي) -->
+      <div class="table-card" style="margin-top:24px">
+        <div class="table-header">
+          <h3>🏫 توزيع الطلاب على الصفوف والشُعب</h3>
+        </div>
+        <div id="analytics-grade-section-breakdown" style="padding:20px 24px"></div>
+      </div>
+
+      <!-- إحصائيات الكورسات: عدد المسجلين والإيرادات -->
+      <div class="table-card" style="margin-top:24px">
+        <div class="table-header">
+          <h3>📚 إحصائيات الكورسات والمدفوعات</h3>
+        </div>
+        <div id="analytics-courses-stats"></div>
+      </div>
+
+      <!-- إحصائيات الاختبارات العامة -->
+      <div class="table-card" style="margin-top:24px">
+        <div class="table-header">
+          <h3>📝 إحصائيات الاختبارات العامة</h3>
+        </div>
+        <div id="analytics-quizzes-stats" style="padding:20px 24px"></div>
+      </div>
+
       <!-- نشاط الطلاب اليومي + الزيارات -->
-      <div id="analytics-student-activity"></div>
+      <div id="analytics-student-activity" style="margin-top:24px"></div>
     </div>
 
     <!-- PAYMENTS PAGE -->
@@ -1026,8 +1044,8 @@ tr:hover td{background:rgba(200,169,110,.03);}
               <div class="form-group">
                 <label>نوع الطالب</label>
                 <select id="vcStudentType" onchange="populateVoucherStudents();toggleGenType()" style="padding:12px 14px;border:2px solid var(--border);border-radius:10px;width:100%;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
-                  <option value="center">طلاب السنتر / السيستم</option>
-                  <option value="outside">طلاب خارج السنتر</option>
+                  <option value="center">طلاب السيستم</option>
+                  <option value="outside">طلاب خارج السيستم</option>
                 </select>
               </div>
             </div>
@@ -1086,8 +1104,8 @@ tr:hover td{background:rgba(200,169,110,.03);}
               </select>
               <select id="vcFilterType" onchange="renderVouchersTable()" style="padding:9px 12px;border:2px solid var(--border);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
                 <option value="all">كل الطلاب</option>
-                <option value="center">طلاب السنتر</option>
-                <option value="outside">خارج السنتر</option>
+                <option value="center">طلاب السيستم</option>
+                <option value="outside">خارج السيستم</option>
               </select>
               <button onclick="deleteAllUsed()" style="padding:9px 14px;background:#fff0f3;color:#c0392b;border:1px solid #ffd0d8;border-radius:10px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:13px;cursor:pointer">🗑️ حذف المستخدمة</button>
             </div>
@@ -1131,8 +1149,8 @@ tr:hover td{background:rgba(200,169,110,.03);}
               </select>
               <select id="printStudentType" onchange="renderPrintPreview()" style="padding:9px 14px;border:2px solid var(--border);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
                 <option value="all">كل الطلاب</option>
-                <option value="center">طلاب السنتر</option>
-                <option value="outside">خارج السنتر</option>
+                <option value="center">طلاب السيستم</option>
+                <option value="outside">خارج السيستم</option>
               </select>
               <select id="printMonth" onchange="renderPrintPreview()" style="padding:9px 14px;border:2px solid var(--border);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
                 <option value="">كل الشهور</option>
@@ -1200,10 +1218,11 @@ tr:hover td{background:rgba(200,169,110,.03);}
         </select>
       </div>
       <div class="form-group">
-        <label>نوع الطالب</label>
-        <select id="asType">
-          <option value="center">طالب سنتر</option>
-          <option value="outside">خارج السنتر</option>
+        <label>الشُعبة (للصفوف الثانوية)</label>
+        <select id="asSection">
+          <option value="">— غير محدد —</option>
+          <option value="scientific">علمي</option>
+          <option value="literary">أدبي</option>
         </select>
       </div>
       <div class="form-group"><label>كلمة المرور</label><input type="password" id="asPW" value="123456"></div>
@@ -1383,6 +1402,19 @@ tr:hover td{background:rgba(200,169,110,.03);}
         <label>مقاطع الفيديو 📹</label>
         <div id="editLessonSegments"></div>
         <div class="field-hint">يمكنك استبدال فيديو أو حذف مقطع. لإضافة مقطع جديد استخدم "إضافة درس".</div>
+      </div>
+      <div class="form-group">
+        <label>ملزمة PDF (اختياري)</label>
+        <div id="editLessonCurrentPdf" style="font-size:13px;color:var(--text2);margin-bottom:6px"></div>
+        <input type="text" id="editLessonPdf" placeholder="رابط PDF خارجي https://...">
+        <input type="file" id="editLessonPdfFile" accept="application/pdf" style="margin-top:10px">
+        <div class="field-hint">رابط PDF خارجي أو ارفع ملف من جهازك. سيستبدل الملزمة الحالية إن وُجدت.</div>
+      </div>
+      <div class="form-group">
+        <label>اختبار الدرس (اختياري)</label>
+        <input type="text" id="editLessonQuizId" list="editLessonQuizOptions" placeholder="مثال: Q_178153">
+        <datalist id="editLessonQuizOptions"></datalist>
+        <div class="field-hint">هتلاقي ID كل اختبار في صفحة الاختبارات. اتركه فاضي لإزالة الاختبار من الدرس.</div>
       </div>
     </div>
     <div class="modal-actions">
@@ -1776,10 +1808,13 @@ if (typeof gradeClass === 'undefined') {
     return {1:'grade1','1':'grade1',2:'grade2','2':'grade2',3:'grade3','3':'grade3'}[g]||'grade1';
   };
 }
-function studentTypeLabel(type){return{'center':'طلاب السنتر','outside':'خارج السنتر','all':'كل الطلاب'}[type]||'غير محدد';}
+function studentTypeLabel(type){return{'center':'طلاب السيستم','outside':'خارج السيستم','all':'كل الطلاب'}[type]||'غير محدد';}
 function getStudentType(user){return user.studentType||'outside';}
 function filterUsersByGradeAndType(users, grade, type){
   return users.filter(u => (grade==='all'||u.grade===grade) && (type==='all'||getStudentType(u)===type));
+}
+function sectionLabel(section){
+  return {'scientific':'علمي 🔬','literary':'أدبي 📜'}[section] || 'غير محدد';
 }
 
 // ---- COURSE & LESSONS DATA MODEL ----
@@ -1969,6 +2004,19 @@ function openEditLessonModal(courseId, lessonId){
   document.getElementById('editLessonDesc').value = lesson.description || '';
   document.getElementById('editLessonPosition').value = lesson.position || 1;
 
+  // تعبية حقل الملزمة الحالية + الاختبار الحالي
+  const currentPdfDiv = document.getElementById('editLessonCurrentPdf');
+  if(currentPdfDiv){
+    currentPdfDiv.textContent = lesson.pdfUrl ? `📄 ملزمة حالية: ${lesson.pdfName || 'ملف PDF'}` : 'لا توجد ملزمة مرفوعة لهذا الدرس.';
+  }
+  const pdfUrlInput = document.getElementById('editLessonPdf');
+  if(pdfUrlInput) pdfUrlInput.value = (lesson.pdfUrl && lesson.pdfUrl.startsWith('http')) ? lesson.pdfUrl : '';
+  const pdfFileInput = document.getElementById('editLessonPdfFile');
+  if(pdfFileInput) pdfFileInput.value = '';
+  populateLessonQuizOptions('editLessonQuizOptions');
+  const quizIdInput = document.getElementById('editLessonQuizId');
+  if(quizIdInput) quizIdInput.value = lesson.quizId || '';
+
   // بناء قائمة المقاطع
   const segs = Array.isArray(lesson.segments) ? lesson.segments : [];
   const segsDiv = document.getElementById('editLessonSegments');
@@ -2000,7 +2048,7 @@ function openEditLessonModal(courseId, lessonId){
   document.getElementById('editLessonModal').classList.add('open');
 }
 
-function saveEditedLesson(){
+async function saveEditedLesson(){
   const courseId = parseInt(document.getElementById('editLessonCourseId').value,10);
   const lessonId = parseInt(document.getElementById('editLessonId').value,10);
   const title    = document.getElementById('editLessonTitle').value.trim();
@@ -2008,6 +2056,20 @@ function saveEditedLesson(){
   const position = parseInt(document.getElementById('editLessonPosition').value,10)||1;
 
   if(!title){ alert('يرجى إدخال عنوان الدرس'); return; }
+
+  // ✅ FIX: قراءة حقول الملزمة والاختبار حتى يتمكن الأدمن من إضافتهما/تعديلهما عند التعديل
+  const pdfUrlText = document.getElementById('editLessonPdf').value.trim();
+  const pdfFileUrl = await readPdfInputAsDataUrl('editLessonPdfFile');
+  if(pdfFileUrl === null) return; // ملف غير صالح، تم التنبيه بالفعل
+
+  const quizIdInput = document.getElementById('editLessonQuizId').value.trim() || null;
+  if(quizIdInput){
+    const quizzes = JSON.parse(localStorage.getItem('alamin_quizzes') || '[]');
+    if(!quizzes.some(q=>String(q.id)===String(quizIdInput))){
+      alert('لا يوجد اختبار بهذا الـ ID. راجع صفحة الاختبارات واكتب ID صحيح.');
+      return;
+    }
+  }
 
   const cs = getCourses();
   const c = cs.find(x=>x.id==courseId);
@@ -2018,6 +2080,19 @@ function saveEditedLesson(){
   lesson.title = title;
   lesson.description = desc;
   lesson.position = position;
+
+  // تحديث الملزمة: لو رفع ملف جديد يستبدل القديم، لو كتب رابط جديد يستبدل القديم،
+  // لو سابهم فاضيين بيفضل المحتوى القديم كما هو (مش بيتمسح بالغلط)
+  if(pdfFileUrl){
+    lesson.pdfUrl = pdfFileUrl;
+    lesson.pdfName = document.getElementById('editLessonPdfFile').files[0]?.name || 'ملزمة الدرس.pdf';
+  } else if(pdfUrlText){
+    lesson.pdfUrl = pdfUrlText;
+    lesson.pdfName = '';
+  }
+
+  // تحديث الاختبار: قيمة فاضية تشيل الاختبار من الدرس عمدًا
+  lesson.quizId = quizIdInput;
 
   // تحديث عناوين المقاطع
   if(Array.isArray(lesson.segments)){
@@ -2138,17 +2213,12 @@ function renderOverview(){
 
 // ---- STUDENTS TABLE ----
 function normalizeStudentId(id){return String(id);}
-function getStudentsSourceFilter(){
-  return document.getElementById('studentsSourceFilter')?.value || 'all';
-}
 function getStudentsGradeFilter(){
   return document.getElementById('studentsGradeFilter')?.value || 'all';
 }
 function renderStudentsGradeSummary(users){
   const wrap = document.getElementById('studentsGradeSummary');
   if(!wrap) return;
-  const source = getStudentsSourceFilter();
-  const base = users.filter(u => source === 'all' || (source === 'center' ? getStudentType(u) === 'center' : getStudentType(u) !== 'center'));
   const cards = [
     ['1','الأول الثانوي'],
     ['2','الثاني الثانوي'],
@@ -2156,7 +2226,7 @@ function renderStudentsGradeSummary(users){
     ['prep3','الثالث الإعدادي']
   ];
   wrap.innerHTML = cards.map(([grade,label]) => {
-    const count = base.filter(u => String(u.grade) === grade).length;
+    const count = users.filter(u => String(u.grade) === grade).length;
     return `<button onclick="document.getElementById('studentsGradeFilter').value='${grade}';filterStudents()" style="text-align:right;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--bg);cursor:pointer;font-family:'Tajawal',sans-serif;color:var(--text)">
       <div style="font-size:13px;color:var(--text2);font-weight:700">${label}</div>
       <div style="font-size:24px;font-weight:900;color:var(--primary);margin-top:4px">${count}</div>
@@ -2168,22 +2238,17 @@ function renderStudentsTable(filter=''){
   const users=getUsers();
   const tbody=document.getElementById('studentsTableBody');
   document.getElementById('studentsBadge').textContent=users.length;
-  const sourceFilter = getStudentsSourceFilter();
   const gradeFilter = getStudentsGradeFilter();
   renderStudentsGradeSummary(users);
   let filtered=users.filter(u=>!filter||(u.name&&u.name.includes(filter))||(u.phone&&u.phone.includes(filter))||(u.email&&u.email.includes(filter))||(u.qrCode&&String(u.qrCode).includes(filter)));
-  if(sourceFilter !== 'all') {
-    filtered = filtered.filter(u => sourceFilter === 'center' ? getStudentType(u) === 'center' : getStudentType(u) !== 'center');
-  }
   if(gradeFilter !== 'all') filtered = filtered.filter(u => String(u.grade) === gradeFilter);
-  if(!filtered.length){tbody.innerHTML='<tr><td colspan="8"><div class="empty-state"><div class="icon">👥</div><p>لا يوجد نتائج</p></div></td></tr>';return;}
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><div class="icon">👥</div><p>لا يوجد نتائج</p></div></td></tr>';return;}
   tbody.innerHTML=filtered.map((u,i)=>`
     <tr>
       <td>${i+1}</td>
       <td><div class="avatar-cell"><div class="avatar-sm">${u.name?u.name[0]:'؟'}</div>${u.name}</div></td>
       <td>${u.phone||u.email||'-'}</td>
       <td><span class="badge ${gradeClass(u.grade)}">${gradeLabel(u.grade)}</span></td>
-      <td>${studentTypeLabel(getStudentType(u))}</td>
       <td>${u.joinDate||'-'}</td>
       <td><span class="badge active">نشط ✅</span></td>
       <td><div class="action-btns">
@@ -2211,7 +2276,7 @@ function viewStudent(id){
       <div><strong>الاسم الكامل:</strong><br>${u.name}</div>
       <div><strong>رقم الموبايل:</strong><br>${u.phone||u.email||'-'}</div>
       <div><strong>الصف الدراسي:</strong><br>${gradeLabel(u.grade)}</div>
-      <div><strong>نوع الطالب:</strong><br>${studentTypeLabel(getStudentType(u))}</div>
+      <div><strong>الشُعبة:</strong><br>${sectionLabel(u.section)}</div>
       <div><strong>تاريخ التسجيل:</strong><br>${u.joinDate||'-'}</div>
       <div><strong>آخر دخول:</strong><br>${u.lastLogin||'-'}</div>
       <div><strong>الحالة:</strong><br><span class="badge active">نشط ✅</span></div>
@@ -2254,10 +2319,24 @@ async function grantCourseToStudent(userId){
   alert('تم تفعيل الوصول للكورس للطالب بنجاح ✅');
   viewStudent(userId);
 }
-function deleteStudent(id){
-  if(!confirm('هل أنت متأكد من حذف هذا الطالب؟')) return;
-  let users=getUsers().filter(u=>normalizeStudentId(u.id)!==normalizeStudentId(id));
+async function deleteStudent(id){
+  if(!confirm('هل أنت متأكد من حذف هذا الطالب؟ سيتم حذفه نهائياً من قاعدة البيانات.')) return;
+  const normalizedId = normalizeStudentId(id);
+  let users=getUsers().filter(u=>normalizeStudentId(u.id)!==normalizedId);
   saveUsers(users);
+
+  // ✅ FIX: كانت الدالة بتحذف من localStorage بس وتسيب الطالب موجود في Firebase،
+  // فيرجع تاني لو تحدّثت البيانات من السيرفر. دلوقتي بتحذف من قاعدة البيانات الحقيقية كمان.
+  if(window.db){
+    try {
+      await window.db.collection('students').doc(normalizedId).delete();
+    } catch(e){
+      console.warn('Could not delete student from Firebase:', e);
+      showNotification('⚠️ تم الحذف محلياً لكن فشل الحذف من قاعدة البيانات. تأكد من الاتصال بالإنترنت وحاول مجدداً.', 'error');
+    }
+  }
+
+  showNotification('🗑️ تم حذف الطالب نهائياً', 'success');
   renderStudentsTable();
   renderOverview();
 }
@@ -2340,12 +2419,12 @@ function saveNewStudent(){
   const ln=document.getElementById('asLN').value.trim();
   const ph=document.getElementById('asPH').value.trim();
   const gr=document.getElementById('asGR').value;
-  const type=document.getElementById('asType').value;
+  const section=document.getElementById('asSection').value || '';
   const pw=document.getElementById('asPW').value;
-  if(!fn||!ln||!ph||!gr||!type){alert('من فضلك اكمل البيانات');return;}
+  if(!fn||!ln||!ph||!gr){alert('من فضلك اكمل البيانات');return;}
   const users=getUsers();
   const base = {id:Date.now(),firstName:fn,lastName:ln,name:fn+' '+ln,
-    phone:ph,grade:gr,studentType:type,password:pw,
+    phone:ph,grade:gr,section,password:pw,
     joinDate:new Date().toLocaleDateString('ar-EG'),status:'active',enrolledCourses:[]};
   const student = typeof buildStudentExportPayload === 'function'
     ? buildStudentExportPayload(base)
@@ -2537,8 +2616,8 @@ function populateLessonCourseOptions(){
   sel.innerHTML = cs.map(c=>`<option value="${c.id}">${c.title} - ${gradeLabel(c.grade)}</option>`).join('');
 }
 
-function populateLessonQuizOptions(){
-  const list = document.getElementById('lessonQuizOptions');
+function populateLessonQuizOptions(listId = 'lessonQuizOptions'){
+  const list = document.getElementById(listId);
   if(!list) return;
   const quizzes = JSON.parse(localStorage.getItem('alamin_quizzes') || '[]');
   list.innerHTML = quizzes.map(q=>`<option value="${q.id}">${q.title} - ${gradeLabel(q.grade)}</option>`).join('');
@@ -2736,8 +2815,8 @@ async function uploadFileToBackend(file){
   return data;
 }
 
-async function readPdfInputAsDataUrl(){
-  const fileInput = document.getElementById('alPdfFile');
+async function readPdfInputAsDataUrl(inputId = 'alPdfFile'){
+  const fileInput = document.getElementById(inputId);
   const file = fileInput && fileInput.files ? fileInput.files[0] : null;
   if(!file) return '';
   if(file.type && file.type !== 'application/pdf'){
@@ -4300,7 +4379,7 @@ function toggleGenType() {
   } else if(type === 'students') {
     countWrap.style.display = 'block';
     studentListWrap.style.display = 'none';
-    countLabel.textContent = 'عدد طلاب السنتر المطابقين';
+    countLabel.textContent = 'عدد طلاب السيستم المطابقين';
     const grade = document.getElementById('vcGrade').value;
     const courseId = document.getElementById('vcCourseId').value;
     const count = filterStudentsMissingCourseCode(filterUsersByGradeAndType(getUsers(), grade, 'center'), courseId).length;
@@ -4685,6 +4764,196 @@ function renderAnalytics(){
 
   // ─── إحصائيات اليوم للطلاب ───
   renderStudentTodayStats();
+
+  // ─── توزيع الطلاب على الصفوف والشُعب ───
+  renderGradeSectionBreakdown(users);
+
+  // ─── إحصائيات الكورسات والمدفوعات ───
+  renderCoursesStats();
+
+  // ─── إحصائيات الاختبارات العامة ───
+  renderQuizzesGeneralStats();
+}
+
+function renderGradeSectionBreakdown(users){
+  const container = document.getElementById('analytics-grade-section-breakdown');
+  if(!container) return;
+  users = users || getUsers();
+
+  // الصفوف الثانوية بتاخد تفصيل علمي/أدبي، الإعدادي والباقي يظهروا بإجمالي بس
+  const secondaryGrades = [
+    ['1','الأول الثانوي'],
+    ['2','الثاني الثانوي'],
+    ['3','الثالث الثانوي']
+  ];
+  const otherGrades = [
+    ['prep1','الأول الإعدادي'],
+    ['prep2','الثاني الإعدادي'],
+    ['prep3','الثالث الإعدادي']
+  ];
+
+  const rows = secondaryGrades.map(([grade,label]) => {
+    const gradeUsers = users.filter(u => String(u.grade) === grade);
+    const scientific = gradeUsers.filter(u => u.section === 'scientific').length;
+    const literary = gradeUsers.filter(u => u.section === 'literary').length;
+    const unspecified = gradeUsers.length - scientific - literary;
+    return `
+      <tr>
+        <td><strong>${label}</strong></td>
+        <td><span style="font-weight:800;color:var(--primary)">${gradeUsers.length}</span></td>
+        <td><span style="font-weight:700;color:#2563eb">🔬 ${scientific}</span></td>
+        <td><span style="font-weight:700;color:#16a34a">📜 ${literary}</span></td>
+        <td><span style="font-weight:700;color:#888">${unspecified}</span></td>
+      </tr>`;
+  }).join('');
+
+  const otherRows = otherGrades.map(([grade,label]) => {
+    const count = users.filter(u => String(u.grade) === grade).length;
+    return `<div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div>${label} (${count})</div>`;
+  }).join('');
+
+  const totalAll = users.length;
+
+  container.innerHTML = `
+    <div style="margin-bottom:18px;font-size:14px;color:var(--text2)">إجمالي عدد الطلاب المسجلين في كل الصفوف: <strong style="color:var(--primary);font-size:16px">${totalAll}</strong> طالب</div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>الصف الدراسي</th>
+            <th>إجمالي الطلاب</th>
+            <th>علمي 🔬</th>
+            <th>أدبي 📜</th>
+            <th>غير محدد</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:16px">${otherRows}</div>
+  `;
+}
+
+function renderCoursesStats(){
+  const container = document.getElementById('analytics-courses-stats');
+  if(!container) return;
+  const courses = getCourses();
+  const users = getUsers();
+
+  if(!courses.length){
+    container.innerHTML = '<div class="empty-state"><div class="icon">📚</div><p>لا توجد كورسات بعد</p></div>';
+    return;
+  }
+
+  let totalRevenue = 0;
+  let totalEnrollments = 0;
+
+  const rows = courses.map(c => {
+    const enrolledCount = users.filter(u => (u.enrolledCourses||[]).map(String).includes(String(c.id))).length;
+    const price = c.type === 'free' ? 0 : (parseFloat(c.price) || 0);
+    const revenue = enrolledCount * price;
+    totalRevenue += revenue;
+    totalEnrollments += enrolledCount;
+    const typeBadge = c.type === 'free'
+      ? `<span style="background:rgba(46,213,115,0.12);color:#2ed573;padding:3px 10px;border-radius:8px;font-weight:700;font-size:12px">مجاني 🆓</span>`
+      : `<span style="background:rgba(245,166,35,0.12);color:#f5a623;padding:3px 10px;border-radius:8px;font-weight:700;font-size:12px">${price} ج.م</span>`;
+    return `
+      <tr>
+        <td><strong>${c.title}</strong></td>
+        <td><span class="badge ${gradeClass(c.grade)}">${gradeLabel(c.grade)}</span></td>
+        <td>${typeBadge}</td>
+        <td><span style="font-weight:800;color:var(--primary)">${enrolledCount}</span> طالب</td>
+        <td><strong style="color:${revenue>0?'#16a34a':'#888'}">${revenue.toLocaleString('ar-EG')} ج.م</strong></td>
+      </tr>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;padding:20px 24px 0">
+      <div class="stat-card"><div class="stat-icon" style="background:#e8f4ff">📚</div><div>
+        <div class="stat-label">عدد الكورسات</div>
+        <div class="stat-val">${courses.length}</div>
+      </div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:#fff8e8">🧑‍🎓</div><div>
+        <div class="stat-label">إجمالي الاشتراكات</div>
+        <div class="stat-val">${totalEnrollments}</div>
+      </div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:#e8fff3">💰</div><div>
+        <div class="stat-label">إجمالي الإيرادات المتوقعة</div>
+        <div class="stat-val" style="font-size:20px">${totalRevenue.toLocaleString('ar-EG')} ج.م</div>
+      </div></div>
+    </div>
+    <div style="overflow-x:auto;padding:20px 24px">
+      <table>
+        <thead>
+          <tr>
+            <th>الكورس</th>
+            <th>الصف</th>
+            <th>السعر</th>
+            <th>عدد المشتركين</th>
+            <th>الإيراد المتوقع</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div style="padding:0 24px 20px;font-size:12px;color:var(--text2)">💡 الإيراد المتوقع = عدد المشتركين × سعر الكورس. الكورسات المجانية لا تُحتسب ضمن الإيرادات.</div>
+  `;
+}
+
+function renderQuizzesGeneralStats(){
+  const container = document.getElementById('analytics-quizzes-stats');
+  if(!container) return;
+  const quizzes = JSON.parse(localStorage.getItem('alamin_quizzes') || '[]');
+  const localAttempts = JSON.parse(localStorage.getItem('alamin_quiz_attempts') || '{}');
+
+  let totalAttempts = 0, totalPassed = 0, totalFailed = 0;
+  const quizRows = quizzes.map(q => {
+    const attemptsList = Object.values(localAttempts).filter(a => String(a.quizId) === String(q.id));
+    const total = attemptsList.length;
+    const passed = attemptsList.filter(a => a.score >= (q.totalPoints * (q.passingGrade / 100))).length;
+    const failed = total - passed;
+    totalAttempts += total; totalPassed += passed; totalFailed += failed;
+    return { title: q.title, grade: q.grade, total, passed, failed };
+  }).filter(q => q.total > 0);
+
+  const passRate = totalAttempts ? Math.round((totalPassed/totalAttempts)*100) : 0;
+
+  const rows = quizRows.map(q => `
+    <tr>
+      <td><strong>${q.title}</strong></td>
+      <td><span class="badge ${gradeClass(q.grade)}">${gradeLabel(q.grade)}</span></td>
+      <td>${q.total}</td>
+      <td><span style="font-weight:800;color:var(--success)">${q.passed}</span></td>
+      <td><span style="font-weight:800;color:#e74c3c">${q.failed}</span></td>
+    </tr>`).join('');
+
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px">
+      <div class="stat-card"><div class="stat-icon" style="background:#fce8ff">📝</div><div>
+        <div class="stat-label">إجمالي المحاولات</div>
+        <div class="stat-val">${totalAttempts}</div>
+      </div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:#e8fff3">✅</div><div>
+        <div class="stat-label">إجمالي الناجحين</div>
+        <div class="stat-val" style="color:var(--success)">${totalPassed}</div>
+      </div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:#ffe8ea">❌</div><div>
+        <div class="stat-label">إجمالي الفاشلين</div>
+        <div class="stat-val" style="color:#e74c3c">${totalFailed}</div>
+      </div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:#e8f4ff">📊</div><div>
+        <div class="stat-label">نسبة النجاح العامة</div>
+        <div class="stat-val">${passRate}%</div>
+      </div></div>
+    </div>
+    ${rows ? `
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>الاختبار</th><th>الصف</th><th>عدد المحاولات</th><th>ناجح ✅</th><th>فاشل ❌</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>` : `<div class="empty-state"><div class="icon">📝</div><p>لا توجد محاولات اختبارات مسجّلة بعد</p></div>`}
+  `;
 }
 
 function renderStudentTodayStats() {
@@ -4842,8 +5111,9 @@ function saveSettings(){
 
 
 // ---- MODALS ----
+// ✅ FIX: المودالز تقفل فقط بزر X أو إلغاء/إغلاق (عبر closeModal)،
+// الضغط خارج الفورم (على الخلفية) لا يقفل المودال حتى لا تضيع البيانات المدخلة بالخطأ.
 function closeModal(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
 
 // ---- THEME ----
 function toggleTheme(){const h=document.documentElement;const next=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',next);localStorage.setItem('theme',next);}
