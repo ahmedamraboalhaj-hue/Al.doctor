@@ -44,24 +44,48 @@ function initTheme() {
     const savedTheme = localStorage.getItem('theme') || 'light';
 
     // Apply saved theme on startup
-    if (savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        themeCheckbox.checked = true;
-    } else {
-        document.documentElement.removeAttribute('data-theme');
-        themeCheckbox.checked = false;
-    }
-
-    // Toggle theme on change
-    themeCheckbox.addEventListener('change', () => {
-        if (themeCheckbox.checked) {
+    const applyTheme = (theme) => {
+        if (theme === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
+            if (themeCheckbox) themeCheckbox.checked = true;
+            updateThemeUI('dark');
         } else {
             document.documentElement.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'light');
+            if (themeCheckbox) themeCheckbox.checked = false;
+            updateThemeUI('light');
         }
-    });
+    };
+
+    const updateThemeUI = (theme) => {
+        const label = document.getElementById('hb-theme-label');
+        const icon  = document.getElementById('hb-theme-icon');
+        if (label) label.textContent = theme === 'dark' ? 'الوضع الليلي' : 'الوضع النهاري';
+        if (icon)  icon.innerHTML    = theme === 'dark'
+            ? '<i class="fas fa-moon"></i>'
+            : '<i class="fas fa-sun"></i>';
+    };
+
+    applyTheme(savedTheme);
+
+    // Toggle via hidden checkbox (legacy support)
+    if (themeCheckbox) {
+        themeCheckbox.addEventListener('change', () => {
+            const newTheme = themeCheckbox.checked ? 'dark' : 'light';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+    }
+
+    // Toggle via new hb-theme row
+    const themeRow = document.getElementById('hb-theme-toggle');
+    if (themeRow) {
+        themeRow.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+    }
 }
 
 // ================= SPA Routing and Page Swapping =================
@@ -119,27 +143,33 @@ function initSearch() {
     const searchClose = document.getElementById('search-close');
     const searchOverlay = document.getElementById('search-overlay');
 
-    searchToggle.addEventListener('click', () => {
-        searchOverlay.classList.add('active');
-        const input = searchOverlay.querySelector('input');
-        if (input) setTimeout(() => input.focus(), 100);
-    });
+    if (searchToggle && searchOverlay) {
+        searchToggle.addEventListener('click', () => {
+            searchOverlay.classList.add('active');
+            const input = searchOverlay.querySelector('input');
+            if (input) setTimeout(() => input.focus(), 100);
+        });
+    }
 
-    searchClose.addEventListener('click', () => {
-        searchOverlay.classList.remove('active');
-    });
-
-    // Close when clicking outside modal content
-    searchOverlay.addEventListener('click', (e) => {
-        if (e.target === searchOverlay) {
+    if (searchClose && searchOverlay) {
+        searchClose.addEventListener('click', () => {
             searchOverlay.classList.remove('active');
-        }
-    });
+        });
+    }
+
+    if (searchOverlay) {
+        // Close when clicking outside modal content
+        searchOverlay.addEventListener('click', (e) => {
+            if (e.target === searchOverlay) {
+                searchOverlay.classList.remove('active');
+            }
+        });
+    }
 
     // Support escape key to close search / forgot-password overlays
     document.addEventListener('keydown', (e) => {
         if (e.key !== 'Escape') return;
-        if (searchOverlay.classList.contains('active')) {
+        if (searchOverlay && searchOverlay.classList.contains('active')) {
             searchOverlay.classList.remove('active');
         }
         const fpOverlay = document.getElementById('forgot-password-overlay');

@@ -403,6 +403,61 @@ body {
     border-radius: 1px;
 }
 
+/* ── صف الوضع الليلي/النهاري ── */
+.hb-theme {
+    cursor: pointer;
+    user-select: none;
+    background: rgba(125,211,252,0.06);
+}
+.hb-theme:hover {
+    background: rgba(125,211,252,0.13);
+    transform: translateX(-3px);
+}
+.hb-theme-icon {
+    background: linear-gradient(135deg, #7dd3fc, #0284c7) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 10px rgba(2,132,199,0.35) !important;
+    transition: background 0.3s ease;
+}
+[data-theme="dark"] .hb-theme-icon {
+    background: linear-gradient(135deg, #1e293b, #38bdf8) !important;
+}
+.hb-theme .hb-item-text {
+    color: #0284c7;
+    flex: 1;
+}
+[data-theme="dark"] .hb-theme .hb-item-text {
+    color: #38bdf8;
+}
+
+/* بيل toggle صغير */
+.hb-theme-pill {
+    width: 36px;
+    height: 20px;
+    border-radius: 10px;
+    background: #cbd5e1;
+    position: relative;
+    transition: background 0.3s ease;
+    flex-shrink: 0;
+}
+.hb-theme-dot {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+[data-theme="dark"] .hb-theme-pill {
+    background: #0284c7;
+}
+[data-theme="dark"] .hb-theme-dot {
+    transform: translateX(16px);
+}
+
 /* Switch (Theme Switcher) */
 .theme-switch-container {
     display: flex;
@@ -2005,6 +2060,115 @@ input:checked + .switch-slider:before {
     .nav-user-chip {
         padding: 6px;
     }
+
+    /* ══ Hero على الموبايل ══ */
+    .hero-container {
+        grid-template-columns: 1fr;
+        padding: 32px 20px 60px;
+        gap: 20px;
+        min-height: unset;
+        text-align: center;
+    }
+
+    /* النص فوق */
+    .hero-content {
+        order: 1;
+        align-items: center;
+    }
+
+    .hero-title {
+        font-size: 2.4rem;
+    }
+
+    .hero-title-sub {
+        font-size: 2rem;
+    }
+
+    .hero-author {
+        justify-content: center;
+        font-size: 0.92rem;
+    }
+
+    /* الدائرة تحت */
+    .hero-visual {
+        order: 2;
+        width: 100%;
+        overflow: visible;
+    }
+
+    /* الـ wrapper بيتضبط على حسب عرض الشاشة */
+    .blob-wrapper {
+        width: 320px;
+        height: 320px;
+    }
+
+    .blob-bg {
+        width: 290px;
+        height: 290px;
+    }
+
+    .blob-image-container {
+        width: 270px;
+        height: 270px;
+        border-width: 3px;
+    }
+
+    /* حلقة الألوان الدوارة */
+    .blob-color-ring {
+        width: 280px;
+        height: 280px;
+        -webkit-mask: radial-gradient(circle, transparent 126px, black 129px, black 140px, transparent 143px);
+        mask:         radial-gradient(circle, transparent 126px, black 129px, black 140px, transparent 143px);
+    }
+
+    /* حلقات النبض */
+    .blob-pulse-ring-1 { width: 290px; height: 290px; }
+    .blob-pulse-ring-2 { width: 310px; height: 310px; }
+    .blob-pulse-ring-3 { width: 330px; height: 330px; }
+
+    /* الأيقونات العائمة الصغيرة */
+    .floating-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+
+    .floating-icon.icon-star {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+
+    /* البطاقات الأربعة — تصغير وإعادة تموضع */
+    .hero-feature-card {
+        padding: 7px 10px;
+        gap: 7px;
+        border-radius: 10px;
+    }
+
+    .hero-feature-card .fc-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+        border-radius: 7px;
+    }
+
+    .hero-feature-card .fc-text strong {
+        font-size: 0.68rem;
+    }
+
+    .hero-feature-card .fc-text span {
+        font-size: 0.58rem;
+    }
+
+    /* أماكن البطاقات على الموبايل */
+    .fc-nahw  { top: -6%;  right: -10%; }
+    .fc-balag { top: 30%;  left: -12%; }
+    .fc-adab  { bottom: 8%; right: -10%; }
+    .fc-imla  { bottom: -4%; left: -8%; }
+
+    /* الـ deco dots */
+    .deco-dot { width: 8px; height: 8px; }
 }
 
 /* ═══════════════════════════════════════════════════════════

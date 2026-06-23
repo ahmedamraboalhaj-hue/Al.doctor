@@ -114,17 +114,32 @@
 
                 <!-- القايمة المنسدلة -->
                 <div class="hb-dropdown" id="hb-dropdown">
+                    <!-- سجل دخولك -->
                     <a href="#login" class="hb-item hb-login" id="nav-login-btn">
                         <span class="hb-item-icon"><i class="fas fa-sign-in-alt"></i></span>
                         <span class="hb-item-text">سجل دخولك</span>
                         <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
                     </a>
                     <div class="hb-divider"></div>
+                    <!-- اعمل حساب -->
                     <a href="#register" class="hb-item hb-register" id="nav-register-btn">
                         <span class="hb-item-icon"><i class="fas fa-user-plus"></i></span>
                         <span class="hb-item-text">اعمل حساب جديد!</span>
                         <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
                     </a>
+                    <div class="hb-divider"></div>
+                    <!-- الوضع الليلي / النهاري -->
+                    <div class="hb-item hb-theme" id="hb-theme-toggle">
+                        <span class="hb-item-icon hb-theme-icon" id="hb-theme-icon">
+                            <i class="fas fa-sun"></i>
+                        </span>
+                        <span class="hb-item-text" id="hb-theme-label">الوضع النهاري</span>
+                        <!-- hidden checkbox للـ app.js -->
+                        <input type="checkbox" id="checkbox" style="display:none">
+                        <div class="hb-theme-pill" id="hb-theme-pill">
+                            <div class="hb-theme-dot"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
