@@ -960,42 +960,42 @@ main {
 .blob-wrapper {
     position: relative;
     width: 580px;
-    height: 680px;          /* أطول عشان الرأس يطلع فوق */
+    height: 680px;
     display: flex;
-    align-items: flex-end;  /* الدايرة في الأسفل */
+    align-items: flex-end;
     justify-content: center;
 }
 
 /* Background blob - مش محتاجينه */
 .blob-bg { display: none; }
 
-/* Teacher Image container — overflow visible عشان الرأس يطلع فوق الدايرة */
+/* Teacher background circle — gradient circle behind the teacher */
 .blob-image-container {
     position: absolute;
     width: 500px;
     height: 500px;
     border-radius: 50%;
-    overflow: hidden;
-    z-index: 2;
+    z-index: 1;
     border: 5px solid var(--bg-color);
+    background: radial-gradient(circle, var(--primary-light) 0%, rgba(2, 132, 199, 0.03) 75%);
     box-shadow: var(--shadow-lg), 0 0 55px rgba(2, 132, 199, 0.3);
     animation: blob-bounce 12s ease-in-out infinite alternate-reverse;
-    /* نزّل الدايرة شوية عشان الرأس يطلع فوقها */
     bottom: 0;
     top: auto;
 }
 
-/* الصورة تطلع فوق حدود الدايرة */
+/* صورة الدكتور بدون خلفية كاملة فوق الحلقة والدائرة */
 .hero-main-img {
     position: absolute;
-    width: 115%;
-    height: 115%;
-    object-fit: cover;
-    object-position: center 8%;
+    width: 530px;
+    height: auto;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
+    z-index: 3;
+    pointer-events: none;
     display: block;
+    animation: teacher-float 12s ease-in-out infinite alternate-reverse;
 }
 
 /* ══ الحلقة الملونة الدوّارة ══ */
@@ -1004,7 +1004,7 @@ main {
     width: 518px;
     height: 518px;
     border-radius: 50%;
-    z-index: 3;
+    z-index: 2;
     pointer-events: none;
     bottom: 0;
     background: conic-gradient(
@@ -1032,31 +1032,7 @@ main {
 /* حلقات النبض - مخفية */
 .blob-pulse-ring { display: none; }
 
-/* ══ طبقة الـ Popout — الرأس والكتفين فوق الدايرة ══ */
-.blob-popout-layer {
-    position: absolute;
-    width: 520px;
-    height: 680px;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 5;          /* فوق الحلقة */
-    pointer-events: none;
-    overflow: hidden;
-    /* نُظهر بس الجزء العلوي اللي فوق الدايرة */
-    clip-path: inset(0 0 310px 0);
-}
 
-.blob-popout-img {
-    position: absolute;
-    width: 105%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 5%;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-}
 
 /* ── بطاقات ميزات عائمة حول الدائرة ── */
 .hero-feature-card {
@@ -1235,6 +1211,18 @@ main {
     100% {
         border-radius: 45% 55% 65% 35% / 45% 45% 65% 55%;
         transform: translateY(5px) scale(0.98);
+    }
+}
+
+@keyframes teacher-float {
+    0% {
+        transform: translateX(-50%) translateY(0) scale(1);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-10px) scale(1.02);
+    }
+    100% {
+        transform: translateX(-50%) translateY(5px) scale(0.98);
     }
 }
 
@@ -1933,7 +1921,8 @@ input:checked + .switch-slider:before {
     }
 
     .hero-main-img {
-        transform: scale(1.05) translateY(-14px); /* Pushes bottom text up more so it fits the smaller mobile circle */
+        width: 285px;
+        height: auto;
     }
 
     .ring-1, .ring-2 {
@@ -2201,9 +2190,8 @@ input:checked + .switch-slider:before {
 
     /* الصورة على الموبايل */
     .hero-main-img {
-        object-position: center 5%;
-        width: 120%;
-        height: 120%;
+        width: 280px;
+        height: auto;
     }
 
     /* حلقة الألوان الدوارة على الموبايل */
@@ -2212,17 +2200,6 @@ input:checked + .switch-slider:before {
         height: 272px;
         -webkit-mask: radial-gradient(circle, transparent 122px, black 125px, black 136px, transparent 139px);
         mask:         radial-gradient(circle, transparent 122px, black 125px, black 136px, transparent 139px);
-    }
-
-    /* popout layer على الموبايل */
-    .blob-popout-layer {
-        width: 270px;
-        height: 380px;
-        clip-path: inset(0 0 155px 0);
-    }
-
-    .blob-popout-img {
-        width: 120%;
     }
 
     /* الأيقونات العائمة - أصغر على الموبايل */
