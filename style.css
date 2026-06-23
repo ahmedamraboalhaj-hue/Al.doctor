@@ -959,48 +959,54 @@ main {
 
 .blob-wrapper {
     position: relative;
-    width: 640px;
-    height: 640px;
+    width: 580px;
+    height: 680px;          /* أطول عشان الرأس يطلع فوق */
     display: flex;
-    align-items: center;
+    align-items: flex-end;  /* الدايرة في الأسفل */
     justify-content: center;
 }
 
 /* Background blob - مش محتاجينه */
 .blob-bg { display: none; }
 
-/* Teacher Image inside styled container */
+/* Teacher Image container — overflow visible عشان الرأس يطلع فوق الدايرة */
 .blob-image-container {
     position: absolute;
-    width: 540px;
-    height: 540px;
+    width: 500px;
+    height: 500px;
     border-radius: 50%;
     overflow: hidden;
     z-index: 2;
     border: 5px solid var(--bg-color);
     box-shadow: var(--shadow-lg), 0 0 55px rgba(2, 132, 199, 0.3);
     animation: blob-bounce 12s ease-in-out infinite alternate-reverse;
+    /* نزّل الدايرة شوية عشان الرأس يطلع فوقها */
+    bottom: 0;
+    top: auto;
 }
 
-/* الصورة: تظهر الأستاذ كله من فوق لتحت */
+/* الصورة تطلع فوق حدود الدايرة */
 .hero-main-img {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    width: 115%;
+    height: 115%;
     object-fit: cover;
-    object-position: center 10%;
-    transform: scale(0.82);
+    object-position: center 8%;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
     display: block;
-    transform-origin: center center;
 }
 
-/* ══ الحلقة الملونة الدوّارة (gradient conic spin) ══ */
+/* ══ الحلقة الملونة الدوّارة ══ */
 .blob-color-ring {
     position: absolute;
-    width: 558px;
-    height: 558px;
+    width: 518px;
+    height: 518px;
     border-radius: 50%;
     z-index: 3;
     pointer-events: none;
+    bottom: 0;
     background: conic-gradient(
         #eab308 0deg,
         #fde68a 40deg,
@@ -1013,8 +1019,8 @@ main {
         #eab308 360deg
     );
     animation: colorRingSpin 4s linear infinite;
-    -webkit-mask: radial-gradient(circle, transparent 255px, black 258px, black 279px, transparent 282px);
-    mask:         radial-gradient(circle, transparent 255px, black 258px, black 279px, transparent 282px);
+    -webkit-mask: radial-gradient(circle, transparent 243px, black 246px, black 259px, transparent 262px);
+    mask:         radial-gradient(circle, transparent 243px, black 246px, black 259px, transparent 262px);
     filter: blur(0.5px) brightness(1.15);
 }
 
@@ -1025,6 +1031,32 @@ main {
 
 /* حلقات النبض - مخفية */
 .blob-pulse-ring { display: none; }
+
+/* ══ طبقة الـ Popout — الرأس والكتفين فوق الدايرة ══ */
+.blob-popout-layer {
+    position: absolute;
+    width: 520px;
+    height: 680px;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;          /* فوق الحلقة */
+    pointer-events: none;
+    overflow: hidden;
+    /* نُظهر بس الجزء العلوي اللي فوق الدايرة */
+    clip-path: inset(0 0 310px 0);
+}
+
+.blob-popout-img {
+    position: absolute;
+    width: 105%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 5%;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
 
 /* ── بطاقات ميزات عائمة حول الدائرة ── */
 .hero-feature-card {
@@ -2158,28 +2190,39 @@ input:checked + .switch-slider:before {
     /* الدائرة على الموبايل */
     .blob-wrapper {
         width: 300px;
-        height: 300px;
+        height: 380px;
     }
 
     .blob-image-container {
-        width: 272px;
-        height: 272px;
+        width: 260px;
+        height: 260px;
         border-width: 3px;
     }
 
-    /* الصورة على الموبايل - الأستاذ كله يبان */
+    /* الصورة على الموبايل */
     .hero-main-img {
         object-position: center 5%;
-        transform: scale(0.80);
-        transform-origin: center center;
+        width: 120%;
+        height: 120%;
     }
 
     /* حلقة الألوان الدوارة على الموبايل */
     .blob-color-ring {
-        width: 284px;
-        height: 284px;
-        -webkit-mask: radial-gradient(circle, transparent 128px, black 131px, black 142px, transparent 145px);
-        mask:         radial-gradient(circle, transparent 128px, black 131px, black 142px, transparent 145px);
+        width: 272px;
+        height: 272px;
+        -webkit-mask: radial-gradient(circle, transparent 122px, black 125px, black 136px, transparent 139px);
+        mask:         radial-gradient(circle, transparent 122px, black 125px, black 136px, transparent 139px);
+    }
+
+    /* popout layer على الموبايل */
+    .blob-popout-layer {
+        width: 270px;
+        height: 380px;
+        clip-path: inset(0 0 155px 0);
+    }
+
+    .blob-popout-img {
+        width: 120%;
     }
 
     /* الأيقونات العائمة - أصغر على الموبايل */
