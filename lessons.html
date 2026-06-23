@@ -830,31 +830,71 @@ function normalizePhone(phone){
 }
 
 async function submitCoursePaymentRequest(courseId){
-  const phone  = document.getElementById('paymentPhoneInput')?.value.trim();
-  const amount = document.getElementById('paymentAmountInput')?.value.trim();
+  const phone   = document.getElementById('paymentPhoneInput')?.value.trim();
+  const amount  = document.getElementById('paymentAmountInput')?.value.trim();
+  const txCode  = document.getElementById('paymentTxCodeInput')?.value.trim();
   if(!phone||!amount){ showNotification('أدخل رقم المحفظة والمبلغ','error'); return; }
+  if(!txCode){ showNotification('أدخل كود العملية (Reference Number)','error'); return; }
   const user = getCurrentUser();
   if(!user){ doLogout(); return; }
+
+  // حفظ محلي مؤقت
   const pending = JSON.parse(localStorage.getItem('alamin_pending_payments')||'[]');
-  const req = { transactionId:Date.now(), studentId: user.phone||user.id, courseId, senderPhone:phone, amount, timestamp:new Date().toLocaleString('ar-EG'), status:'pending' };
+  const req = {
+    transactionId: Date.now(),
+    studentId: user.phone||user.id,
+    fullName: user.name||'',
+    courseId,
+    phone,
+    senderPhone: phone,
+    amount,
+    transactionCode: txCode,
+    timestamp: new Date().toLocaleString('ar-EG'),
+    status: 'pending'
+  };
   pending.push(req);
   localStorage.setItem('alamin_pending_payments', JSON.stringify(pending));
+
+  // حفظ في Firestore (paymentRequests) — يظهر في لوحة SMS تلقائياً
   if(window.db && window.firebase){
     try{
       const docRef = await window.db.collection('paymentRequests').add({
-        studentId: String(user.phone||user.id), courseId:String(courseId), phone,
+        studentId:       String(user.phone||user.id),
+        fullName:        user.name || '',
+        courseId:        String(courseId),
+        phone:           phone,
         phoneNormalized: normalizePhone(phone),
-        amount: String(amount), amountNumber: Number(String(amount).replace(',','.')),
-        provider:'vodafone_cash', status:'pending',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        amount:          String(amount),
+        amountNumber:    Number(String(amount).replace(',','.')),
+        transactionCode: txCode,
+        provider:        'vodafone_cash',
+        status:          'pending',
+        source:          'platform_student',
+        createdAt:       firebase.firestore.FieldValue.serverTimestamp()
       });
       req.firebaseId = docRef.id;
       localStorage.setItem('alamin_pending_payments', JSON.stringify(pending));
     }catch(e){ console.warn('[payment fb]', e); }
   }
-  showNotification('✅ تم إرسال طلب التفعيل — سيتم الرد قريباً','ok');
-  document.getElementById('paymentPhoneInput').value = '';
-  document.getElementById('paymentAmountInput').value = '';
+
+  // إشعار مرئي للطالب بأن الطلب وصل
+  const gate = document.getElementById('accessGate');
+  if(gate){
+    gate.innerHTML = `
+      <div class="gate-box" style="border:2px solid #16a34a;background:rgba(22,163,74,.05);">
+        <div class="gate-icon">⏳</div>
+        <div class="gate-title" style="color:#16a34a;">طلبك وصلنا بنجاح!</div>
+        <p class="gate-desc">
+          تم استلام طلب تفعيل الكورس.<br>
+          سيتم مراجعة بيانات التحويل وتفعيل الكورس تلقائياً قريباً.<br><br>
+          <strong>رقم التحويل:</strong> ${txCode}<br>
+          <strong>المبلغ:</strong> ${amount} ج.م
+        </p>
+        <p style="font-size:.8rem;color:var(--text2);margin-top:10px;">
+          🔄 ستظهر إمكانية الوصول للكورس فور المراجعة وقد تحتاج تحديث الصفحة.
+        </p>
+      </div>`;
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -871,7 +911,9 @@ function hasQuizAttempt(quizId){
 }
 function getQuizById(quizId){
   const quizzes = JSON.parse(localStorage.getItem('alamin_quizzes')||'[]');
-  return quizzes.find(q => String(q.id)===String(quizId));
+  let q = quizzes.find(q => String(q.id)===String(quizId));
+  if (!q) q = quizzes.find(q => String(q.quizId)===String(quizId));
+  return q || null;
 }
 function startQuiz(quizId){
   if(hasQuizAttempt(quizId)){
@@ -879,7 +921,9 @@ function startQuiz(quizId){
     return;
   }
   localStorage.setItem('alamin_selected_quiz', String(quizId));
-  window.location.href = 'tests.html?quiz=' + quizId;
+  // نمرر courseId في الرابط عشان tests.html يعرف يرجع للكورس
+  const courseId = new URLSearchParams(location.search).get('course') || currentCourseId || '';
+  window.location.href = 'tests.html?quiz=' + quizId + (courseId ? '&course=' + courseId : '');
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1190,15 +1234,20 @@ async function renderCoursePage(){
      <span id="courseUpdateMeta"><i class="fas fa-calendar-alt"></i> آخر تحديث: ${course.updated||course.created||'غير محدد'}</span>
      ${typeBadge}`;
 
-  // Load quizzes
+  // Load quizzes — دائماً يحمّل الاختبارات من Firestore
   if(window.db){
     try{
-      const hasQ = (course.lessons||[]).some(ls=>ls.quizId);
-      if(hasQ){
-        const snap = await window.db.collection('quizzes').get();
-        if(!snap.empty){ const ql=[]; snap.forEach(d=>ql.push(d.data())); localStorage.setItem('alamin_quizzes',JSON.stringify(ql)); }
+      const snap = await window.db.collection('quizzes').get();
+      if(!snap.empty){
+        const ql = [];
+        snap.forEach(d => {
+          const data = d.data();
+          // نضمن وجود id
+          ql.push({ ...data, id: data.id || d.id });
+        });
+        localStorage.setItem('alamin_quizzes', JSON.stringify(ql));
       }
-    }catch(e){}
+    }catch(e){ console.warn('[quizzes load]', e); }
   }
 
   // Build lessons
@@ -1285,6 +1334,11 @@ async function renderCoursePage(){
             <div class="gate-input-group">
               <label>المبلغ المحوّل (ج.م)</label>
               <input id="paymentAmountInput" class="gate-input" type="number" min="0" placeholder="أدخل المبلغ">
+            </div>
+            <div class="gate-input-group">
+              <label>كود العملية (Reference Number) 🧾</label>
+              <input id="paymentTxCodeInput" class="gate-input" type="text" placeholder="مثال: 020635548453" dir="ltr" style="font-family:monospace;letter-spacing:1px;">
+              <small style="color:var(--text2);font-size:.78rem;display:block;margin-top:5px;">موجود في رسالة التأكيد من فودافون كاش</small>
             </div>
             <button id="submitPaymentBtn" class="btn-gate-action">إرسال طلب التفعيل 🚀</button>
           </div>

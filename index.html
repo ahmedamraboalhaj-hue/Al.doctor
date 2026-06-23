@@ -100,8 +100,9 @@
     <!-- Navigation Bar -->
     <header id="header">
         <div class="header-container">
-            <!-- Left Side: Logo + Theme Toggle -->
-            <div class="header-left">
+
+            <!-- اليمين: اللوجو -->
+            <div class="header-right">
                 <a href="#home" class="logo" id="logo-link">
                     <img src="ايقونة الهدر.png" alt="شعار الدكتور" class="logo-img">
                     <div class="logo-text">
@@ -111,26 +112,27 @@
                 </a>
             </div>
 
-            <!-- Center: Theme Toggle دايمًا ظاهر -->
-            <div class="header-theme-wrap">
-                <input type="checkbox" id="checkbox" style="display:none">
-                <button class="header-theme-btn" id="header-theme-btn" aria-label="تغيير الوضع">
-                    <span class="htb-icon" id="htb-icon"><i class="fas fa-sun"></i></span>
-                    <div class="htb-pill" id="htb-pill">
-                        <div class="htb-dot"></div>
-                    </div>
-                    <span class="htb-label" id="htb-label">نهاري</span>
-                </button>
-            </div>
-
-            <!-- Right Side: Hamburger - فيها اعمل حساب وسجل دخول بس -->
-            <div class="header-right">
+            <!-- الشمال: الهامبرغر + التوجل -->
+            <div class="header-left">
+                <!-- الهامبرغر -->
                 <button class="hamburger-btn" id="hamburger-btn" aria-label="القائمة" aria-expanded="false">
                     <span class="hb-line hb-line-1"></span>
                     <span class="hb-line hb-line-2"></span>
                     <span class="hb-line hb-line-3"></span>
                 </button>
 
+                <!-- التوجل ليل/نهار -->
+                <input type="checkbox" id="checkbox" style="display:none">
+                <button class="header-theme-btn" id="header-theme-btn" aria-label="تغيير الوضع">
+                    <div class="htb-track">
+                        <div class="htb-thumb">
+                            <i class="fas fa-sun htb-sun-ico"></i>
+                            <i class="fas fa-moon htb-moon-ico"></i>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- القائمة المنسدلة -->
                 <div class="hb-dropdown" id="hb-dropdown">
                     <a href="#login" class="hb-item hb-login" id="nav-login-btn">
                         <span class="hb-item-icon"><i class="fas fa-sign-in-alt"></i></span>
@@ -145,6 +147,7 @@
                     </a>
                 </div>
             </div>
+
         </div>
     </header>
 
@@ -279,63 +282,221 @@
                 </div>
             </div>
 
-            <!-- New Courses Section -->
-            <div class="courses-section">
-                <div class="section-header">
-                    <h2 class="section-title"><i class="fas fa-graduation-cap"></i> الكورسات المتاحة</h2>
-                    <p class="section-subtitle">ابدأ رحلتك التعليمية الآن مع أقوى الكورسات المخصصة للتفوق والريادة</p>
-                </div>
-                <div class="courses-grid">
-                    <!-- Course 1 -->
-                    <div class="course-card">
-                        <div class="course-image-container">
-                            <img src="صورة الواجهه.jpeg" alt="تأسيس النحو من الصفر" class="course-img">
-                            <span class="course-badge">كورس مجاني</span>
-                        </div>
-                        <div class="course-info">
-                            <h3 class="course-title">تأسيس النحو من الصفر</h3>
-                            <p class="course-desc">شرح تفصيلي ومبسط لكافة القواعد الإعرابية من البداية وحتى الاحتراف بأسلوب عصري.</p>
-                            <div class="course-stats">
-                                <span><i class="fas fa-play-circle"></i> 14 محاضرة</span>
-                                <span><i class="fas fa-clock"></i> 10 ساعات</span>
-                            </div>
-                            <button class="btn-course-action" onclick="alert('سيتم فتح الكورس قريباً بعد التفعيل...');">ابدأ التعلم الآن <i class="fas fa-arrow-left"></i></button>
-                        </div>
+            <!-- ═══════════════ قسم عن الدكتور ═══════════════ -->
+            <div class="about-section">
+                <div class="about-inner">
+                    <div class="about-badge-wrap">
+                        <span class="about-badge"><i class="fas fa-star"></i> من هو الدكتور؟</span>
                     </div>
-                    <!-- Course 2 -->
-                    <div class="course-card">
-                        <div class="course-image-container">
-                            <img src="صورة الواجهه.jpeg" alt="البلاغة والتذوق الأدبي" class="course-img">
-                            <span class="course-badge">كورس مجاني</span>
-                        </div>
-                        <div class="course-info">
-                            <h3 class="course-title">البلاغة والتذوق الأدبي</h3>
-                            <p class="course-desc">افهم أسرار البلاغة وتعلم كيفية إجابة أسئلة التذوق والنصوص المتحررة بنظام الامتحانات الجديد.</p>
-                            <div class="course-stats">
-                                <span><i class="fas fa-play-circle"></i> 8 محاضرات</span>
-                                <span><i class="fas fa-clock"></i> 6 ساعات</span>
+                    <div class="about-grid">
+                        <div class="about-img-side">
+                            <div class="about-img-frame">
+                                <img src="صورة الواجهه.jpeg" alt="الدكتور إبراهيم طناني" class="about-img">
+                                <div class="about-img-ring"></div>
+                                <div class="about-exp-chip">
+                                    <span class="about-exp-num">+١٥</span>
+                                    <span class="about-exp-text">سنة خبرة</span>
+                                </div>
                             </div>
-                            <button class="btn-course-action" onclick="alert('سيتم فتح الكورس قريباً بعد التفعيل...');">ابدأ التعلم الآن <i class="fas fa-arrow-left"></i></button>
                         </div>
-                    </div>
-                    <!-- Course 3 -->
-                    <div class="course-card">
-                        <div class="course-image-container">
-                            <img src="صورة الواجهه.jpeg" alt="شرح منهج الأدب والنصوص" class="course-img">
-                            <span class="course-badge">كورس مجاني</span>
-                        </div>
-                        <div class="course-info">
-                            <h3 class="course-title">منهج الأدب والنصوص للثانوية</h3>
-                            <p class="course-desc">شرح وافٍ لمدارس الأدب والتعليقات على النصوص المقررة لضمان تحصيل الدرجة النهائية.</p>
-                            <div class="course-stats">
-                                <span><i class="fas fa-play-circle"></i> 18 محاضرة</span>
-                                <span><i class="fas fa-clock"></i> 12 ساعة</span>
+                        <div class="about-text-side">
+                            <h2 class="about-title">الدكتور <span class="about-title-hl">إبراهيم طناني</span></h2>
+                            <p class="about-desc">أستاذ اللغة العربية المتميز، حاصل على درجة الدكتوراه في اللغة العربية وآدابها. يتميز بأسلوب شرح مبسط وممتع يجعل المنهج سهلاً وقابلاً للفهم لكل الطلاب. يُدرّس للمراحل الثانوية الثلاث (أولى وثانية وثالثة ثانوي) بنظام علمي وأدبي.</p>
+                            <div class="about-tags">
+                                <span class="about-tag"><i class="fas fa-check-circle"></i> شرح مبسط ومنظم</span>
+                                <span class="about-tag"><i class="fas fa-check-circle"></i> نماذج امتحانات حقيقية</span>
+                                <span class="about-tag"><i class="fas fa-check-circle"></i> متابعة مستمرة</span>
+                                <span class="about-tag"><i class="fas fa-check-circle"></i> تصحيح تفصيلي</span>
+                                <span class="about-tag"><i class="fas fa-check-circle"></i> منهج كامل ومنظم</span>
+                                <span class="about-tag"><i class="fas fa-check-circle"></i> مراجعات دورية</span>
                             </div>
-                            <button class="btn-course-action" onclick="alert('سيتم فتح الكورس قريباً بعد التفعيل...');">ابدأ التعلم الآن <i class="fas fa-arrow-left"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- ═══════════════ قسم الكورسات ═══════════════ -->
+            <div class="courses-section">
+                <div class="section-header">
+                    <span class="section-eyebrow"><i class="fas fa-graduation-cap"></i> كورساتنا</span>
+                    <h2 class="section-title">الكورسات المتاحة</h2>
+                    <p class="section-subtitle">ابدأ رحلتك التعليمية مع أقوى الكورسات المخصصة للتفوق</p>
+                </div>
+                <div id="courses-grid" class="courses-grid">
+                    <div class="courses-loading"><i class="fas fa-spinner fa-spin"></i><span>جارٍ تحميل الكورسات…</span></div>
+                </div>
+            </div>
+
+            <!-- ═══════════════ قسم الأرقام ═══════════════ -->
+            <div class="stats-section">
+                <div class="stats-inner">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="--sc:#0284c7"><i class="fas fa-users"></i></div>
+                        <div class="stat-num counter" data-target="5000">٠</div>
+                        <div class="stat-label">طالب مسجل</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="--sc:#eab308"><i class="fas fa-play-circle"></i></div>
+                        <div class="stat-num counter" data-target="200">٠</div>
+                        <div class="stat-label">محاضرة مسجلة</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="--sc:#16a34a"><i class="fas fa-medal"></i></div>
+                        <div class="stat-num counter" data-target="98">٠</div>
+                        <div class="stat-label">% نسبة رضا الطلاب</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="--sc:#a855f7"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <div class="stat-num counter" data-target="15">٠</div>
+                        <div class="stat-label">سنة خبرة في التدريس</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════════ قسم المراحل ═══════════════ -->
+            <div class="grades-section">
+                <div class="section-header">
+                    <span class="section-eyebrow"><i class="fas fa-layer-group"></i> المراحل</span>
+                    <h2 class="section-title">المراحل التي يُدرّسها الدكتور</h2>
+                    <p class="section-subtitle">متخصص في المرحلة الثانوية بالكامل — علمي وأدبي</p>
+                </div>
+                <div class="grades-grid">
+                    <div class="grade-card grade-card-1">
+                        <div class="grade-icon"><i class="fas fa-seedling"></i></div>
+                        <h3 class="grade-name">أولى ثانوي</h3>
+                        <p class="grade-desc">تأسيس قوي في النحو والبلاغة والأدب للسنة الأولى</p>
+                        <div class="grade-tracks">
+                            <span class="track-pill track-science"><i class="fas fa-flask"></i> علمي</span>
+                            <span class="track-pill track-arts"><i class="fas fa-feather"></i> أدبي</span>
+                        </div>
+                    </div>
+                    <div class="grade-card grade-card-2">
+                        <div class="grade-icon"><i class="fas fa-book-reader"></i></div>
+                        <h3 class="grade-name">ثانية ثانوي</h3>
+                        <p class="grade-desc">تعمق في المنهج وتدريب مكثف على نماذج الامتحانات</p>
+                        <div class="grade-tracks">
+                            <span class="track-pill track-science"><i class="fas fa-flask"></i> علمي</span>
+                            <span class="track-pill track-arts"><i class="fas fa-feather"></i> أدبي</span>
+                        </div>
+                    </div>
+                    <div class="grade-card grade-card-3">
+                        <div class="grade-icon"><i class="fas fa-award"></i></div>
+                        <h3 class="grade-name">ثالثة ثانوي</h3>
+                        <p class="grade-desc">مراجعة شاملة وتحضير مكثف للثانوية العامة للحصول على أعلى الدرجات</p>
+                        <div class="grade-tracks">
+                            <span class="track-pill track-science"><i class="fas fa-flask"></i> علمي</span>
+                            <span class="track-pill track-arts"><i class="fas fa-feather"></i> أدبي</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════════ قسم المميزات ═══════════════ -->
+            <div class="features-section">
+                <div class="section-header">
+                    <span class="section-eyebrow"><i class="fas fa-bolt"></i> ليه تختارنا؟</span>
+                    <h2 class="section-title">مميزات منصة الدكتور</h2>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrap" style="--fi:#0284c7"><i class="fas fa-video"></i></div>
+                        <h3 class="feature-title">محاضرات مسجلة</h3>
+                        <p class="feature-desc">شاهد المحاضرات في أي وقت ومن أي مكان بجودة عالية</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon-wrap" style="--fi:#eab308"><i class="fas fa-pencil-alt"></i></div>
+                        <h3 class="feature-title">تصحيح فوري</h3>
+                        <p class="feature-desc">تصحيح تفصيلي للتدريبات والامتحانات مع توضيح الأخطاء</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon-wrap" style="--fi:#16a34a"><i class="fas fa-file-alt"></i></div>
+                        <h3 class="feature-title">امتحانات تجريبية</h3>
+                        <p class="feature-desc">نماذج امتحانات حقيقية على نظام الثانوية العامة الجديد</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon-wrap" style="--fi:#a855f7"><i class="fas fa-headset"></i></div>
+                        <h3 class="feature-title">دعم مستمر</h3>
+                        <p class="feature-desc">تواصل مباشر مع الدكتور والفريق طوال أيام الأسبوع</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon-wrap" style="--fi:#ef4444"><i class="fas fa-chart-line"></i></div>
+                        <h3 class="feature-title">متابعة التقدم</h3>
+                        <p class="feature-desc">تابع مستوى تقدمك ودرجاتك بشكل مستمر ومنظم</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon-wrap" style="--fi:#0ea5e9"><i class="fas fa-mobile-alt"></i></div>
+                        <h3 class="feature-title">متوافق مع الموبايل</h3>
+                        <p class="feature-desc">المنصة تشتغل بكفاءة على الموبايل والتابلت والكمبيوتر</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════════ آراء الطلاب ═══════════════ -->
+            <div class="reviews-section">
+                <div class="section-header">
+                    <span class="section-eyebrow"><i class="fas fa-heart"></i> طلابنا بيقولوا</span>
+                    <h2 class="section-title">آراء الطلاب</h2>
+                </div>
+                <div class="reviews-grid">
+                    <div class="review-card">
+                        <div class="review-stars">★★★★★</div>
+                        <p class="review-text">"الدكتور إبراهيم غيّر نظرتي للغة العربية خالص. كنت بكره المادة وبقيت من أحسن الطلاب فيها!"</p>
+                        <div class="review-author">
+                            <div class="review-avatar">م</div>
+                            <div><strong>محمد أحمد</strong><small>ثالثة ثانوي — علمي</small></div>
+                        </div>
+                    </div>
+                    <div class="review-card">
+                        <div class="review-stars">★★★★★</div>
+                        <p class="review-text">"أسلوب الشرح بسيط جداً ومنظم. الامتحانات التجريبية ساعدتني أجيب ٤٨ من ٥٠ في اللغة العربية!"</p>
+                        <div class="review-author">
+                            <div class="review-avatar">س</div>
+                            <div><strong>سارة محمود</strong><small>ثانية ثانوي — أدبي</small></div>
+                        </div>
+                    </div>
+                    <div class="review-card">
+                        <div class="review-stars">★★★★★</div>
+                        <p class="review-text">"المنصة سهلة الاستخدام والمحاضرات منظمة. الدكتور بيرد على الأسئلة بسرعة وده بيساعد جداً!"</p>
+                        <div class="review-author">
+                            <div class="review-avatar">ي</div>
+                            <div><strong>يوسف علي</strong><small>أولى ثانوي — علمي</small></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════════ CTA ═══════════════ -->
+            <div class="cta-section">
+                <div class="cta-inner">
+                    <div class="cta-glow"></div>
+                    <h2 class="cta-title">جاهز تبدأ رحلتك؟ 🚀</h2>
+                    <p class="cta-desc">انضم لآلاف الطلاب اللي حققوا أحلامهم مع الدكتور إبراهيم طناني</p>
+                    <div class="cta-btns">
+                        <a href="#register" class="cta-btn-primary"><i class="fas fa-user-plus"></i> اعمل حساب مجاناً</a>
+                        <a href="#login" class="cta-btn-secondary"><i class="fas fa-sign-in-alt"></i> سجل دخولك</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════════ Footer ═══════════════ -->
+            <footer class="site-footer">
+                <div class="footer-inner">
+                    <div class="footer-brand">
+                        <img src="ايقونة الهدر.png" alt="الدكتور" class="footer-logo">
+                        <div>
+                            <div class="footer-brand-name">الدكتور</div>
+                            <div class="footer-brand-sub">في اللغة العربية</div>
+                        </div>
+                    </div>
+                    <div class="footer-links">
+                        <a href="#home">الرئيسية</a>
+                        <a href="#login">تسجيل الدخول</a>
+                        <a href="#register">حساب جديد</a>
+                        <a href="https://wa.me/201028164601" target="_blank">تواصل معنا</a>
+                    </div>
+                    <div class="footer-copy">© ٢٠٢٥ منصة الدكتور في اللغة العربية — جميع الحقوق محفوظة</div>
+                </div>
+            </footer>
         </section>
 
 
@@ -706,6 +867,102 @@
     })();
     </script>
 
-</body>
+    <!-- Courses Loader + Counter Animation -->
+    <script>
+    // ── تحميل الكورسات ──
+    async function loadCoursesGrid() {
+        var grid = document.getElementById('courses-grid');
+        if (!grid) return;
 
+        var staticCourses = [
+            { id:'c1', title:'تأسيس النحو من الصفر',        desc:'شرح تفصيلي ومبسط لكافة القواعد الإعرابية من البداية حتى الاحتراف بأسلوب عصري ومميز.',                              grade:'أولى ثانوي',  lectures:14, hours:10, isFree:true  },
+            { id:'c2', title:'البلاغة والتذوق الأدبي',       desc:'افهم أسرار البلاغة وتعلم إجابة أسئلة التذوق والنصوص المتحررة بنظام الامتحانات الجديد.',                           grade:'ثانية ثانوي', lectures:8,  hours:6,  isFree:false, price:'١٥٠ جنيه' },
+            { id:'c3', title:'منهج الأدب والنصوص للثانوية',  desc:'شرح وافٍ لمدارس الأدب والتعليقات على النصوص المقررة لضمان تحصيل الدرجة النهائية.',                               grade:'ثالثة ثانوي', lectures:18, hours:12, isFree:false, price:'٢٠٠ جنيه' },
+            { id:'c4', title:'الإملاء والكتابة الإبداعية',   desc:'إتقان قواعد الإملاء وتطوير مهارات التعبير الكتابي والإبداعي بأسلوب سهل وممتع.',                                  grade:'أولى ثانوي',  lectures:10, hours:7,  isFree:true  },
+            { id:'c5', title:'مراجعة نهائية ثانوية عامة',    desc:'مراجعة شاملة لكل أجزاء المنهج مع نماذج الامتحانات والحلول التفصيلية.',                                             grade:'ثالثة ثانوي', lectures:22, hours:15, isFree:false, price:'٢٥٠ جنيه' },
+            { id:'c6', title:'الصرف والاشتقاق',              desc:'دراسة متعمقة في علم الصرف والاشتقاق اللغوي بطريقة مبسطة تُمكّن الطالب من إتقان المادة.',                          grade:'ثانية ثانوي', lectures:12, hours:8,  isFree:true  }
+        ];
+
+        var courses = staticCourses;
+        if (window.db) {
+            try {
+                var doc = await window.db.collection('platform_data').doc('courses_list').get();
+                if (doc.exists) {
+                    var items = doc.data().items;
+                    if (Array.isArray(items) && items.length) {
+                        courses = items.map(function(c) {
+                            return Object.assign({}, c, {
+                                isFree: c.isFree !== undefined ? c.isFree : (c.type === 'free'),
+                                img: c.thumbnail || c.img || 'صورة الواجهه.jpeg'
+                            });
+                        });
+                    }
+                }
+            } catch(e){ console.warn('courses load error:', e); }
+        }
+
+        grid.innerHTML = courses.map(function(c){
+            return '<div class="course-card">' +
+                '<div class="course-image-container">' +
+                    '<img src="' + (c.img||'صورة الواجهه.jpeg') + '" alt="' + c.title + '" class="course-img" loading="lazy">' +
+                    '<span class="course-badge ' + (c.isFree ? 'badge-free' : 'badge-paid') + '">' +
+                        (c.isFree ? '🎁 مجاني' : '💎 مدفوع') +
+                    '</span>' +
+                '</div>' +
+                '<div class="course-info">' +
+                    '<span class="course-grade-pill"><i class="fas fa-layer-group"></i> ' + (c.grade||'') + '</span>' +
+                    '<h3 class="course-title">' + c.title + '</h3>' +
+                    '<p class="course-desc">' + (c.desc||'') + '</p>' +
+                    '<div class="course-stats">' +
+                        '<span><i class="fas fa-play-circle"></i> ' + (c.lectures||0) + ' محاضرة</span>' +
+                        '<span><i class="fas fa-clock"></i> ' + (c.hours||0) + ' ساعات</span>' +
+                        (!c.isFree && c.price ? '<span><i class="fas fa-tag"></i> ' + c.price + '</span>' : '') +
+                    '</div>' +
+                    '<button class="btn-course-action" onclick="handleCourseClick(\'' + c.id + '\',' + c.isFree + ')">' +
+                        (c.isFree ? 'ابدأ مجاناً' : 'اشترك الآن') + ' <i class="fas fa-arrow-left"></i>' +
+                    '</button>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    function handleCourseClick(courseId, isFree) {
+        var session = null;
+        try { session = JSON.parse(localStorage.getItem('alamin_session') || sessionStorage.getItem('alamin_session') || 'null'); } catch(e){}
+        if (!session) { alert('⚠️ يجب تسجيل الدخول أولاً للوصول للكورسات'); window.location.hash='#login'; return; }
+        if (!isFree)  { alert('💎 هذا الكورس مدفوع — سيتم التواصل معك لإتمام الاشتراك'); return; }
+        window.location.hash = '#lessons';
+    }
+    window.handleCourseClick = handleCourseClick;
+
+    // ── Counter Animation ──
+    function initCounters() {
+        var counters = document.querySelectorAll('.counter');
+        if (!counters.length) return;
+        var arabic = function(n){ return String(n).replace(/\d/g, function(d){ return '٠١٢٣٤٥٦٧٨٩'[d]; }); };
+        var obs = new IntersectionObserver(function(entries){
+            entries.forEach(function(entry){
+                if (!entry.isIntersecting) return;
+                var el = entry.target;
+                var target = +el.dataset.target;
+                var current = 0;
+                var step = Math.ceil(target / 60);
+                var timer = setInterval(function(){
+                    current = Math.min(current + step, target);
+                    el.textContent = arabic(current);
+                    if (current >= target) clearInterval(timer);
+                }, 30);
+                obs.unobserve(el);
+            });
+        }, { threshold: 0.4 });
+        counters.forEach(function(c){ obs.observe(c); });
+    }
+
+    document.addEventListener('DOMContentLoaded', function(){
+        loadCoursesGrid();
+        initCounters();
+    });
+    </script>
+
+</body>
 </html>

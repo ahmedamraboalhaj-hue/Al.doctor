@@ -51,16 +51,7 @@ function initTheme() {
             document.documentElement.removeAttribute('data-theme');
             if (themeCheckbox) themeCheckbox.checked = false;
         }
-        // تحديث واجهة الزرار في الهيدر
-        const htbIcon  = document.getElementById('htb-icon');
-        const htbLabel = document.getElementById('htb-label');
-        if (htbIcon)  htbIcon.innerHTML   = theme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
-        if (htbLabel) htbLabel.textContent = theme === 'dark' ? 'ليلي' : 'نهاري';
-        // دعم القديم
-        const oldLabel = document.getElementById('hb-theme-label');
-        const oldIcon  = document.getElementById('hb-theme-icon');
-        if (oldLabel) oldLabel.textContent = theme === 'dark' ? 'الوضع الليلي' : 'الوضع النهاري';
-        if (oldIcon)  oldIcon.innerHTML    = theme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        // الـ toggle الجديد — CSS بيتحكم في الشكل تلقائياً عبر [data-theme="dark"]
     };
 
     applyTheme(savedTheme);

@@ -1001,9 +1001,6 @@ tr:hover td{background:rgba(200,169,110,.03);}
                   <option value="1">الصف الأول الثانوي</option>
                   <option value="2">الصف الثاني الثانوي</option>
                   <option value="3">الصف الثالث الثانوي</option>
-                  <option value="prep1">الأول الإعدادي</option>
-                  <option value="prep2">الثاني الإعدادي</option>
-                  <option value="prep3">الثالث الإعدادي</option>
                 </select>
               </div>
             </div>
@@ -1278,9 +1275,6 @@ tr:hover td{background:rgba(200,169,110,.03);}
       <div class="form-group">
         <label>الصف المستهدف</label>
         <select id="acGrade" onchange="updateCourseTrackVisibility()">
-          <option value="prep1">الصف الأول الإعدادي</option>
-          <option value="prep2">الصف الثاني الإعدادي</option>
-          <option value="prep3">الصف الثالث الإعدادي</option>
           <option value="1">الصف الأول الثانوي</option>
           <option value="2">الصف الثاني الثانوي</option>
           <option value="3">الصف الثالث الثانوي</option>
@@ -1461,9 +1455,7 @@ tr:hover td{background:rgba(200,169,110,.03);}
           <option value="1">الصف الأول الثانوي</option>
           <option value="2">الصف الثاني الثانوي</option>
           <option value="3">الصف الثالث الثانوي</option>
-          <option value="prep3">الصف الثالث الإعدادي</option>
-          <option value="prep2">الصف الثاني الإعدادي</option>
-          <option value="prep1">الصف الأول الإعدادي</option>
+
           <option value="all">كل الصفوف</option>
         </select>
       </div>
@@ -1783,14 +1775,13 @@ function saveUsers(u){localStorage.setItem('alamin_users',JSON.stringify(u));}
 if (typeof gradeLabel === 'undefined') {
   window.gradeLabel = function(g) {
     const m={'1':'أولى ثانوي','2':'ثانية ثانوي','3':'ثالثة ثانوي',
-             'prep3':'ثالثة إعدادي','prep2':'ثانية إعدادي','prep1':'أولى إعدادي',
              'all':'كل الصفوف'};
     return m[g]||g;
   };
 }
 if (typeof gradeClass === 'undefined') {
   window.gradeClass = function(g) {
-    if(['prep1','prep2','prep3'].includes(g)) return 'grade-prep';
+    // prep grades removed
     return {1:'grade1','1':'grade1',2:'grade2','2':'grade2',3:'grade3','3':'grade3'}[g]||'grade1';
   };
 }
@@ -2210,8 +2201,7 @@ function renderStudentsGradeSummary(users){
   const cards = [
     ['1','الأول الثانوي'],
     ['2','الثاني الثانوي'],
-    ['3','الثالث الثانوي'],
-    ['prep3','الثالث الإعدادي']
+    ['3','الثالث الثانوي']
   ];
   wrap.innerHTML = cards.map(([grade,label]) => {
     const count = base.filter(u => String(u.grade) === grade).length;
@@ -2615,6 +2605,10 @@ function openAddLessonModal(courseId){
   document.getElementById('alPdfFile').value = '';
   document.getElementById('alQuizId').value = '';
   resetLessonSegments();
+  // ✅ إعادة تفعيل زرار الحفظ كل ما اتفتح المودال
+  var btn = document.getElementById('saveLessonBtn');
+  if(btn){ btn.disabled = false; btn.textContent = 'حفظ الدرس ✅'; }
+  clearInterval(window._bunnyStatusInterval || 0);
   document.getElementById('addLessonModal').classList.add('open');
   if(courseId){
     setTimeout(()=>{ const sel=document.getElementById('alCourseId'); if(sel) sel.value = courseId; },50);
@@ -3062,6 +3056,13 @@ function bunnyEmbedUrl(videoId){
 }
 
 async function saveNewLesson(){
+  // ✅ منع الحفظ المزدوج: disable الزرار فوراً
+  var saveLessonBtnGuard = document.getElementById('saveLessonBtn');
+  if(saveLessonBtnGuard){
+    if(saveLessonBtnGuard.disabled) return; // منع الضغط أكتر من مرة
+    saveLessonBtnGuard.disabled = true;
+    saveLessonBtnGuard.textContent = 'جاري الحفظ...';
+  }
   const courseId = document.getElementById('alCourseId').value;
   const title = document.getElementById('alTitle').value.trim();
   const description = document.getElementById('alDescription').value.trim();
@@ -3143,6 +3144,9 @@ async function saveNewLesson(){
   closeModal('addLessonModal');
   renderCoursesAdmin();
   showAlert(hasBunny ? 'تم إضافة الدرس مع الفيديو على Bunny.net ✅' : 'تم إضافة الدرس بنجاح ✅');
+  // ✅ إعادة تهيئة الزرار بعد الحفظ
+  var sbtn = document.getElementById('saveLessonBtn');
+  if(sbtn){ sbtn.disabled = false; sbtn.textContent = 'حفظ الدرس ✅'; }
 }
 
 // ---- PAYMENTS (ADMIN) ----
@@ -5609,7 +5613,7 @@ if(currentUser && currentUser.role === 'student') {
       ? buildGradeOptions
       : function(sel, incAll) {
           const grades = [
-            ['prep1','أولى إعدادي'],['prep2','ثانية إعدادي'],['prep3','ثالثة إعدادي'],
+            
             ['1','أولى ثانوي'],['2','ثانية ثانوي'],['3','ثالثة ثانوي']
           ];
           let html = incAll ? '<option value="all">كل الصفوف</option>' : '<option value="">اختر الصف الدراسي</option>';
