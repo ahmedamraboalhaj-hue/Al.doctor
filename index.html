@@ -100,31 +100,40 @@
     <!-- Navigation Bar -->
     <header id="header">
         <div class="header-container">
-
-            <!-- اليمين (الآن): الهامبرغر + التوجل -->
-            <div class="header-right">
-                <!-- التوجل ليل/نهار -->
-                <input type="checkbox" id="checkbox" style="display:none">
-                <button class="header-theme-btn" id="header-theme-btn" aria-label="تغيير الوضع">
-                    <div class="htb-track">
-                        <div class="htb-thumb">
-                            <i class="fas fa-sun htb-sun-ico"></i>
-                            <i class="fas fa-moon htb-moon-ico"></i>
-                        </div>
+            <!-- RIGHT side (RTL): Logo يجلس في اليمين -->
+            <div class="header-logo-side">
+                <a href="#home" class="logo" id="logo-link">
+                    <img src="ايقونة الهدر.png" alt="شعار الدكتور" class="logo-img">
+                    <div class="logo-text">
+                        <span class="logo-main">الدكتور</span>
+                        <span class="logo-sub">في اللغة العربية</span>
                     </div>
-                </button>
+                </a>
+            </div>
 
-                <!-- الهامبرغر -->
-                <button class="hamburger-btn" id="hamburger-btn" aria-label="القائمة" aria-expanded="false">
-                    <span class="hb-line hb-line-1"></span>
-                    <span class="hb-line hb-line-2"></span>
-                    <span class="hb-line hb-line-3"></span>
-                </button>
+            <!-- LEFT side (RTL): Theme Toggle + Hamburger يجلسان في الشمال -->
+            <div class="header-actions-side">
+                <!-- Theme Toggle -->
+                <div class="header-theme-wrap">
+                    <input type="checkbox" id="checkbox" style="display:none">
+                    <button class="header-theme-btn" id="header-theme-btn" aria-label="تغيير الوضع">
+                        <span class="htb-icon" id="htb-icon"><i class="fas fa-sun"></i></span>
+                        <div class="htb-pill" id="htb-pill">
+                            <div class="htb-dot"></div>
+                        </div>
+                        
+                    </button>
+                </div>
 
-                <!-- القائمة المنسدلة -->
-                <div class="hb-dropdown" id="hb-dropdown">
-                    <!-- روابط غير مسجل -->
-                    <div id="hb-guest-links">
+                <!-- Hamburger -->
+                <div style="position:relative;">
+                    <button class="hamburger-btn" id="hamburger-btn" aria-label="القائمة" aria-expanded="false">
+                        <span class="hb-line hb-line-1"></span>
+                        <span class="hb-line hb-line-2"></span>
+                        <span class="hb-line hb-line-3"></span>
+                    </button>
+
+                    <div class="hb-dropdown" id="hb-dropdown">
                         <a href="#login" class="hb-item hb-login" id="nav-login-btn">
                             <span class="hb-item-icon"><i class="fas fa-sign-in-alt"></i></span>
                             <span class="hb-item-text">سجل دخولك</span>
@@ -137,34 +146,8 @@
                             <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
                         </a>
                     </div>
-                    <!-- روابط مسجل -->
-                    <div id="hb-user-links" style="display:none">
-                        <a href="profile.html" class="hb-item hb-profile" id="nav-profile-btn">
-                            <span class="hb-item-icon"><i class="fas fa-user-circle"></i></span>
-                            <span class="hb-item-text" id="hb-user-name">حسابي</span>
-                            <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
-                        </a>
-                        <div class="hb-divider"></div>
-                        <a href="#home" class="hb-item hb-logout" id="nav-logout-btn" onclick="logoutUser()">
-                            <span class="hb-item-icon"><i class="fas fa-sign-out-alt"></i></span>
-                            <span class="hb-item-text">تسجيل الخروج</span>
-                            <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
-                        </a>
-                    </div>
                 </div>
             </div>
-
-            <!-- الشمال (الآن): اللوجو -->
-            <div class="header-left">
-                <a href="#home" class="logo" id="logo-link">
-                    <img src="ايقونة الهدر.png" alt="شعار الدكتور" class="logo-img">
-                    <div class="logo-text">
-                        <span class="logo-main">الدكتور</span>
-                        <span class="logo-sub">في اللغة العربية</span>
-                    </div>
-                </a>
-            </div>
-
         </div>
     </header>
 
@@ -235,7 +218,7 @@
                 <!-- Right Side: Text & Heading -->
                 <div class="hero-content">
                     <h1 class="hero-title">
-                        منصة <span class="highlight">الدكتور</span>
+                        منصة <span class="highlight-gold">الدكتور</span>
                         <div class="hero-title-sub">في اللغة العربية</div>
                     </h1>
                     <p class="hero-author">الدكتور إبراهيم طناني</p>
@@ -299,221 +282,246 @@
                 </div>
             </div>
 
-            <!-- ═══════════════ قسم عن الدكتور ═══════════════ -->
-            <div class="about-section">
-                <div class="about-inner">
-                    <div class="about-badge-wrap">
-                        <span class="about-badge"><i class="fas fa-star"></i> من هو الدكتور؟</span>
-                    </div>
-                    <div class="about-grid">
-                        <div class="about-img-side">
-                            <div class="about-img-frame">
-                                <img src="صورة الواجهه.jpeg" alt="الدكتور إبراهيم طناني" class="about-img">
-                                <div class="about-img-ring"></div>
-                                <div class="about-exp-chip">
-                                    <span class="about-exp-num">+١٥</span>
-                                    <span class="about-exp-text">سنة خبرة</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="about-text-side">
-                            <h2 class="about-title">الدكتور <span class="about-title-hl">إبراهيم طناني</span></h2>
-                            <p class="about-desc">أستاذ اللغة العربية المتميز، حاصل على درجة الدكتوراه في اللغة العربية وآدابها. يتميز بأسلوب شرح مبسط وممتع يجعل المنهج سهلاً وقابلاً للفهم لكل الطلاب. يُدرّس للمراحل الثانوية الثلاث (أولى وثانية وثالثة ثانوي) بنظام علمي وأدبي.</p>
-                            <div class="about-tags">
-                                <span class="about-tag"><i class="fas fa-check-circle"></i> شرح مبسط ومنظم</span>
-                                <span class="about-tag"><i class="fas fa-check-circle"></i> نماذج امتحانات حقيقية</span>
-                                <span class="about-tag"><i class="fas fa-check-circle"></i> متابعة مستمرة</span>
-                                <span class="about-tag"><i class="fas fa-check-circle"></i> تصحيح تفصيلي</span>
-                                <span class="about-tag"><i class="fas fa-check-circle"></i> منهج كامل ومنظم</span>
-                                <span class="about-tag"><i class="fas fa-check-circle"></i> مراجعات دورية</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ═══════════════ قسم الكورسات ═══════════════ -->
+            <!-- ══ Courses Section ══ -->
             <div class="courses-section">
                 <div class="section-header">
-                    <span class="section-eyebrow"><i class="fas fa-graduation-cap"></i> كورساتنا</span>
+                    <div class="section-tag"><i class="fas fa-graduation-cap"></i> الكورسات</div>
                     <h2 class="section-title">الكورسات المتاحة</h2>
-                    <p class="section-subtitle">ابدأ رحلتك التعليمية مع أقوى الكورسات المخصصة للتفوق</p>
+                    <p class="section-subtitle">ابدأ رحلتك التعليمية الآن مع أقوى الكورسات المخصصة للتفوق والريادة</p>
                 </div>
-                <div id="courses-grid" class="courses-grid">
-                    <div class="courses-loading"><i class="fas fa-spinner fa-spin"></i><span>جارٍ تحميل الكورسات…</span></div>
+                <div class="courses-grid">
+                    <!-- Course 1 - مجاني -->
+                    <div class="course-card">
+                        <div class="course-image-container">
+                            <img src="صورة الواجهه.jpeg" alt="تأسيس النحو من الصفر" class="course-img">
+                            <span class="course-badge free">مجاني</span>
+                        </div>
+                        <div class="course-info">
+                            <h3 class="course-title">تأسيس النحو من الصفر</h3>
+                            <p class="course-desc">شرح تفصيلي ومبسط لكافة القواعد الإعرابية من البداية وحتى الاحتراف بأسلوب عصري.</p>
+                            <div class="course-stats">
+                                <span><i class="fas fa-play-circle"></i> 14 محاضرة</span>
+                                <span><i class="fas fa-clock"></i> 10 ساعات</span>
+                            </div>
+                            <button class="btn-course-action" onclick="alert('سيتم فتح الكورس قريباً بعد التفعيل...');">ابدأ التعلم الآن <i class="fas fa-arrow-left"></i></button>
+                        </div>
+                    </div>
+                    <!-- Course 2 - مدفوع -->
+                    <div class="course-card">
+                        <div class="course-image-container">
+                            <img src="صورة الواجهه.jpeg" alt="البلاغة والتذوق الأدبي" class="course-img">
+                            <span class="course-badge paid">مدفوع</span>
+                        </div>
+                        <div class="course-info">
+                            <h3 class="course-title">البلاغة والتذوق الأدبي</h3>
+                            <p class="course-desc">افهم أسرار البلاغة وتعلم كيفية إجابة أسئلة التذوق والنصوص المتحررة بنظام الامتحانات الجديد.</p>
+                            <div class="course-stats">
+                                <span><i class="fas fa-play-circle"></i> 8 محاضرات</span>
+                                <span><i class="fas fa-clock"></i> 6 ساعات</span>
+                            </div>
+                            <button class="btn-course-action" onclick="alert('سيتم فتح الكورس قريباً بعد التفعيل...');">ابدأ التعلم الآن <i class="fas fa-arrow-left"></i></button>
+                        </div>
+                    </div>
+                    <!-- Course 3 - مجاني -->
+                    <div class="course-card">
+                        <div class="course-image-container">
+                            <img src="صورة الواجهه.jpeg" alt="شرح منهج الأدب والنصوص" class="course-img">
+                            <span class="course-badge free">مجاني</span>
+                        </div>
+                        <div class="course-info">
+                            <h3 class="course-title">منهج الأدب والنصوص للثانوية</h3>
+                            <p class="course-desc">شرح وافٍ لمدارس الأدب والتعليقات على النصوص المقررة لضمان تحصيل الدرجة النهائية.</p>
+                            <div class="course-stats">
+                                <span><i class="fas fa-play-circle"></i> 18 محاضرة</span>
+                                <span><i class="fas fa-clock"></i> 12 ساعة</span>
+                            </div>
+                            <button class="btn-course-action" onclick="alert('سيتم فتح الكورس قريباً بعد التفعيل...');">ابدأ التعلم الآن <i class="fas fa-arrow-left"></i></button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- ═══════════════ قسم الأرقام ═══════════════ -->
-            <div class="stats-section">
-                <div class="stats-inner">
-                    <div class="stat-card">
-                        <div class="stat-icon" style="--sc:#0284c7"><i class="fas fa-users"></i></div>
-                        <div class="stat-num counter" data-target="5000">٠</div>
-                        <div class="stat-label">طالب مسجل</div>
+            <!-- ══ Who is the Doctor Section ══ -->
+            <div class="who-section" id="who-section">
+                <div class="who-bg-decoration">
+                    <div class="who-bg-circle who-bg-c1"></div>
+                    <div class="who-bg-circle who-bg-c2"></div>
+                    <div class="who-bg-dots"></div>
+                </div>
+                <div class="who-inner">
+                    <!-- Left: Image Card -->
+                    <div class="who-image-side">
+                        <div class="who-img-frame">
+                            <div class="who-img-ring who-ring-1"></div>
+                            <div class="who-img-ring who-ring-2"></div>
+                            <div class="who-img-diamond">
+                                <img src="المدرس_بدون_خلفية.png" alt="الدكتور إبراهيم طناني" class="who-img">
+                            </div>
+                            <!-- Experience Badge -->
+                            <div class="who-exp-badge">
+                                <span class="who-exp-num">15+</span>
+                                <span class="who-exp-txt">سنة خبرة</span>
+                            </div>
+                            <!-- Rating Badge -->
+                            <div class="who-rate-badge">
+                                <i class="fas fa-star"></i>
+                                <span>4.9 / 5</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="--sc:#eab308"><i class="fas fa-play-circle"></i></div>
-                        <div class="stat-num counter" data-target="200">٠</div>
-                        <div class="stat-label">محاضرة مسجلة</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="--sc:#16a34a"><i class="fas fa-medal"></i></div>
-                        <div class="stat-num counter" data-target="98">٠</div>
-                        <div class="stat-label">% نسبة رضا الطلاب</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="--sc:#a855f7"><i class="fas fa-chalkboard-teacher"></i></div>
-                        <div class="stat-num counter" data-target="15">٠</div>
-                        <div class="stat-label">سنة خبرة في التدريس</div>
+
+                    <!-- Right: Content -->
+                    <div class="who-content-side">
+                        <div class="who-tag">
+                            <i class="fas fa-star"></i>
+                            <span>من هو الدكتور؟</span>
+                        </div>
+                        <h2 class="who-title">الدكتور <span class="who-name-gold">إبراهيم طناني</span></h2>
+                        <p class="who-desc">أستاذ اللغة العربية المتميز، حاصل على درجة الدكتوراه في اللغة العربية وآدابها. يتميز بأسلوب شرح مبسط وممتع يجعل المنهج سهلاً وقابلاً للفهم لكل الطلاب. يُدرّس للمراحل الثلاث (أولى وثانية وثالثة ثانوي) بنظام علمي وأدبي.</p>
+
+                        <!-- Feature Pills -->
+                        <div class="who-features">
+                            <div class="who-feat"><i class="fas fa-check-circle"></i><span>شرح مبسط ومنظم</span></div>
+                            <div class="who-feat"><i class="fas fa-check-circle"></i><span>نماذج امتحانات حقيقية</span></div>
+                            <div class="who-feat"><i class="fas fa-check-circle"></i><span>متابعة مستمرة</span></div>
+                            <div class="who-feat"><i class="fas fa-check-circle"></i><span>تصحيح تفصيلي</span></div>
+                            <div class="who-feat"><i class="fas fa-check-circle"></i><span>منهج كامل ومنظم</span></div>
+                            <div class="who-feat"><i class="fas fa-check-circle"></i><span>مراجعات دورية</span></div>
+                        </div>
+
+                        <!-- Stats Row -->
+                        <div class="who-stats-row">
+                            <div class="who-stat">
+                                <span class="who-stat-num">+5000</span>
+                                <span class="who-stat-lbl">طالب</span>
+                            </div>
+                            <div class="who-stat-divider"></div>
+                            <div class="who-stat">
+                                <span class="who-stat-num">+200</span>
+                                <span class="who-stat-lbl">محاضرة</span>
+                            </div>
+                            <div class="who-stat-divider"></div>
+                            <div class="who-stat">
+                                <span class="who-stat-num">15+</span>
+                                <span class="who-stat-lbl">سنة خبرة</span>
+                            </div>
+                        </div>
+
+                        <a href="https://wa.me/201028164601" target="_blank" class="who-cta-btn">
+                            <i class="fab fa-whatsapp"></i>
+                            تواصل معنا الآن
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- ═══════════════ قسم المراحل ═══════════════ -->
+            <!-- ══ Why Us Section ══ -->
+            <div class="why-section">
+                <div class="section-header">
+                    <div class="section-tag"><i class="fas fa-award"></i> مميزاتنا</div>
+                    <h2 class="section-title">لماذا تختار منصة الدكتور؟</h2>
+                    <p class="section-subtitle">نقدم لك تجربة تعليمية استثنائية تضمن لك التفوق والريادة</p>
+                </div>
+                <div class="why-grid">
+                    <div class="why-card">
+                        <div class="why-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <h3>شرح احترافي ومبسط</h3>
+                        <p>أسلوب تدريس فريد يجعل أصعب القواعد سهلة وممتعة للحفظ والفهم</p>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-icon"><i class="fas fa-file-alt"></i></div>
+                        <h3>نماذج امتحانات حقيقية</h3>
+                        <p>تدريبات مكثفة على نماذج وزارية وامتحانات سابقة لضمان التفوق</p>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-icon"><i class="fas fa-comments"></i></div>
+                        <h3>متابعة مستمرة</h3>
+                        <p>تواصل دائم مع الدكتور ومتابعة مستمرة للطالب طوال العام الدراسي</p>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-icon"><i class="fas fa-layer-group"></i></div>
+                        <h3>كل الصفوف الدراسية</h3>
+                        <p>تغطية كاملة لمرحلتي الإعدادي والثانوي بنظامي علمي وأدبي</p>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-icon"><i class="fas fa-pencil-alt"></i></div>
+                        <h3>تصحيح تفصيلي</h3>
+                        <p>تصحيح دقيق وتفصيلي للواجبات مع شرح الأخطاء وطرق تجنبها</p>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-icon"><i class="fas fa-redo-alt"></i></div>
+                        <h3>مراجعات دورية</h3>
+                        <p>جلسات مراجعة منتظمة لتثبيت المعلومات وضمان الاستيعاب الكامل</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ Grades Section ══ -->
             <div class="grades-section">
                 <div class="section-header">
-                    <span class="section-eyebrow"><i class="fas fa-layer-group"></i> المراحل</span>
-                    <h2 class="section-title">المراحل التي يُدرّسها الدكتور</h2>
-                    <p class="section-subtitle">متخصص في المرحلة الثانوية بالكامل — علمي وأدبي</p>
+                    <div class="section-tag"><i class="fas fa-graduation-cap"></i> الصفوف</div>
+                    <h2 class="section-title">الصفوف الدراسية المتاحة</h2>
+                    <p class="section-subtitle">محتوى تعليمي متخصص لكل صف دراسي</p>
                 </div>
                 <div class="grades-grid">
-                    <div class="grade-card grade-card-1">
-                        <div class="grade-icon"><i class="fas fa-seedling"></i></div>
-                        <h3 class="grade-name">أولى ثانوي</h3>
-                        <p class="grade-desc">تأسيس قوي في النحو والبلاغة والأدب للسنة الأولى</p>
-                        <div class="grade-tracks">
-                            <span class="track-pill track-science"><i class="fas fa-flask"></i> علمي</span>
-                            <span class="track-pill track-arts"><i class="fas fa-feather"></i> أدبي</span>
-                        </div>
+                    <div class="grade-card grade-prep">
+                        <div class="grade-icon"><i class="fas fa-book"></i></div>
+                        <span class="grade-level">إعدادي</span>
+                        <h3>أولى إعدادي</h3>
+                        <p>أساسيات اللغة العربية والقواعد والإملاء</p>
+                        <a href="#register" class="grade-btn">ابدأ الآن</a>
                     </div>
-                    <div class="grade-card grade-card-2">
-                        <div class="grade-icon"><i class="fas fa-book-reader"></i></div>
-                        <h3 class="grade-name">ثانية ثانوي</h3>
-                        <p class="grade-desc">تعمق في المنهج وتدريب مكثف على نماذج الامتحانات</p>
-                        <div class="grade-tracks">
-                            <span class="track-pill track-science"><i class="fas fa-flask"></i> علمي</span>
-                            <span class="track-pill track-arts"><i class="fas fa-feather"></i> أدبي</span>
-                        </div>
+                    <div class="grade-card grade-prep">
+                        <div class="grade-icon"><i class="fas fa-book"></i></div>
+                        <span class="grade-level">إعدادي</span>
+                        <h3>ثانية إعدادي</h3>
+                        <p>تعمق في القواعد النحوية وتحليل النصوص</p>
+                        <a href="#register" class="grade-btn">ابدأ الآن</a>
                     </div>
-                    <div class="grade-card grade-card-3">
-                        <div class="grade-icon"><i class="fas fa-award"></i></div>
-                        <h3 class="grade-name">ثالثة ثانوي</h3>
-                        <p class="grade-desc">مراجعة شاملة وتحضير مكثف للثانوية العامة للحصول على أعلى الدرجات</p>
-                        <div class="grade-tracks">
-                            <span class="track-pill track-science"><i class="fas fa-flask"></i> علمي</span>
-                            <span class="track-pill track-arts"><i class="fas fa-feather"></i> أدبي</span>
-                        </div>
+                    <div class="grade-card grade-prep">
+                        <div class="grade-icon"><i class="fas fa-book"></i></div>
+                        <span class="grade-level">إعدادي</span>
+                        <h3>ثالثة إعدادي</h3>
+                        <p>مراجعة شاملة والاستعداد للثانوية</p>
+                        <a href="#register" class="grade-btn">ابدأ الآن</a>
                     </div>
-                </div>
-            </div>
-
-            <!-- ═══════════════ قسم المميزات ═══════════════ -->
-            <div class="features-section">
-                <div class="section-header">
-                    <span class="section-eyebrow"><i class="fas fa-bolt"></i> ليه تختارنا؟</span>
-                    <h2 class="section-title">مميزات منصة الدكتور</h2>
-                </div>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon-wrap" style="--fi:#0284c7"><i class="fas fa-video"></i></div>
-                        <h3 class="feature-title">محاضرات مسجلة</h3>
-                        <p class="feature-desc">شاهد المحاضرات في أي وقت ومن أي مكان بجودة عالية</p>
+                    <div class="grade-card grade-sec1">
+                        <div class="grade-icon"><i class="fas fa-star"></i></div>
+                        <span class="grade-level">ثانوي</span>
+                        <h3>أولى ثانوي</h3>
+                        <p>الأدب والنصوص والقواعد والبلاغة</p>
+                        <a href="#register" class="grade-btn">ابدأ الآن</a>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon-wrap" style="--fi:#eab308"><i class="fas fa-pencil-alt"></i></div>
-                        <h3 class="feature-title">تصحيح فوري</h3>
-                        <p class="feature-desc">تصحيح تفصيلي للتدريبات والامتحانات مع توضيح الأخطاء</p>
+                    <div class="grade-card grade-sec2">
+                        <div class="grade-icon"><i class="fas fa-star"></i></div>
+                        <span class="grade-level">ثانوي</span>
+                        <h3>ثانية ثانوي</h3>
+                        <p>تعمق في المنهج وحل نماذج الامتحانات</p>
+                        <a href="#register" class="grade-btn">ابدأ الآن</a>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon-wrap" style="--fi:#16a34a"><i class="fas fa-file-alt"></i></div>
-                        <h3 class="feature-title">امتحانات تجريبية</h3>
-                        <p class="feature-desc">نماذج امتحانات حقيقية على نظام الثانوية العامة الجديد</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon-wrap" style="--fi:#a855f7"><i class="fas fa-headset"></i></div>
-                        <h3 class="feature-title">دعم مستمر</h3>
-                        <p class="feature-desc">تواصل مباشر مع الدكتور والفريق طوال أيام الأسبوع</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon-wrap" style="--fi:#ef4444"><i class="fas fa-chart-line"></i></div>
-                        <h3 class="feature-title">متابعة التقدم</h3>
-                        <p class="feature-desc">تابع مستوى تقدمك ودرجاتك بشكل مستمر ومنظم</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon-wrap" style="--fi:#0ea5e9"><i class="fas fa-mobile-alt"></i></div>
-                        <h3 class="feature-title">متوافق مع الموبايل</h3>
-                        <p class="feature-desc">المنصة تشتغل بكفاءة على الموبايل والتابلت والكمبيوتر</p>
+                    <div class="grade-card grade-sec3">
+                        <div class="grade-icon"><i class="fas fa-crown"></i></div>
+                        <span class="grade-level">ثانوي عام</span>
+                        <h3>ثالثة ثانوي</h3>
+                        <p>مراجعة مكثفة وتحضير للثانوية العامة</p>
+                        <a href="#register" class="grade-btn">ابدأ الآن</a>
                     </div>
                 </div>
             </div>
 
-            <!-- ═══════════════ آراء الطلاب ═══════════════ -->
-            <div class="reviews-section">
-                <div class="section-header">
-                    <span class="section-eyebrow"><i class="fas fa-heart"></i> طلابنا بيقولوا</span>
-                    <h2 class="section-title">آراء الطلاب</h2>
-                </div>
-                <div class="reviews-grid">
-                    <div class="review-card">
-                        <div class="review-stars">★★★★★</div>
-                        <p class="review-text">"الدكتور إبراهيم غيّر نظرتي للغة العربية خالص. كنت بكره المادة وبقيت من أحسن الطلاب فيها!"</p>
-                        <div class="review-author">
-                            <div class="review-avatar">م</div>
-                            <div><strong>محمد أحمد</strong><small>ثالثة ثانوي — علمي</small></div>
-                        </div>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-stars">★★★★★</div>
-                        <p class="review-text">"أسلوب الشرح بسيط جداً ومنظم. الامتحانات التجريبية ساعدتني أجيب ٤٨ من ٥٠ في اللغة العربية!"</p>
-                        <div class="review-author">
-                            <div class="review-avatar">س</div>
-                            <div><strong>سارة محمود</strong><small>ثانية ثانوي — أدبي</small></div>
-                        </div>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-stars">★★★★★</div>
-                        <p class="review-text">"المنصة سهلة الاستخدام والمحاضرات منظمة. الدكتور بيرد على الأسئلة بسرعة وده بيساعد جداً!"</p>
-                        <div class="review-author">
-                            <div class="review-avatar">ي</div>
-                            <div><strong>يوسف علي</strong><small>أولى ثانوي — علمي</small></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ═══════════════ CTA ═══════════════ -->
+            <!-- ══ CTA Banner ══ -->
             <div class="cta-section">
                 <div class="cta-inner">
                     <div class="cta-glow"></div>
-                    <h2 class="cta-title">جاهز تبدأ رحلتك؟ 🚀</h2>
-                    <p class="cta-desc">انضم لآلاف الطلاب اللي حققوا أحلامهم مع الدكتور إبراهيم طناني</p>
+                    <h2 class="cta-title">ابدأ رحلتك نحو التفوق الآن!</h2>
+                    <p class="cta-desc">انضم لآلاف الطلاب المتفوقين على منصة الدكتور في اللغة العربية وحقق درجاتك المثلى</p>
                     <div class="cta-btns">
-                        <a href="#register" class="cta-btn-primary"><i class="fas fa-user-plus"></i> اعمل حساب مجاناً</a>
-                        <a href="#login" class="cta-btn-secondary"><i class="fas fa-sign-in-alt"></i> سجل دخولك</a>
+                        <a href="#register" class="cta-btn-primary">اعمل حساب مجاني <i class="fas fa-arrow-left"></i></a>
+                        <a href="https://wa.me/201028164601" target="_blank" class="cta-btn-whatsapp"><i class="fab fa-whatsapp"></i> تواصل معنا</a>
                     </div>
                 </div>
             </div>
 
-            <!-- ═══════════════ Footer ═══════════════ -->
-            <footer class="site-footer">
-                <div class="footer-inner">
-                    <div class="footer-brand">
-                        <img src="ايقونة الهدر.png" alt="الدكتور" class="footer-logo">
-                        <div>
-                            <div class="footer-brand-name">الدكتور</div>
-                            <div class="footer-brand-sub">في اللغة العربية</div>
-                        </div>
-                    </div>
-                    <div class="footer-links">
-                        <a href="#home">الرئيسية</a>
-                        <a href="#login">تسجيل الدخول</a>
-                        <a href="#register">حساب جديد</a>
-                        <a href="https://wa.me/201028164601" target="_blank">تواصل معنا</a>
-                    </div>
-                    <div class="footer-copy">© ٢٠٢٥ منصة الدكتور في اللغة العربية — جميع الحقوق محفوظة</div>
-                </div>
-            </footer>
         </section>
 
 
@@ -594,21 +602,20 @@
                 <!-- Left Side: Registration Form -->
                 <div class="form-container">
                     <div class="form-header">
-                        <h2 class="form-title"><i class="fas fa-user-plus"></i> إنشاء حساب :</h2>
+                        <h2 class="form-title"><i class="fas fa-user-plus"></i> طلب انشاء حساب :</h2>
                         <p class="form-subtitle">ادخل بياناتك بشكل صحيح وسيتم التواصل معك خلال ساعات قليلة لتفعيل الحساب !</p>
                         <a href="#login" class="form-link-btn" id="go-to-login">يوجد لديك حساب بالفعل؟ ادخل إلى حسابك الآن !</a>
                     </div>
 
                     <form id="register-form" class="auth-form" onsubmit="handleRegisterSubmit(event)">
-                        <!-- Full Name (الاسم الثلاثي) — حقل واحد بدل 4 حقول -->
+                        <!-- Name Input Group -->
                         <div class="input-group">
                             <label for="reg-fullname" class="input-label">
-                                <span class="label-text">الاسم الثلاثي</span>
+                                <span class="label-text">أدخل اسمك الثلاثي</span>
                                 <i class="fas fa-user input-icon"></i>
                             </label>
-                            <input type="text" id="reg-fullname" class="underline-input" required placeholder="مثال: أحمد محمد علي">
+                            <input type="text" id="reg-fullname" class="underline-input" required placeholder="الاسم الثلاثي">
                             <span class="focus-line"></span>
-                            <span class="field-error" id="err-fullname"></span>
                         </div>
 
                         <!-- Student Phone -->
@@ -619,7 +626,6 @@
                             </label>
                             <input type="tel" id="reg-phone" class="underline-input" required placeholder="01xxxxxxxxx">
                             <span class="focus-line"></span>
-                            <span class="field-error" id="err-phone"></span>
                         </div>
 
                         <!-- Parent / Recovery Phones Row -->
@@ -631,7 +637,6 @@
                                 </label>
                                 <input type="tel" id="reg-father-phone" class="underline-input" required placeholder="01xxxxxxxxx">
                                 <span class="focus-line"></span>
-                                <span class="field-error" id="err-father-phone"></span>
                             </div>
 
                             <div class="input-group">
@@ -642,7 +647,6 @@
                                 <input type="tel" id="reg-recovery-phone" class="underline-input" required placeholder="01xxxxxxxxx">
                                 <span class="focus-line"></span>
                                 <small class="recovery-hint-text">هذا الرقم يُستخدم لاسترداد الحساب في حال نسيت كلمة المرور</small>
-                                <span class="field-error" id="err-recovery-phone"></span>
                             </div>
                         </div>
 
@@ -667,7 +671,6 @@
                                     <!-- تُملأ ديناميكياً من grade-mapping.js -->
                                 </select>
                                 <span class="focus-line"></span>
-                                <span class="field-error" id="err-grade"></span>
                             </div>
                         </div>
 
@@ -684,7 +687,6 @@
                                     <option value="أدبي">أدبي</option>
                                 </select>
                                 <span class="focus-line"></span>
-                                <span class="field-error" id="err-track"></span>
                             </div>
                         </div>
 
@@ -743,34 +745,17 @@
                         </div>
 
                         <!-- Password field for account security -->
-                        <div class="form-row">
-                            <div class="input-group">
-                                <label for="reg-password" class="input-label">
-                                    <span class="label-text">كلمة المرور</span>
-                                    <i class="fas fa-lock input-icon"></i>
-                                </label>
-                                <input type="password" id="reg-password" class="underline-input" required placeholder="ادخل كلمة مرور لحسابك">
-                                <span class="focus-line"></span>
-                                <span class="field-error" id="err-password"></span>
-                            </div>
-
-                            <!-- Confirm Password -->
-                            <div class="input-group">
-                                <label for="reg-password-confirm" class="input-label">
-                                    <span class="label-text">تأكيد كلمة المرور</span>
-                                    <i class="fas fa-lock input-icon"></i>
-                                </label>
-                                <input type="password" id="reg-password-confirm" class="underline-input" required placeholder="أعد كتابة كلمة المرور">
-                                <span class="focus-line"></span>
-                                <span class="field-error" id="err-password-confirm"></span>
-                            </div>
+                        <div class="input-group">
+                            <label for="reg-password" class="input-label">
+                                <span class="label-text">كلمة المرور</span>
+                                <i class="fas fa-lock input-icon"></i>
+                            </label>
+                            <input type="password" id="reg-password" class="underline-input" required placeholder="ادخل كلمة مرور لحسابك">
+                            <span class="focus-line"></span>
                         </div>
 
-                        <!-- Form-level alert -->
-                        <div id="reg-form-alert" class="form-alert" style="display:none;"></div>
-
                         <!-- Submit Button -->
-                        <button type="submit" class="btn-submit-blue">إنشاء حساب</button>
+                        <button type="submit" class="btn-submit-blue">طلب انشاء حساب</button>
                     </form>
                 </div>
 
@@ -907,40 +892,6 @@
     })();
     </script>
 
-    <!-- Stats Counter Animation -->
-    <script>
-    // ملاحظة: تحميل الكورسات الفعلي بيتم عبر loadHomeCourses() في app.js
-    // (شِيل من هنا الكود القديم المكرر اللي كان بيستخدم بيانات تجريبية ثابتة
-    //  وبيتعارض مع نظام تسجيل الدخول الموحّد، وكان سبب رئيسي في مشكلة
-    //  "اطلب تسجيل دخول تاني بعد ما كنت داخل بالفعل")
-
-    // ── Counter Animation ──
-    function initCounters() {
-        var counters = document.querySelectorAll('.counter');
-        if (!counters.length) return;
-        var arabic = function(n){ return String(n).replace(/\d/g, function(d){ return '٠١٢٣٤٥٦٧٨٩'[d]; }); };
-        var obs = new IntersectionObserver(function(entries){
-            entries.forEach(function(entry){
-                if (!entry.isIntersecting) return;
-                var el = entry.target;
-                var target = +el.dataset.target;
-                var current = 0;
-                var step = Math.ceil(target / 60);
-                var timer = setInterval(function(){
-                    current = Math.min(current + step, target);
-                    el.textContent = arabic(current);
-                    if (current >= target) clearInterval(timer);
-                }, 30);
-                obs.unobserve(el);
-            });
-        }, { threshold: 0.4 });
-        counters.forEach(function(c){ obs.observe(c); });
-    }
-
-    document.addEventListener('DOMContentLoaded', function(){
-        initCounters();
-    });
-    </script>
-
 </body>
+
 </html>
