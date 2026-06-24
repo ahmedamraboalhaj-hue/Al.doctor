@@ -253,14 +253,17 @@ body {
 
 /* ── New sleek toggle track ── */
 .htb-pill {
-    width: 52px;
-    height: 28px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #94a3b8, #64748b);
+    width: 56px;
+    height: 30px;
+    border-radius: 15px;
+    /* Light mode = warm golden gradient */
+    background: linear-gradient(135deg, #f59e0b, #eab308);
     position: relative;
-    transition: background 0.35s ease, box-shadow 0.25s ease;
+    transition: background 0.4s cubic-bezier(0.4,0,0.2,1),
+                box-shadow  0.35s ease;
     flex-shrink: 0;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.18);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.15),
+                0 0 10px rgba(234,179,8,0.35);
 }
 
 /* track = the pill itself */
@@ -270,7 +273,8 @@ body {
 
 [data-theme="dark"] .htb-pill {
     background: linear-gradient(135deg, #0284c7, #0ea5e9);
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.25), 0 0 8px rgba(2,132,199,0.3);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.25),
+                0 0 12px rgba(2,132,199,0.45);
 }
 
 /* Icons painted via pseudo on pill */
@@ -282,10 +286,10 @@ body {
     right: 7px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 0.6rem;
-    color: #fff;
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.9);
     opacity: 1;
-    transition: opacity 0.25s;
+    transition: opacity 0.3s ease, left 0.3s ease, right 0.3s ease;
 }
 
 [data-theme="dark"] .htb-pill::before {
@@ -298,16 +302,18 @@ body {
     position: absolute;
     top: 4px;
     left: 4px;
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.22);
-    transition: transform 0.32s cubic-bezier(0.34,1.56,0.64,1);
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25),
+                0 0 0 2px rgba(255,255,255,0.3);
+    transition: transform 0.38s cubic-bezier(0.34,1.56,0.64,1),
+                background 0.3s ease;
 }
 
 [data-theme="dark"] .htb-dot {
-    transform: translateX(24px);
+    transform: translateX(26px);
     background: #f0f9ff;
 }
 
@@ -1021,35 +1027,24 @@ main {
 /* Background blob - مش محتاجينه */
 .blob-bg { display: none; }
 
-/* Teacher background circle — gradient circle behind the teacher */
+/* Teacher background circle — HIDDEN: replaced by side decorative elements */
 .blob-image-container {
-    position: absolute;
-    width: 500px;
-    height: 500px;
-    border-radius: 50%;
-    z-index: 1;
-    border: 5px solid var(--bg-color);
-    background: radial-gradient(circle, var(--primary-light) 0%, rgba(2, 132, 199, 0.03) 75%);
-    box-shadow: var(--shadow-lg), 0 0 55px rgba(2, 132, 199, 0.3);
-    animation: blob-bounce 12s ease-in-out infinite alternate-reverse;
-    bottom: 0;
-    top: auto;
-    /* قص الجزء العلوي من الدائرة خلف رأس الدكتور */
-    clip-path: polygon(0% 14%, 100% 14%, 100% 100%, 0% 100%);
+    display: none;
 }
 
 /* صورة الدكتور بدون خلفية كاملة فوق الحلقة والدائرة */
 .hero-main-img {
     position: absolute;
-    width: 530px;
+    width: 570px;
     height: auto;
-    bottom: 0;
+    bottom: -20px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 3;
     pointer-events: none;
     display: block;
     animation: teacher-float 12s ease-in-out infinite alternate-reverse;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.18));
 }
 
 /* ══ حاوية الحلقة الثابتة مع القص من الأعلى ══ */
@@ -1098,7 +1093,128 @@ main {
 /* حلقات النبض - مخفية */
 .blob-pulse-ring { display: none; }
 
+/* ══ عناصر زخرفية جانبية بدلاً من الخلفية خلف الدكتور ══ */
+.hero-deco-left,
+.hero-deco-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 90px;
+    z-index: 2;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+}
 
+.hero-deco-left  { left: -10px; }
+.hero-deco-right { right: -10px; }
+
+.hero-deco-orb {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent-yellow, #eab308);
+    opacity: 0.7;
+    animation: deco-pulse 3s ease-in-out infinite;
+    box-shadow: 0 0 12px rgba(234,179,8,0.55);
+}
+
+.hero-deco-orb.blue {
+    background: #38bdf8;
+    box-shadow: 0 0 12px rgba(56,189,248,0.55);
+    animation-delay: 1.5s;
+}
+
+.hero-deco-orb.sm {
+    width: 6px;
+    height: 6px;
+    opacity: 0.5;
+}
+
+.hero-deco-line {
+    width: 2px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, rgba(234,179,8,0.5), transparent);
+    border-radius: 2px;
+}
+
+.hero-deco-diamond {
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(234,179,8,0.7);
+    transform: rotate(45deg);
+    animation: deco-spin 8s linear infinite;
+}
+
+.hero-deco-diamond.blue {
+    border-color: rgba(56,189,248,0.7);
+    animation-direction: reverse;
+}
+
+.hero-deco-arc {
+    width: 40px;
+    height: 40px;
+    border: 2px solid transparent;
+    border-top-color: rgba(234,179,8,0.5);
+    border-right-color: rgba(234,179,8,0.3);
+    border-radius: 50%;
+    animation: deco-spin 5s linear infinite;
+}
+
+.hero-deco-arc.blue {
+    border-top-color: rgba(56,189,248,0.5);
+    border-right-color: rgba(56,189,248,0.3);
+    animation-direction: reverse;
+    animation-duration: 6s;
+}
+
+.hero-deco-dots {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.hero-deco-dots span {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(234,179,8,0.6);
+    display: block;
+    animation: deco-pulse 2.5s ease-in-out infinite;
+}
+.hero-deco-dots span:nth-child(2) { animation-delay: 0.4s; background: rgba(56,189,248,0.6); }
+.hero-deco-dots span:nth-child(3) { animation-delay: 0.8s; }
+
+.hero-deco-letter {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(234,179,8,0.45);
+    animation: deco-float-letter 4s ease-in-out infinite;
+    user-select: none;
+}
+.hero-deco-letter.blue {
+    -webkit-text-stroke: 1.5px rgba(56,189,248,0.45);
+    animation-delay: 2s;
+}
+
+@keyframes deco-pulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.3); }
+}
+
+@keyframes deco-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+@keyframes deco-float-letter {
+    0%, 100% { transform: translateY(0px); opacity: 0.5; }
+    50%       { transform: translateY(-10px); opacity: 0.85; }
+}
 
 /* ── بطاقات ميزات عائمة حول الدائرة ── */
 .hero-feature-card {
@@ -2476,6 +2592,14 @@ input:checked + .switch-slider:before {
     font-size: 1.1rem;
 }
 
+/* Skeleton row fills the grid columns correctly */
+.courses-skeleton-row {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 28px;
+}
+
 /* ─── Mobile Responsive ─── */
 @media (max-width: 768px) {
     .courses-grid {
@@ -2562,7 +2686,7 @@ input:checked + .switch-slider:before {
     .hero-main-img {
         width: 310px;
         height: auto;
-        bottom: -10px; /* إنزال الصورة قليلاً لأسفل */
+        bottom: -20px;
     }
 
     /* حاوية الحلقة على الموبايل */
@@ -2576,6 +2700,10 @@ input:checked + .switch-slider:before {
         -webkit-mask: radial-gradient(circle, transparent 47%, black 47.5%, black 50%, transparent 50.5%);
         mask:         radial-gradient(circle, transparent 47%, black 47.5%, black 50%, transparent 50.5%);
     }
+
+    /* إخفاء العناصر الزخرفية على الموبايل لتجنب الازدحام */
+    .hero-deco-left,
+    .hero-deco-right { display: none; }
 
     /* الأيقونات العائمة - أصغر على الموبايل */
     .floating-icon {

@@ -409,15 +409,54 @@ function renderCourseCard(course) {
 async function loadHomeCourses() {
     const grid = document.querySelector('#home-view .courses-grid');
     if (!grid) return;
-    grid.innerHTML = `
-        <div class="courses-loading">
-            <i class="fas fa-spinner fa-spin"></i>
-            <span>جاري تحميل الكورسات...</span>
-        </div>
-    `;
 
-    const courses = await fetchPlatformCourses();
-    if (!courses.length) {
+    // ── 1. عرض الكاش الفوري بدون أي تأخير ──
+    let cached = [];
+    try { cached = JSON.parse(localStorage.getItem('alamin_courses') || '[]'); } catch(e) {}
+
+    if (cached.length) {
+        // إظهار الكورسات المخزنة فوراً
+        grid.innerHTML = cached.map(renderCourseCard).join('');
+    } else {
+        // Loading skeleton احترافي
+        grid.innerHTML = `
+            <div class="courses-skeleton-row">
+                ${[1,2,3].map(() => `
+                <div class="course-card skeleton-card">
+                    <div class="course-image-container skeleton-img"></div>
+                    <div class="course-info">
+                        <div class="skeleton-line" style="width:65%;height:20px;margin-bottom:12px;"></div>
+                        <div class="skeleton-line" style="width:100%;height:14px;margin-bottom:8px;"></div>
+                        <div class="skeleton-line" style="width:80%;height:14px;margin-bottom:24px;"></div>
+                        <div class="skeleton-line" style="width:100%;height:48px;border-radius:14px;"></div>
+                    </div>
+                </div>`).join('')}
+            </div>
+        `;
+    }
+
+    // ── 2. تحميل من Firebase في الخلفية وتحديث الشاشة ──
+    if (window.db) {
+        try {
+            const doc = await window.db.collection('platform_data').doc('courses_list').get();
+            if (doc.exists) {
+                const data = doc.data() || {};
+                const fresh = Array.isArray(data.items) ? data.items :
+                    (Array.isArray(data.courses) ? data.courses :
+                    (Array.isArray(data.list) ? data.list : []));
+                if (fresh.length) {
+                    localStorage.setItem('alamin_courses', JSON.stringify(fresh));
+                    grid.innerHTML = fresh.map(renderCourseCard).join('');
+                    return;
+                }
+            }
+        } catch (err) {
+            console.warn('Courses Firebase load failed, keeping cache:', err);
+        }
+    }
+
+    // ── 3. لو Firebase فشل والكاش فاضي ──
+    if (!cached.length) {
         grid.innerHTML = `
             <div class="courses-empty">
                 <i class="fas fa-book-open"></i>
@@ -425,9 +464,7 @@ async function loadHomeCourses() {
                 <span>أضف أول كورس من لوحة التحكم وسيظهر هنا فوراً.</span>
             </div>
         `;
-        return;
     }
-    grid.innerHTML = courses.map(renderCourseCard).join('');
 }
 
 function openCourse(courseId) {
