@@ -804,3 +804,13 @@ async function handleForgotPasswordSubmit(e) {
     }, 1800);
 }
 window.handleForgotPasswordSubmit = handleForgotPasswordSubmit;
+
+// ================= Banners Smooth Scroll Helper =================
+function scrollToCourses(e) {
+    e.preventDefault();
+    const coursesSection = document.querySelector('.courses-section');
+    if (coursesSection) {
+        coursesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+window.scrollToCourses = scrollToCourses;

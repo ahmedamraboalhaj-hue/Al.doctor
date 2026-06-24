@@ -283,63 +283,107 @@
             </div>
 
             <!-- ══ Courses Section ══ -->
-            <div class="courses-section">
+            <div class="courses-section" id="courses-section">
                 <div class="section-header">
                     <div class="section-tag"><i class="fas fa-graduation-cap"></i> الكورسات</div>
                     <h2 class="section-title">الكورسات المتاحة</h2>
-                    <p class="section-subtitle">ابدأ رحلتك التعليمية الآن مع أقوى الكورسات المخصصة للتفوق والريادة</p>
+                    <p class="section-subtitle">ابدأ رحلتك التعليمية الآن مع أقوى الكورسات المخصصة للتفوق والريادة في اللغة العربية</p>
+
+                    <!-- Floating ticker stats -->
+                    <div class="courses-ticker">
+                        <div class="ticker-item">
+                            <i class="fas fa-users"></i>
+                            <span>أكثر من <strong id="tickerStudents">500+</strong> طالب</span>
+                        </div>
+                        <div class="ticker-item">
+                            <i class="fas fa-book-open"></i>
+                            <span><strong id="tickerCourses">3</strong> كورسات متاحة</span>
+                        </div>
+                        <div class="ticker-item">
+                            <i class="fas fa-star" style="color:#eab308;"></i>
+                            <span>تقييم <strong>4.9</strong> / 5</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="courses-grid">
-                    <!-- Course 1 - مجاني -->
-                    <div class="course-card">
-                        <div class="course-image-container">
-                            <img src="صورة الواجهه.jpeg" alt="تأسيس النحو من الصفر" class="course-img">
-                            <span class="course-badge free">مجاني</span>
-                        </div>
+
+                <!-- Dynamic courses grid — loaded from Firebase -->
+                <div class="courses-grid" id="coursesGrid">
+                    <!-- Skeleton loading cards -->
+                    <div class="course-card skeleton-card">
+                        <div class="course-image-container skeleton-img"></div>
                         <div class="course-info">
-                            <h3 class="course-title">تأسيس النحو من الصفر</h3>
-                            <p class="course-desc">شرح تفصيلي ومبسط لكافة القواعد الإعرابية من البداية وحتى الاحتراف بأسلوب عصري.</p>
-                            <div class="course-stats">
-                                <span><i class="fas fa-play-circle"></i> 14 محاضرة</span>
-                                <span><i class="fas fa-clock"></i> 10 ساعات</span>
-                            </div>
-                            <button class="btn-course-action" onclick="alert('سيتم فتح الكورس قريباً بعد التفعيل...');">ابدأ التعلم الآن <i class="fas fa-arrow-left"></i></button>
+                            <div class="skeleton-line" style="width:70%;height:20px;margin-bottom:12px;"></div>
+                            <div class="skeleton-line" style="width:100%;height:14px;margin-bottom:8px;"></div>
+                            <div class="skeleton-line" style="width:85%;height:14px;margin-bottom:8px;"></div>
+                            <div class="skeleton-line" style="width:50%;height:14px;margin-bottom:24px;"></div>
+                            <div class="skeleton-line" style="width:100%;height:48px;border-radius:14px;"></div>
                         </div>
                     </div>
-                    <!-- Course 2 - مدفوع -->
-                    <div class="course-card">
-                        <div class="course-image-container">
-                            <img src="صورة الواجهه.jpeg" alt="البلاغة والتذوق الأدبي" class="course-img">
-                            <span class="course-badge paid">مدفوع</span>
-                        </div>
+                    <div class="course-card skeleton-card">
+                        <div class="course-image-container skeleton-img"></div>
                         <div class="course-info">
-                            <h3 class="course-title">البلاغة والتذوق الأدبي</h3>
-                            <p class="course-desc">افهم أسرار البلاغة وتعلم كيفية إجابة أسئلة التذوق والنصوص المتحررة بنظام الامتحانات الجديد.</p>
-                            <div class="course-stats">
-                                <span><i class="fas fa-play-circle"></i> 8 محاضرات</span>
-                                <span><i class="fas fa-clock"></i> 6 ساعات</span>
-                            </div>
-                            <button class="btn-course-action" onclick="alert('سيتم فتح الكورس قريباً بعد التفعيل...');">ابدأ التعلم الآن <i class="fas fa-arrow-left"></i></button>
+                            <div class="skeleton-line" style="width:60%;height:20px;margin-bottom:12px;"></div>
+                            <div class="skeleton-line" style="width:100%;height:14px;margin-bottom:8px;"></div>
+                            <div class="skeleton-line" style="width:80%;height:14px;margin-bottom:8px;"></div>
+                            <div class="skeleton-line" style="width:45%;height:14px;margin-bottom:24px;"></div>
+                            <div class="skeleton-line" style="width:100%;height:48px;border-radius:14px;"></div>
                         </div>
                     </div>
-                    <!-- Course 3 - مجاني -->
-                    <div class="course-card">
-                        <div class="course-image-container">
-                            <img src="صورة الواجهه.jpeg" alt="شرح منهج الأدب والنصوص" class="course-img">
-                            <span class="course-badge free">مجاني</span>
-                        </div>
+                    <div class="course-card skeleton-card">
+                        <div class="course-image-container skeleton-img"></div>
                         <div class="course-info">
-                            <h3 class="course-title">منهج الأدب والنصوص للثانوية</h3>
-                            <p class="course-desc">شرح وافٍ لمدارس الأدب والتعليقات على النصوص المقررة لضمان تحصيل الدرجة النهائية.</p>
-                            <div class="course-stats">
-                                <span><i class="fas fa-play-circle"></i> 18 محاضرة</span>
-                                <span><i class="fas fa-clock"></i> 12 ساعة</span>
-                            </div>
-                            <button class="btn-course-action" onclick="alert('سيتم فتح الكورس قريباً بعد التفعيل...');">ابدأ التعلم الآن <i class="fas fa-arrow-left"></i></button>
+                            <div class="skeleton-line" style="width:75%;height:20px;margin-bottom:12px;"></div>
+                            <div class="skeleton-line" style="width:100%;height:14px;margin-bottom:8px;"></div>
+                            <div class="skeleton-line" style="width:90%;height:14px;margin-bottom:8px;"></div>
+                            <div class="skeleton-line" style="width:55%;height:14px;margin-bottom:24px;"></div>
+                            <div class="skeleton-line" style="width:100%;height:48px;border-radius:14px;"></div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- ══ Promo Sections ══ -->
+            <section class="promos-wrapper">
+                <!-- Promo 1: Discover Courses -->
+                <div class="promo-card promo-courses">
+                    <div class="promo-body">
+                        <div class="promo-content">
+                            <span class="promo-badge"><i class="fas fa-graduation-cap"></i> كورسات الدكتور</span>
+                            <h2 class="promo-title">اكتشف كورساتنا المتميزة</h2>
+                            <p class="promo-text">
+                                اختر من بين مجموعة واسعة من الكورسات الشاملة المصممة خصيصاً لمساعدتك في التميز وإتقان اللغة العربية بكل سهولة وبأعلى جودة تعليمية.
+                            </p>
+                            <a href="#home" class="btn-promo btn-courses-animate" onclick="scrollToCourses(event)">
+                                اكتشف كورساتنا <i class="fas fa-arrow-left"></i>
+                            </a>
+                        </div>
+                        <div class="promo-media">
+                            <div class="promo-glow"></div>
+                            <img src="اكتشف كورستنا.png" alt="اكتشف كورساتنا" class="promo-img">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promo 2: Join Us -->
+                <div class="promo-card promo-join">
+                    <div class="promo-body">
+                        <div class="promo-content">
+                            <span class="promo-badge"><i class="fas fa-users"></i> انضم إلينا</span>
+                            <h2 class="promo-title">عايز تبدأ رحلتك التعليمية مع الدكتور؟</h2>
+                            <p class="promo-text">
+                                انضم الآن إلى المنصة وسجل حسابك التعليمي لتستمتع بأقوى الشروحات، التدريبات التفاعلية، والاختبارات الدورية لضمان التفوق والدرجة النهائية في اللغة العربية.
+                            </p>
+                            <a href="#register" class="btn-promo btn-yellow">
+                                انشئ حسابك الآن <i class="fas fa-user-plus"></i>
+                            </a>
+                        </div>
+                        <div class="promo-media">
+                            <div class="promo-glow"></div>
+                            <img src="انضم لعائلتنا.png" alt="انضم لعائلتنا" class="promo-img">
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <!-- ══ Who is the Doctor Section ══ -->
             <div class="who-section" id="who-section">
