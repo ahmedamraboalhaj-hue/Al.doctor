@@ -101,26 +101,8 @@
     <header id="header">
         <div class="header-container">
 
-            <!-- اليمين: اللوجو -->
+            <!-- اليمين (الآن): الهامبرغر + التوجل -->
             <div class="header-right">
-                <a href="#home" class="logo" id="logo-link">
-                    <img src="ايقونة الهدر.png" alt="شعار الدكتور" class="logo-img">
-                    <div class="logo-text">
-                        <span class="logo-main">الدكتور</span>
-                        <span class="logo-sub">في اللغة العربية</span>
-                    </div>
-                </a>
-            </div>
-
-            <!-- الشمال: الهامبرغر + التوجل -->
-            <div class="header-left">
-                <!-- الهامبرغر -->
-                <button class="hamburger-btn" id="hamburger-btn" aria-label="القائمة" aria-expanded="false">
-                    <span class="hb-line hb-line-1"></span>
-                    <span class="hb-line hb-line-2"></span>
-                    <span class="hb-line hb-line-3"></span>
-                </button>
-
                 <!-- التوجل ليل/نهار -->
                 <input type="checkbox" id="checkbox" style="display:none">
                 <button class="header-theme-btn" id="header-theme-btn" aria-label="تغيير الوضع">
@@ -132,20 +114,55 @@
                     </div>
                 </button>
 
+                <!-- الهامبرغر -->
+                <button class="hamburger-btn" id="hamburger-btn" aria-label="القائمة" aria-expanded="false">
+                    <span class="hb-line hb-line-1"></span>
+                    <span class="hb-line hb-line-2"></span>
+                    <span class="hb-line hb-line-3"></span>
+                </button>
+
                 <!-- القائمة المنسدلة -->
                 <div class="hb-dropdown" id="hb-dropdown">
-                    <a href="#login" class="hb-item hb-login" id="nav-login-btn">
-                        <span class="hb-item-icon"><i class="fas fa-sign-in-alt"></i></span>
-                        <span class="hb-item-text">سجل دخولك</span>
-                        <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
-                    </a>
-                    <div class="hb-divider"></div>
-                    <a href="#register" class="hb-item hb-register" id="nav-register-btn">
-                        <span class="hb-item-icon"><i class="fas fa-user-plus"></i></span>
-                        <span class="hb-item-text">اعمل حساب جديد!</span>
-                        <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
-                    </a>
+                    <!-- روابط غير مسجل -->
+                    <div id="hb-guest-links">
+                        <a href="#login" class="hb-item hb-login" id="nav-login-btn">
+                            <span class="hb-item-icon"><i class="fas fa-sign-in-alt"></i></span>
+                            <span class="hb-item-text">سجل دخولك</span>
+                            <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
+                        </a>
+                        <div class="hb-divider"></div>
+                        <a href="#register" class="hb-item hb-register" id="nav-register-btn">
+                            <span class="hb-item-icon"><i class="fas fa-user-plus"></i></span>
+                            <span class="hb-item-text">اعمل حساب جديد!</span>
+                            <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
+                        </a>
+                    </div>
+                    <!-- روابط مسجل -->
+                    <div id="hb-user-links" style="display:none">
+                        <a href="profile.html" class="hb-item hb-profile" id="nav-profile-btn">
+                            <span class="hb-item-icon"><i class="fas fa-user-circle"></i></span>
+                            <span class="hb-item-text" id="hb-user-name">حسابي</span>
+                            <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
+                        </a>
+                        <div class="hb-divider"></div>
+                        <a href="#home" class="hb-item hb-logout" id="nav-logout-btn" onclick="logoutUser()">
+                            <span class="hb-item-icon"><i class="fas fa-sign-out-alt"></i></span>
+                            <span class="hb-item-text">تسجيل الخروج</span>
+                            <span class="hb-item-arrow"><i class="fas fa-chevron-left"></i></span>
+                        </a>
+                    </div>
                 </div>
+            </div>
+
+            <!-- الشمال (الآن): اللوجو -->
+            <div class="header-left">
+                <a href="#home" class="logo" id="logo-link">
+                    <img src="ايقونة الهدر.png" alt="شعار الدكتور" class="logo-img">
+                    <div class="logo-text">
+                        <span class="logo-main">الدكتور</span>
+                        <span class="logo-sub">في اللغة العربية</span>
+                    </div>
+                </a>
             </div>
 
         </div>
@@ -583,46 +600,15 @@
                     </div>
 
                     <form id="register-form" class="auth-form" onsubmit="handleRegisterSubmit(event)">
-                        <!-- Name Input Group — 4 separate fields -->
-                        <div class="form-row" id="name-fields-row">
-                            <div class="input-group">
-                                <label for="reg-fname" class="input-label">
-                                    <span class="label-text">الاسم الأول</span>
-                                    <i class="fas fa-user input-icon"></i>
-                                </label>
-                                <input type="text" id="reg-fname" class="underline-input" required placeholder="الاسم الأول">
-                                <span class="focus-line"></span>
-                                <span class="field-error" id="err-fname"></span>
-                            </div>
-                            <div class="input-group">
-                                <label for="reg-sname" class="input-label">
-                                    <span class="label-text">الاسم الثاني</span>
-                                    <i class="fas fa-user input-icon"></i>
-                                </label>
-                                <input type="text" id="reg-sname" class="underline-input" required placeholder="الاسم الثاني">
-                                <span class="focus-line"></span>
-                                <span class="field-error" id="err-sname"></span>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="input-group">
-                                <label for="reg-tname" class="input-label">
-                                    <span class="label-text">الاسم الثالث</span>
-                                    <i class="fas fa-user input-icon"></i>
-                                </label>
-                                <input type="text" id="reg-tname" class="underline-input" required placeholder="الاسم الثالث">
-                                <span class="focus-line"></span>
-                                <span class="field-error" id="err-tname"></span>
-                            </div>
-                            <div class="input-group">
-                                <label for="reg-lname" class="input-label">
-                                    <span class="label-text">الاسم الرابع</span>
-                                    <i class="fas fa-user input-icon"></i>
-                                </label>
-                                <input type="text" id="reg-lname" class="underline-input" placeholder="الاسم الرابع (اختياري)">
-                                <span class="focus-line"></span>
-                                <span class="field-error" id="err-lname"></span>
-                            </div>
+                        <!-- Full Name (الاسم الثلاثي) — حقل واحد بدل 4 حقول -->
+                        <div class="input-group">
+                            <label for="reg-fullname" class="input-label">
+                                <span class="label-text">الاسم الثلاثي</span>
+                                <i class="fas fa-user input-icon"></i>
+                            </label>
+                            <input type="text" id="reg-fullname" class="underline-input" required placeholder="مثال: أحمد محمد علي">
+                            <span class="focus-line"></span>
+                            <span class="field-error" id="err-fullname"></span>
                         </div>
 
                         <!-- Student Phone -->
@@ -757,14 +743,27 @@
                         </div>
 
                         <!-- Password field for account security -->
-                        <div class="input-group">
-                            <label for="reg-password" class="input-label">
-                                <span class="label-text">كلمة المرور</span>
-                                <i class="fas fa-lock input-icon"></i>
-                            </label>
-                            <input type="password" id="reg-password" class="underline-input" required placeholder="ادخل كلمة مرور لحسابك">
-                            <span class="focus-line"></span>
-                            <span class="field-error" id="err-password"></span>
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="reg-password" class="input-label">
+                                    <span class="label-text">كلمة المرور</span>
+                                    <i class="fas fa-lock input-icon"></i>
+                                </label>
+                                <input type="password" id="reg-password" class="underline-input" required placeholder="ادخل كلمة مرور لحسابك">
+                                <span class="focus-line"></span>
+                                <span class="field-error" id="err-password"></span>
+                            </div>
+
+                            <!-- Confirm Password -->
+                            <div class="input-group">
+                                <label for="reg-password-confirm" class="input-label">
+                                    <span class="label-text">تأكيد كلمة المرور</span>
+                                    <i class="fas fa-lock input-icon"></i>
+                                </label>
+                                <input type="password" id="reg-password-confirm" class="underline-input" required placeholder="أعد كتابة كلمة المرور">
+                                <span class="focus-line"></span>
+                                <span class="field-error" id="err-password-confirm"></span>
+                            </div>
                         </div>
 
                         <!-- Form-level alert -->
@@ -908,73 +907,12 @@
     })();
     </script>
 
-    <!-- Courses Loader + Counter Animation -->
+    <!-- Stats Counter Animation -->
     <script>
-    // ── تحميل الكورسات ──
-    async function loadCoursesGrid() {
-        var grid = document.getElementById('courses-grid');
-        if (!grid) return;
-
-        var staticCourses = [
-            { id:'c1', title:'تأسيس النحو من الصفر',        desc:'شرح تفصيلي ومبسط لكافة القواعد الإعرابية من البداية حتى الاحتراف بأسلوب عصري ومميز.',                              grade:'أولى ثانوي',  lectures:14, hours:10, isFree:true  },
-            { id:'c2', title:'البلاغة والتذوق الأدبي',       desc:'افهم أسرار البلاغة وتعلم إجابة أسئلة التذوق والنصوص المتحررة بنظام الامتحانات الجديد.',                           grade:'ثانية ثانوي', lectures:8,  hours:6,  isFree:false, price:'١٥٠ جنيه' },
-            { id:'c3', title:'منهج الأدب والنصوص للثانوية',  desc:'شرح وافٍ لمدارس الأدب والتعليقات على النصوص المقررة لضمان تحصيل الدرجة النهائية.',                               grade:'ثالثة ثانوي', lectures:18, hours:12, isFree:false, price:'٢٠٠ جنيه' },
-            { id:'c4', title:'الإملاء والكتابة الإبداعية',   desc:'إتقان قواعد الإملاء وتطوير مهارات التعبير الكتابي والإبداعي بأسلوب سهل وممتع.',                                  grade:'أولى ثانوي',  lectures:10, hours:7,  isFree:true  },
-            { id:'c5', title:'مراجعة نهائية ثانوية عامة',    desc:'مراجعة شاملة لكل أجزاء المنهج مع نماذج الامتحانات والحلول التفصيلية.',                                             grade:'ثالثة ثانوي', lectures:22, hours:15, isFree:false, price:'٢٥٠ جنيه' },
-            { id:'c6', title:'الصرف والاشتقاق',              desc:'دراسة متعمقة في علم الصرف والاشتقاق اللغوي بطريقة مبسطة تُمكّن الطالب من إتقان المادة.',                          grade:'ثانية ثانوي', lectures:12, hours:8,  isFree:true  }
-        ];
-
-        var courses = staticCourses;
-        if (window.db) {
-            try {
-                var doc = await window.db.collection('platform_data').doc('courses_list').get();
-                if (doc.exists) {
-                    var items = doc.data().items;
-                    if (Array.isArray(items) && items.length) {
-                        courses = items.map(function(c) {
-                            return Object.assign({}, c, {
-                                isFree: c.isFree !== undefined ? c.isFree : (c.type === 'free'),
-                                img: c.thumbnail || c.img || 'صورة الواجهه.jpeg'
-                            });
-                        });
-                    }
-                }
-            } catch(e){ console.warn('courses load error:', e); }
-        }
-
-        grid.innerHTML = courses.map(function(c){
-            return '<div class="course-card">' +
-                '<div class="course-image-container">' +
-                    '<img src="' + (c.img||'صورة الواجهه.jpeg') + '" alt="' + c.title + '" class="course-img" loading="lazy">' +
-                    '<span class="course-badge ' + (c.isFree ? 'badge-free' : 'badge-paid') + '">' +
-                        (c.isFree ? '🎁 مجاني' : '💎 مدفوع') +
-                    '</span>' +
-                '</div>' +
-                '<div class="course-info">' +
-                    '<span class="course-grade-pill"><i class="fas fa-layer-group"></i> ' + (c.grade||'') + '</span>' +
-                    '<h3 class="course-title">' + c.title + '</h3>' +
-                    '<p class="course-desc">' + (c.desc||'') + '</p>' +
-                    '<div class="course-stats">' +
-                        '<span><i class="fas fa-play-circle"></i> ' + (c.lectures||0) + ' محاضرة</span>' +
-                        '<span><i class="fas fa-clock"></i> ' + (c.hours||0) + ' ساعات</span>' +
-                        (!c.isFree && c.price ? '<span><i class="fas fa-tag"></i> ' + c.price + '</span>' : '') +
-                    '</div>' +
-                    '<button class="btn-course-action" onclick="handleCourseClick(\'' + c.id + '\',' + c.isFree + ')">' +
-                        (c.isFree ? 'ابدأ مجاناً' : 'اشترك الآن') + ' <i class="fas fa-arrow-left"></i>' +
-                    '</button>' +
-                '</div>' +
-            '</div>';
-        }).join('');
-    }
-
-    function handleCourseClick(courseId, isFree) {
-        var session = null;
-        try { session = JSON.parse(localStorage.getItem('alamin_session') || sessionStorage.getItem('alamin_session') || 'null'); } catch(e){}
-        if (!session) { alert('⚠️ يجب تسجيل الدخول أولاً للوصول للكورسات'); window.location.hash='#login'; return; }
-        if (!isFree)  { alert('💎 هذا الكورس مدفوع — سيتم التواصل معك لإتمام الاشتراك'); return; }
-        window.location.hash = '#lessons';
-    }
-    window.handleCourseClick = handleCourseClick;
+    // ملاحظة: تحميل الكورسات الفعلي بيتم عبر loadHomeCourses() في app.js
+    // (شِيل من هنا الكود القديم المكرر اللي كان بيستخدم بيانات تجريبية ثابتة
+    //  وبيتعارض مع نظام تسجيل الدخول الموحّد، وكان سبب رئيسي في مشكلة
+    //  "اطلب تسجيل دخول تاني بعد ما كنت داخل بالفعل")
 
     // ── Counter Animation ──
     function initCounters() {
@@ -1000,7 +938,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', function(){
-        loadCoursesGrid();
         initCounters();
     });
     </script>

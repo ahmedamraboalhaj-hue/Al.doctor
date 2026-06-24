@@ -251,17 +251,27 @@ async function findStudentByPhone(phone) {
 }
 
 function saveSession(student) {
-    localStorage.setItem('alamin_current', JSON.stringify(student));
+    const data = JSON.stringify(student);
+    localStorage.setItem('alamin_current', data);
+    localStorage.setItem('alamin_session', data); // backward compat
     initAuthHeader();
 }
 
 function getCurrentSession() {
     try {
-        return JSON.parse(localStorage.getItem('alamin_current') || 'null');
+        return JSON.parse(localStorage.getItem('alamin_current') || localStorage.getItem('alamin_session') || 'null');
     } catch (err) {
         return null;
     }
 }
+
+function logoutUser() {
+    localStorage.removeItem('alamin_current');
+    localStorage.removeItem('alamin_session');
+    initAuthHeader();
+    window.location.hash = '#home';
+}
+window.logoutUser = logoutUser;
 
 function getDisplayName(user) {
     if (!user) return '';
@@ -281,31 +291,33 @@ function escapeHTML(value) {
 }
 
 function initAuthHeader() {
-    const loginLink = document.getElementById('nav-login-btn');
-    const registerLink = document.getElementById('nav-register-btn');
+    const guestLinks = document.getElementById('hb-guest-links');
+    const userLinks  = document.getElementById('hb-user-links');
+    const hbUserName = document.getElementById('hb-user-name');
     const user = getCurrentSession();
-    if (!loginLink || !registerLink) return;
+
+    if (!guestLinks || !userLinks) return;
 
     if (!user) {
-        loginLink.href = '#login';
-        loginLink.className = 'nav-login-link';
-        loginLink.innerHTML = '<i class="fas fa-accessibility"></i><span>سجل دخولك</span>';
-        registerLink.style.display = '';
+        guestLinks.style.display = '';
+        userLinks.style.display  = 'none';
         return;
     }
 
+    // مسجل دخول
+    guestLinks.style.display = 'none';
+    userLinks.style.display  = '';
+
     const displayName = getDisplayName(user);
-    const initial = (displayName || 'ط').trim().charAt(0);
-    loginLink.href = user.role === 'admin' ? 'dashboard.html' : 'profile.html';
-    loginLink.className = 'nav-user-chip';
-    loginLink.innerHTML = `
-        <span class="nav-user-avatar">${escapeHTML(initial)}</span>
-        <span class="nav-user-meta">
-            <strong>${escapeHTML(displayName.split(' ').slice(0, 2).join(' '))}</strong>
-            <small>${user.role === 'admin' ? 'لوحة التحكم' : 'حسابي'}</small>
-        </span>
-    `;
-    registerLink.style.display = 'none';
+    if (hbUserName) {
+        hbUserName.textContent = displayName.split(' ').slice(0, 2).join(' ') || 'حسابي';
+    }
+
+    // لو أدمن يوجه للداشبورد
+    const profileLink = document.getElementById('nav-profile-btn');
+    if (profileLink) {
+        profileLink.href = user.role === 'admin' ? 'dashboard.html' : 'profile.html';
+    }
 }
 
 async function fetchPlatformCourses() {
@@ -364,7 +376,10 @@ function getCourseDurationLabel(course) {
 function renderCourseCard(course) {
     const lessonCount = getCourseLessonCount(course);
     const isPaid = course.type === 'paid';
-    const badge = isPaid ? `${course.price || 0} ج.م` : 'كورس مجاني';
+    const priceLabel = `${course.price || 0} ج.م`;
+    const badgeHtml = isPaid
+        ? `مدفوع <span class="course-badge-price">${escapeHTML(priceLabel)}</span>`
+        : 'كورس مجاني';
     const thumb = course.thumbnail || course.thumb || 'صورة الواجهه.jpeg';
     const objectPosition = `${course.thumbnailX || 50}% ${course.thumbnailY || 35}%`;
     const desc = course.desc || course.description || 'محتوى تعليمي منظم يساعدك تذاكر وتراجع وتتابع تقدمك بسهولة.';
@@ -374,7 +389,7 @@ function renderCourseCard(course) {
         <div class="course-card">
             <a class="course-image-container" href="${courseUrl}" aria-label="فتح ${escapeHTML(course.title || 'الكورس')}">
                 <img src="${escapeHTML(thumb)}" alt="${escapeHTML(course.title || 'كورس')}" class="course-img" style="object-position:${objectPosition}">
-                <span class="course-badge ${isPaid ? 'paid' : 'free'}">${escapeHTML(badge)}</span>
+                <span class="course-badge ${isPaid ? 'paid' : 'free'}">${badgeHtml}</span>
             </a>
             <div class="course-info">
                 <h3 class="course-title">${escapeHTML(course.title || 'كورس جديد')}</h3>
@@ -435,6 +450,25 @@ function initForms() {
     document.getElementById('go-to-login').addEventListener('click', (e) => {
         window.location.hash = '#login';
     });
+
+    // فحص لحظي لتطابق كلمة المرور وتأكيدها أثناء الكتابة
+    const pwInp = document.getElementById('reg-password');
+    const pwConfirmInp = document.getElementById('reg-password-confirm');
+    if (pwInp && pwConfirmInp) {
+        const checkMatch = () => {
+            if (!pwConfirmInp.value) {
+                clearFieldError('reg-password-confirm', 'err-password-confirm');
+                return;
+            }
+            if (pwInp.value !== pwConfirmInp.value) {
+                addInlineErr('err-password-confirm', '❌ كلمة المرور وتأكيدها غير متطابقتين');
+            } else {
+                clearFieldError('reg-password-confirm', 'err-password-confirm');
+            }
+        };
+        pwInp.addEventListener('input', checkMatch);
+        pwConfirmInp.addEventListener('input', checkMatch);
+    }
 }
 
 // Egyptian Phone number validation regex
@@ -563,11 +597,11 @@ function clearFieldError(fieldId, errId) {
     if (errEl) { errEl.textContent = ''; errEl.style.display = 'none'; }
 }
 function clearAllRegisterErrors() {
-    [['reg-fname','err-fname'],['reg-sname','err-sname'],
-     ['reg-tname','err-tname'],['reg-lname','err-lname'],
+    [['reg-fullname','err-fullname'],
      ['reg-phone','err-phone'],['reg-father-phone','err-father-phone'],
      ['reg-recovery-phone','err-recovery-phone'],['reg-grade','err-grade'],
-     ['reg-track','err-track'],['reg-password','err-password']
+     ['reg-track','err-track'],['reg-password','err-password'],
+     ['reg-password-confirm','err-password-confirm']
     ].forEach(([f,e]) => clearFieldError(f, e));
     const a = document.getElementById('reg-form-alert');
     if (a) { a.style.display = 'none'; a.textContent = ''; }
@@ -582,10 +616,10 @@ function showFormAlert(message, type) {
 }
 function addInlineErr(errId, message) {
     const fieldMap = {
-        'err-fname':'reg-fname','err-sname':'reg-sname','err-tname':'reg-tname',
-        'err-lname':'reg-lname','err-phone':'reg-phone',
+        'err-fullname':'reg-fullname','err-phone':'reg-phone',
         'err-father-phone':'reg-father-phone','err-recovery-phone':'reg-recovery-phone',
-        'err-grade':'reg-grade','err-track':'reg-track','err-password':'reg-password'
+        'err-grade':'reg-grade','err-track':'reg-track','err-password':'reg-password',
+        'err-password-confirm':'reg-password-confirm'
     };
     const e = document.getElementById(errId);
     if (e) { e.textContent = message; e.style.display = 'block'; }
@@ -600,10 +634,7 @@ async function handleRegisterSubmit(e) {
 
     clearAllRegisterErrors();
 
-    const fname = (document.getElementById('reg-fname')?.value || '').trim();
-    const sname = (document.getElementById('reg-sname')?.value || '').trim();
-    const tname = (document.getElementById('reg-tname')?.value || '').trim();
-    const lname = (document.getElementById('reg-lname')?.value || '').trim();
+    const fullName = (document.getElementById('reg-fullname')?.value || '').trim().replace(/\s+/g, ' ');
 
     const phone         = (document.getElementById('reg-phone')?.value || '').trim();
     const fatherPhone   = (document.getElementById('reg-father-phone')?.value || '').trim();
@@ -615,6 +646,7 @@ async function handleRegisterSubmit(e) {
     const gov      = document.getElementById('reg-gov')?.value || '';
     const gender   = document.getElementById('reg-gender')?.value || '';
     const password = (document.getElementById('reg-password')?.value || '').trim();
+    const passwordConfirm = (document.getElementById('reg-password-confirm')?.value || '').trim();
 
     // ─── Inline Validations ────────────────────────────────────
     let firstErrorField = null;
@@ -623,9 +655,13 @@ async function handleRegisterSubmit(e) {
         if (!firstErrorField) firstErrorField = fid;
     }
 
-    if (!fname)  markErr('reg-fname', 'err-fname', '⚠️ الاسم الأول مطلوب');
-    if (!sname)  markErr('reg-sname', 'err-sname', '⚠️ الاسم الثاني مطلوب');
-    if (!tname)  markErr('reg-tname', 'err-tname', '⚠️ الاسم الثالث مطلوب');
+    // الاسم الثلاثي: لازم 3 كلمات على الأقل (الاسم الأول + الثاني + الثالث)
+    const nameParts = fullName ? fullName.split(' ').filter(Boolean) : [];
+    if (!fullName) {
+        markErr('reg-fullname', 'err-fullname', '⚠️ الاسم الثلاثي مطلوب');
+    } else if (nameParts.length < 3) {
+        markErr('reg-fullname', 'err-fullname', '⚠️ من فضلك ادخل الاسم الثلاثي كاملاً (الاسم الأول والثاني والثالث)');
+    }
 
     if (!EGYPT_PHONE_REGEX.test(phone)) {
         markErr('reg-phone', 'err-phone', '⚠️ رقم هاتف الطالب يجب أن يكون 11 رقماً ويبدأ بـ 010/011/012/015');
@@ -649,11 +685,16 @@ async function handleRegisterSubmit(e) {
     }
     if (password.length < 6) {
         markErr('reg-password', 'err-password', '⚠️ كلمة المرور يجب ألا تقل عن 6 خانات');
+    } else if (!passwordConfirm) {
+        markErr('reg-password-confirm', 'err-password-confirm', '⚠️ من فضلك أكّد كلمة المرور');
+    } else if (password !== passwordConfirm) {
+        markErr('reg-password-confirm', 'err-password-confirm', '❌ كلمة المرور وتأكيدها غير متطابقتين');
     }
 
     if (firstErrorField) {
         const el = document.getElementById(firstErrorField);
         if (el) { el.focus(); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        showFormAlert('⚠️ يوجد بعض الأخطاء في البيانات المدخلة، برجاء مراجعتها وتصحيحها.', 'error');
         return;
     }
 
@@ -675,10 +716,10 @@ async function handleRegisterSubmit(e) {
     }
 
     // ─── Build student document ────────────────────────────────
-    const fullName = `${fname} ${sname} ${tname} ${lname}`.replace(/\s+/g, ' ').trim();
+    const firstNameForGreeting = nameParts[0] || fullName;
     const newStudent = {
-        firstName: fname, secondName: sname, thirdName: tname, lastName: lname,
-        name: fullName, fullName, phone, fatherPhone, recoveryPhone,
+        name: fullName, fullName,
+        phone, fatherPhone, recoveryPhone,
         school, grade, track: isSecondary ? track : null, gov, gender, password,
         studentType: 'outside', role: 'student', status: 'pending',
         enrolledCourses: [], qrCode: phone,
@@ -695,7 +736,7 @@ async function handleRegisterSubmit(e) {
     }
 
     saveSession({ id: phone, ...newStudent });
-    showFormAlert(`✅ تهانينا يا ${fname}! تم إرسال طلب إنشاء الحساب بنجاح. سيتم التواصل معك لتفعيل الحساب.`, 'success');
+    showFormAlert(`✅ تهانينا يا ${firstNameForGreeting}! تم إرسال طلب إنشاء الحساب بنجاح. سيتم التواصل معك لتفعيل الحساب.`, 'success');
 
     setTimeout(() => {
         document.getElementById('register-form').reset();

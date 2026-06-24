@@ -482,6 +482,35 @@ body {
     border-radius: 1px;
 }
 
+/* بند حسابي — أخضر */
+.hb-profile {
+    background: rgba(22,163,74,0.06);
+}
+.hb-profile:hover {
+    background: rgba(22,163,74,0.13);
+}
+.hb-profile .hb-item-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, #16a34a, #4ade80);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 0.95rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(22,163,74,0.35);
+}
+.hb-profile .hb-item-text { font-size: 0.92rem; font-weight: 800; color: #16a34a; flex: 1; }
+.hb-profile .hb-item-arrow { color: rgba(22,163,74,0.45); font-size: 0.7rem; }
+
+/* بند تسجيل الخروج — أحمر */
+.hb-logout { background: rgba(239,68,68,0.06); cursor: pointer; }
+.hb-logout:hover { background: rgba(239,68,68,0.13); }
+.hb-logout .hb-item-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, #ef4444, #fca5a5);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 0.95rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(239,68,68,0.3);
+}
+.hb-logout .hb-item-text { font-size: 0.92rem; font-weight: 800; color: #dc2626; flex: 1; }
+.hb-logout .hb-item-arrow { color: rgba(239,68,68,0.45); font-size: 0.7rem; }
+
+
 /* ── صف الوضع الليلي/النهاري ── */
 .hb-theme {
     cursor: pointer;
@@ -2002,16 +2031,18 @@ input:checked + .switch-slider:before {
 .course-image-container {
     position: relative;
     width: 100%;
-    height: 220px;
     overflow: hidden;
     background-color: var(--bg-color);
+    line-height: 0;
 }
 
 .course-img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
+    height: auto;
+    max-height: 260px;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
     transition: transform 0.5s ease;
 }
 
@@ -2019,28 +2050,6 @@ input:checked + .switch-slider:before {
     transform: scale(1.08);
 }
 
-.course-badge {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-yellow-hover) 100%);
-    color: #1a1500;
-    font-weight: 800;
-    font-size: 0.85rem;
-    padding: 6px 14px;
-    border-radius: 30px;
-    box-shadow: 0 4px 10px rgba(234, 179, 8, 0.3);
-}
-
-.course-badge.paid {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-    color: #fff;
-}
-
-.course-badge.free {
-    background: linear-gradient(135deg, var(--accent-yellow), var(--accent-yellow-hover));
-    color: #1a1500;
-}
 
 .course-info {
     padding: 24px;
@@ -2651,282 +2660,6 @@ body.intro-active { overflow: hidden; }
     .is-orb-1,.is-orb-3,.is-orb-5,.is-orb-7,.is-orb-9  { left:2%; }
     .is-orb-2,.is-orb-4,.is-orb-6,.is-orb-8,.is-orb-10 { right:2%; }
 }
-/* ══ Theme Toggle في الهيدر ══ */
-.header-theme-wrap {
-    display: flex;
-    align-items: center;
-}
-
-.header-theme-btn {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    background: var(--card-bg);
-    border: 1.5px solid var(--border-color);
-    border-radius: 20px;
-    padding: 5px 10px 5px 6px;
-    cursor: pointer;
-    transition: border-color 0.25s, box-shadow 0.25s;
-    color: var(--text-main);
-}
-
-.header-theme-btn:hover {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 8px rgba(2,132,199,0.2);
-}
-
-.htb-icon {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #fcd34d, #eab308);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    flex-shrink: 0;
-    transition: background 0.3s;
-}
-
-[data-theme="dark"] .htb-icon {
-    background: linear-gradient(135deg, #1e293b, #38bdf8);
-}
-
-.htb-label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    white-space: nowrap;
-}
-
-.htb-pill {
-    width: 32px;
-    height: 17px;
-    border-radius: 9px;
-    background: #cbd5e1;
-    position: relative;
-    transition: background 0.3s;
-    flex-shrink: 0;
-}
-
-.htb-dot {
-    position: absolute;
-    top: 2.5px;
-    left: 2.5px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-    transition: transform 0.3s ease;
-}
-
-[data-theme="dark"] .htb-pill {
-    background: #0284c7;
-}
-
-[data-theme="dark"] .htb-dot {
-    transform: translateX(15px);
-}
-
-
-.hamburger-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    width: 44px;
-    height: 44px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    border-radius: 12px;
-    transition: background 0.25s ease;
-    padding: 0;
-    position: relative;
-}
-
-.hamburger-btn:hover {
-    background: rgba(2, 132, 199, 0.08);
-}
-
-.hb-line {
-    display: block;
-    height: 3px;
-    border-radius: 3px;
-    transition: transform 0.35s cubic-bezier(.4,0,.2,1),
-                opacity   0.25s ease,
-                width     0.3s ease;
-}
-
-/* السطر الأول — ذهبي */
-.hb-line-1 {
-    width: 28px;
-    background: linear-gradient(90deg, #eab308, #fcd34d);
-    box-shadow: 0 0 6px rgba(234,179,8,0.55);
-}
-
-/* السطر الثاني — أزرق سماوي */
-.hb-line-2 {
-    width: 22px;
-    background: linear-gradient(90deg, #0284c7, #38bdf8);
-    box-shadow: 0 0 6px rgba(2,132,199,0.55);
-    align-self: flex-end;
-    margin-left: auto;
-    margin-right: 4px;
-}
-
-/* السطر الثالث — تدرج ذهبي سماوي */
-.hb-line-3 {
-    width: 26px;
-    background: linear-gradient(90deg, #7dd3fc, #eab308);
-    box-shadow: 0 0 6px rgba(125,211,252,0.5);
-}
-
-/* حالة مفتوح — تحويل لـ X */
-.hamburger-btn.is-open .hb-line-1 {
-    transform: translateY(8px) rotate(45deg);
-    width: 28px;
-    background: linear-gradient(90deg, #eab308, #38bdf8);
-}
-.hamburger-btn.is-open .hb-line-2 {
-    opacity: 0;
-    transform: scaleX(0);
-}
-.hamburger-btn.is-open .hb-line-3 {
-    transform: translateY(-8px) rotate(-45deg);
-    width: 28px;
-    align-self: center;
-    margin: 0;
-}
-
-/* ══ القايمة المنسدلة ══ */
-.hb-dropdown {
-    position: absolute;
-    top: calc(100% + 14px);
-    left: 0;
-    min-width: 210px;
-    background: var(--card-bg);
-    border-radius: 16px;
-    padding: 8px;
-    box-shadow:
-        0 20px 50px rgba(0,0,0,0.12),
-        0 0 0 1px rgba(2,132,199,0.12);
-    direction: rtl;
-    opacity: 0;
-    transform: translateY(-10px) scale(0.97);
-    pointer-events: none;
-    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(.4,0,.2,1);
-    z-index: 2000;
-}
-
-/* سهم صغير فوق القايمة */
-.hb-dropdown::before {
-    content: '';
-    position: absolute;
-    top: -7px;
-    left: 18px;
-    width: 14px;
-    height: 14px;
-    background: var(--card-bg);
-    border-radius: 3px;
-    transform: rotate(45deg);
-    box-shadow: -2px -2px 5px rgba(2,132,199,0.07);
-}
-
-.hb-dropdown.is-open {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
-}
-
-.hb-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    border-radius: 12px;
-    padding: 12px 14px;
-    transition: background 0.2s ease, transform 0.2s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.hb-item:hover {
-    transform: translateX(-3px);
-}
-
-/* بند سجل الدخول — أزرق */
-.hb-login {
-    background: rgba(2,132,199,0.06);
-}
-.hb-login:hover {
-    background: rgba(2,132,199,0.13);
-}
-.hb-login .hb-item-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #0284c7, #38bdf8);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.95rem;
-    flex-shrink: 0;
-    box-shadow: 0 4px 10px rgba(2,132,199,0.35);
-}
-.hb-login .hb-item-text {
-    font-size: 0.92rem;
-    font-weight: 800;
-    color: #0284c7;
-    flex: 1;
-}
-.hb-login .hb-item-arrow {
-    color: rgba(2,132,199,0.45);
-    font-size: 0.7rem;
-}
-
-/* بند اعمل حساب — ذهبي */
-.hb-register {
-    background: rgba(234,179,8,0.06);
-}
-.hb-register:hover {
-    background: rgba(234,179,8,0.13);
-}
-.hb-register .hb-item-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #eab308, #fcd34d);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.95rem;
-    flex-shrink: 0;
-    box-shadow: 0 4px 10px rgba(234,179,8,0.35);
-}
-.hb-register .hb-item-text {
-    font-size: 0.92rem;
-    font-weight: 800;
-    color: #b45309;
-    flex: 1;
-}
-.hb-register .hb-item-arrow {
-    color: rgba(234,179,8,0.5);
-    font-size: 0.7rem;
-}
-
-.hb-divider {
-    height: 1px;
-    background: var(--border-color);
-    margin: 4px 8px;
-    border-radius: 1px;
-}
-
 /* ── صف الوضع الليلي/النهاري ── */
 .hb-theme {
     cursor: pointer;
@@ -4438,16 +4171,18 @@ input:checked + .switch-slider:before {
 .course-image-container {
     position: relative;
     width: 100%;
-    height: 220px;
     overflow: hidden;
     background-color: var(--bg-color);
+    line-height: 0;
 }
 
 .course-img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
+    height: auto;
+    max-height: 260px;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
     transition: transform 0.5s ease;
 }
 
@@ -4461,9 +4196,9 @@ input:checked + .switch-slider:before {
     right: 16px;
     background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-yellow-hover) 100%);
     color: #1a1500;
-    font-weight: 800;
-    font-size: 0.85rem;
-    padding: 6px 14px;
+    font-weight: 900;
+    font-size: 1.1rem;
+    padding: 7px 18px;
     border-radius: 30px;
     box-shadow: 0 4px 10px rgba(234, 179, 8, 0.3);
 }
@@ -4471,11 +4206,23 @@ input:checked + .switch-slider:before {
 .course-badge.paid {
     background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
     color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .course-badge.free {
     background: linear-gradient(135deg, var(--accent-yellow), var(--accent-yellow-hover));
     color: #1a1500;
+}
+
+.course-badge-price {
+    color: var(--primary-color);
+    background: #fff;
+    font-weight: 900;
+    padding: 1px 9px;
+    border-radius: 14px;
+    font-size: 0.95rem;
 }
 
 .course-info {
@@ -5145,14 +4892,17 @@ body.intro-active { overflow: hidden; }
 /* صورة الكورس */
 .course-image-container {
     position: relative;
-    height: 240px;
     overflow: hidden;
     border-radius: 20px 20px 0 0;
+    line-height: 0;
 }
 .course-img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    max-height: 260px;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
     transition: transform 0.4s ease;
 }
 .course-card:hover .course-img {
@@ -5774,15 +5524,18 @@ body.intro-active { overflow: hidden; }
 /* صورة الكورس */
 .course-image-container {
     position: relative;
-    height: 240px;
     border-radius: 24px 24px 0 0;
     overflow: hidden;
+    line-height: 0;
 }
 
 .course-img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    max-height: 260px;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
     transition: transform 0.5s ease;
 }
 .course-card:hover .course-img { transform: scale(1.08); }
@@ -6043,15 +5796,6 @@ body.intro-active { overflow: hidden; }
 /* إخفاء العناصر القديمة للتوجل اللي مش موجودة في HTML الجديد */
 .htb-icon, .htb-pill, .htb-dot { display: none !important; }
 .htb-label { display: none !important; }
-
-/* ── ترتيب الهيدر: اللوجو يمين، الهامبرغر+توجل شمال ── */
-.header-container {
-    flex-direction: row-reverse !important;
-}
-.header-left {
-    flex-direction: row !important;
-    gap: 10px !important;
-}
 
 /* ── الـ Badge فوق الصورة بـ 1cm ── */
 .course-badge {
