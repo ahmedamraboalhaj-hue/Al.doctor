@@ -104,7 +104,7 @@ tr:hover td{background:rgba(200,169,110,.03);}
 /* COURSES PAGE */
 .courses-admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
 .course-admin-card{background:var(--card-bg);border-radius:16px;border:1px solid var(--border);overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.04);}
-.course-admin-thumb{height:130px;display:flex;align-items:center;justify-content:center;font-size:48px;}
+.course-admin-thumb{min-height:130px;display:flex;align-items:center;justify-content:center;font-size:48px;overflow:hidden;}
 .course-admin-body{padding:16px;}
 .course-admin-title{font-size:15px;font-weight:800;margin-bottom:8px;}
 .course-admin-meta{font-size:12px;color:#888;margin-bottom:12px;}
@@ -114,8 +114,8 @@ tr:hover td{background:rgba(200,169,110,.03);}
 .student-courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;}
 .student-course-card{background:var(--card-bg);border-radius:18px;border:1px solid var(--border);overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.06);transition:all .3s;cursor:pointer;position:relative;}
 .student-course-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(139,105,20,.15);border-color:var(--primary);}
-.scc-cover{height:180px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:72px;}
-.scc-cover-img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.scc-cover{min-height:120px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:72px;}
+.scc-cover-img{max-width:100%;max-height:100%;object-fit:contain;position:relative;}
 .scc-badge{position:absolute;top:14px;right:14px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:800;z-index:2;}
 .scc-badge.free{background:linear-gradient(135deg,#2ed573,#1ea760);color:white;}
 .scc-badge.paid{background:linear-gradient(135deg,#f5a623,#e67e22);color:white;box-shadow:0 4px 12px rgba(245,166,35,0.35);}
@@ -408,6 +408,8 @@ tr:hover td{background:rgba(200,169,110,.03);}
 </head>
 <body>
 
+<div id="notificationContainer" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;"></div>
+
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-logo">
@@ -499,6 +501,7 @@ tr:hover td{background:rgba(200,169,110,.03);}
     <div class="topbar-title" id="pageTitle">نظرة عامة 📊</div>
     <div class="topbar-actions">
       <button onclick="window.open('index.html','_blank')">🌐 الموقع</button>
+
       <button class="theme-toggle" onclick="toggleTheme()">☀️ 🌙</button>
       <button onclick="localStorage.removeItem('alamin_current');window.location.replace('login.html')">🚪 خروج</button>
     </div>
@@ -570,22 +573,21 @@ tr:hover td{background:rgba(200,169,110,.03);}
     <div class="page" id="page-students">
       <div class="table-card">
         <div class="table-header">
-          <h3>جميع الطلاب المسجّلين 👨‍🎓</h3>
+          <h3>طلاب المنصة 👨‍🎓</h3>
           <div class="table-search">
-            <input type="text" id="searchStudents" placeholder="ابحث عن طالب..." oninput="filterStudents()">
-            <select id="studentsSourceFilter" onchange="filterStudents()" style="padding:9px 12px;border:2px solid var(--border);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
-              <option value="all">كل الطلاب</option>
-              <option value="platform">طلاب المنصة</option>
-              <option value="center">طلاب السيستم / السنتر</option>
-            </select>
+            <input type="text" id="searchStudents" placeholder="ابحث باسم أو موبايل..." oninput="filterStudents()">
             <select id="studentsGradeFilter" onchange="filterStudents()" style="padding:9px 12px;border:2px solid var(--border);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
               <option value="all">كل الصفوف</option>
-              <!-- تُملأ ديناميكياً من grade-mapping.js عند التحميل -->
             </select>
-            <button class="btn-add" onclick="openAddStudentModal()">➕ إضافة طالب</button>
+            <select id="studentsTrackFilter" onchange="filterStudents()" style="padding:9px 12px;border:2px solid var(--border);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none">
+              <option value="all">كل الشُعب</option>
+              <option value="علمي">علمي</option>
+              <option value="أدبي">أدبي</option>
+            </select>
+            <button onclick="syncPlatformStudents()" style="background:linear-gradient(135deg,#16a34a,#15803d);color:white;border:none;padding:9px 16px;border-radius:10px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px">🔄 تحديث</button>
           </div>
         </div>
-        <div id="studentsGradeSummary" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 24px 18px"></div>
+        <div id="studentsGradeSummary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 24px 18px"></div>
         <table>
           <thead>
             <tr>
@@ -594,14 +596,14 @@ tr:hover td{background:rgba(200,169,110,.03);}
               <th>رقم الموبايل</th>
               <th>الصف</th>
               <th>الشُعبة</th>
-              <th>نوع الطالب</th>
+              <th>المحافظة</th>
               <th>تاريخ التسجيل</th>
               <th>الحالة</th>
               <th>الإجراءات</th>
             </tr>
           </thead>
           <tbody id="studentsTableBody">
-            <tr><td colspan="9"><div class="empty-state"><div class="icon">👥</div><p>لا يوجد طلاب مسجلين بعد</p></div></td></tr>
+            <tr><td colspan="9"><div class="empty-state"><div class="icon">👥</div><p>جاري تحميل الطلاب...</p></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -648,6 +650,32 @@ tr:hover td{background:rgba(200,169,110,.03);}
 
     <!-- PAYMENTS PAGE -->
     <div class="page" id="page-payments">
+
+      <!-- أرباح الكورسات -->
+      <div class="table-card" style="margin-bottom:24px;">
+        <div class="table-header">
+          <h3>💰 أرباح الكورسات</h3>
+        </div>
+        <div id="earningsSummaryCards" style="display:flex;gap:16px;flex-wrap:wrap;padding:16px 24px 4px;"></div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>اسم الكورس</th>
+                <th>النوع</th>
+                <th>السعر</th>
+                <th>المشتركين</th>
+                <th>إجمالي الأرباح</th>
+              </tr>
+            </thead>
+            <tbody id="earningsTableBody">
+              <tr><td colspan="5"><div class="empty-state"><div class="icon">📚</div><p>لا توجد كورسات بعد</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- المدفوعات المعلقة -->
       <div class="table-card">
         <div class="table-header">
           <h3>المدفوعات المعلقة 💳</h3>
@@ -1176,38 +1204,6 @@ tr:hover td{background:rgba(200,169,110,.03);}
   </div>
 </div>
 
-<!-- ADD STUDENT MODAL -->
-<div class="modal-overlay" id="addStudentModal">
-  <div class="modal">
-    <h3>إضافة طالب جديد ➕</h3>
-    <div class="modal-form">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <div class="form-group"><label>الاسم الأول</label><input type="text" id="asFN"></div>
-        <div class="form-group"><label>الاسم الأخير</label><input type="text" id="asLN"></div>
-      </div>
-      <div class="form-group"><label>رقم الموبايل</label><input type="tel" id="asPH" placeholder="01xxxxxxxxx"></div>
-      <div class="form-group">
-        <label>الصف الدراسي</label>
-        <select id="asGR">
-          <!-- تُملأ ديناميكياً من buildGradeOptions() في grade-mapping.js -->
-        </select>
-      </div>
-      <div class="form-group">
-        <label>نوع الطالب</label>
-        <select id="asType">
-          <option value="center">طالب سنتر</option>
-          <option value="outside">خارج السنتر</option>
-        </select>
-      </div>
-      <div class="form-group"><label>كلمة المرور</label><input type="password" id="asPW" value="123456"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-save" onclick="saveNewStudent()">إضافة الطالب ✅</button>
-      <button class="btn-cancel" onclick="closeModal('addStudentModal')">إلغاء</button>
-    </div>
-  </div>
-</div>
-
 <!-- ADD COURSE MODAL -->
 <div class="modal-overlay" id="addCourseModal">
   <div class="modal" style="max-width:700px;max-height:90vh;overflow-y:auto">
@@ -1227,22 +1223,14 @@ tr:hover td{background:rgba(200,169,110,.03);}
           <input type="file" id="acThumbnailInput" accept="image/*" style="display:none" onchange="handleCourseThumbnailSelect(event)">
         </div>
         <div id="courseThumbnailPreview" style="margin-top:10px;display:none;text-align:center">
-          <div style="position:relative;display:inline-block;width:100%;max-width:320px;height:180px;border-radius:10px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.15);border:1px solid var(--border)">
-            <img id="courseThumbnailImg" style="width:100%;height:100%;object-fit:cover;object-position:50% 50%">
-          </div>
-          <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;max-width:320px;margin-left:auto;margin-right:auto;">
-            <div style="display:flex;align-items:center;justify-content:space-between">
-              <span style="font-size:12px;font-weight:700">التحريك أفقياً (يمين/يسار):</span>
-              <input type="range" id="acThumbnailX" min="0" max="100" value="50" oninput="updateThumbnailPreviewPosition()" style="width:150px">
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between">
-              <span style="font-size:12px;font-weight:700">التحريك رأسياً (أعلى/أسفل):</span>
-              <input type="range" id="acThumbnailY" min="0" max="100" value="50" oninput="updateThumbnailPreviewPosition()" style="width:150px">
-            </div>
+          <div style="position:relative;display:inline-block;width:100%;max-width:320px;border-radius:10px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.15);border:1px solid var(--border);background:#000;min-height:60px;display:flex;align-items:center;justify-content:center">
+            <img id="courseThumbnailImg" style="max-width:100%;max-height:280px;object-fit:contain;display:block;margin:auto">
           </div>
           <button type="button" class="btn-mini" onclick="clearCourseThumbnail()" style="margin-top:8px;background:var(--danger);color:white;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-family:'Tajawal',sans-serif">🗑️ حذف الصورة</button>
         </div>
         <input type="hidden" id="acThumbnail">
+        <input type="hidden" id="acThumbnailX" value="50">
+        <input type="hidden" id="acThumbnailY" value="50">
       </div>
 
       <div class="form-group"><label>اسم الكورس</label><input type="text" id="acTitle"></div>
@@ -1271,7 +1259,57 @@ tr:hover td{background:rgba(200,169,110,.03);}
         <input type="hidden" id="acHeaderColor" value="linear-gradient(135deg,#8B6F47,#A0826D)">
       </div>
 
-      <div class="form-group"><label>وصف الكورس</label><textarea id="acDesc" rows="3" style="resize:vertical"></textarea></div>
+      <div class="form-group">
+        <label>وصف الكورس</label>
+        <!-- AI Description Box -->
+        <div style="background:var(--bg);border:2px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;">
+          <div style="font-weight:800;font-size:13px;color:var(--primary);margin-bottom:10px;">✨ توليد الوصف بالذكاء الاصطناعي</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <input type="text" id="acDescAiPrompt"
+              placeholder='مثال: اعمل وصف من 30 كلمة، وصف احترافي، وصف مختصر...'
+              style="flex:1;min-width:180px;padding:9px 13px;border:1.5px solid var(--border);border-radius:10px;font-family:Tajawal,sans-serif;font-size:13px;background:var(--card-bg);color:var(--text);outline:none;">
+            <button type="button" onclick="generateCourseDescAI()" id="btnDescAI"
+              style="background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;padding:9px 18px;border-radius:10px;font-family:Tajawal,sans-serif;font-weight:800;font-size:13px;cursor:pointer;white-space:nowrap;">
+              ✨ توليد
+            </button>
+          </div>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <button type="button" id="btnVoiceDesc" onclick="toggleVoiceDesc()"
+              style="background:var(--card-bg);border:2px solid #e74c3c;color:#e74c3c;padding:8px 16px;border-radius:10px;font-family:Tajawal,sans-serif;font-weight:800;font-size:13px;cursor:pointer;">
+              🎙️ تسجيل صوتي
+            </button>
+            <span id="voiceDescStatus" style="font-size:12px;color:var(--text2);font-family:Tajawal,sans-serif;"></span>
+          </div>
+          <div id="acDescAiStatus" style="font-size:12px;color:var(--primary);margin-top:6px;min-height:16px;font-family:Tajawal,sans-serif;"></div>
+        </div>
+        <textarea id="acDesc" rows="3" style="resize:vertical;width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:10px;font-family:Tajawal,sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none;"
+          placeholder="اكتب وصفاً، أو استخدم الذكاء الاصطناعي أو التسجيل الصوتي أعلاه..."></textarea>
+      </div>
+
+      <!-- 🧠 الوصف الذكي الداخلي - يُستخدم فقط لترشيح الكورسات بالذكاء الاصطناعي -->
+      <div class="form-group">
+        <div style="background:linear-gradient(135deg,rgba(124,58,237,0.06),rgba(2,132,199,0.06));border:2px solid rgba(124,58,237,0.25);border-radius:14px;padding:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+            <div style="font-weight:800;font-size:13px;color:#7c3aed;display:flex;align-items:center;gap:6px;">
+              🧠 التحليل الذكي الداخلي للكورس
+            </div>
+            <span style="font-size:11px;background:#fef3c7;color:#92400e;padding:3px 12px;border-radius:20px;font-weight:700;">للنظام فقط — لا يظهر للطلاب</span>
+          </div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.7;background:rgba(124,58,237,0.04);padding:10px;border-radius:10px;">
+            💡 هذا الوصف يستخدمه <strong>نظام الترشيح بالذكاء الاصطناعي</strong> لفهم الكورس بعمق ومطابقته مع مشاكل الطلاب. يُولَّد تلقائياً عند الضغط على "✨ توليد" أعلاه، أو يمكنك تعديله يدوياً لتحسين دقة الترشيح.
+          </div>
+          <textarea id="acAiSmartDesc" rows="5" style="resize:vertical;width:100%;padding:12px 16px;border:2px dashed rgba(124,58,237,0.4);border-radius:10px;font-family:Tajawal,sans-serif;font-size:13px;background:var(--bg);color:var(--text);outline:none;line-height:1.8;"
+            placeholder="مثال: هذا الكورس يعالج ضعف النحو والإعراب، يناسب الطلاب الذين يعانون من صعوبة فهم القواعد وضعف علامات الإعراب، يحل مشكلة الاستعداد للامتحانات، يبني أساساً قوياً في اللغة العربية، مناسب لمن يضيع درجات في أسئلة النحو..."></textarea>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap;">
+            <button type="button" onclick="regenerateSmartDesc()" id="btnRegenerateSmartDesc"
+              style="background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;border:none;padding:9px 18px;border-radius:10px;font-family:Tajawal,sans-serif;font-weight:800;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;">
+              🧠 إعادة توليد التحليل
+            </button>
+            <span id="acSmartDescStatus" style="font-size:12px;color:#7c3aed;font-family:Tajawal,sans-serif;font-weight:700;"></span>
+          </div>
+        </div>
+      </div>
+
       <div class="form-group">
         <label>الصف المستهدف</label>
         <select id="acGrade" onchange="updateCourseTrackVisibility()">
@@ -1665,71 +1703,173 @@ else { // fallback لو الدالة لسه ما اتعرّفتش
 }
 
 let courses = JSON.parse(localStorage.getItem('alamin_courses') || '[]');
-if(!courses.length) {
-  courses = [
-    {id:1,title:'المراجعة النهائية الصف الأول الثانوي',desc:'المراجعة النهائية لطلاب أولى تانوي',grade:'1',type:'free',emoji:'📖',color:'linear-gradient(135deg,#1a1a2e,#8B6914)',created:'٩ مايو ٢٠٢٦',lessons:[]},
-    {id:2,title:'المراجعة النهائية الصف الثاني الثانوي',desc:'مراجعة ليالي الامتحان لطلاب تانية تانوي',grade:'2',type:'free',emoji:'🌿',color:'linear-gradient(135deg,#1b4332,#2d6a4f)',created:'٩ مايو ٢٠٢٦',lessons:[]},
-    {id:3,title:'مراجعة التربية الدينية الصف الثالث',desc:'ملفات مراجعة التربية الدينية',grade:'3',type:'free',emoji:'🔥',color:'linear-gradient(135deg,#3d0000,#c00000)',created:'٨ مايو ٢٠٢٦',lessons:[]},
-  ];
+// Firebase is the source of truth. Do not seed demo courses in localStorage:
+// that made old/default courses appear in some browsers and disappear in others.
+const _legacySeedCourseTitles = new Set([
+  'المراجعة النهائية الصف الأول الثانوي',
+  'المراجعة النهائية الصف الثاني الثانوي',
+  'مراجعة التربية الدينية الصف الثالث'
+]);
+if (Array.isArray(courses) && courses.some(c => _legacySeedCourseTitles.has(c && c.title))) {
+  courses = courses.filter(c => !_legacySeedCourseTitles.has(c && c.title));
   localStorage.setItem('alamin_courses', JSON.stringify(courses));
 }
+localStorage.setItem('alamin_courses_initialized', '1');
+
+// ── اختبار اتصال Firebase عند التحميل ──
+(async () => {
+  // انتظر db
+  if (!window.db) {
+    await new Promise(r => {
+      const t = setInterval(() => { if (window.db) { clearInterval(t); r(); } }, 100);
+      setTimeout(() => { clearInterval(t); r(); }, 8000);
+    });
+  }
+  if (!window.db) {
+    console.error('[STARTUP] Firebase db not available after 8s — check firebase-config.js');
+    showNotification('⚠️ Firebase غير متاح — تحقق من ملف firebase-config.js', 'error');
+    return;
+  }
+  // اختبار قراءة وكتابة
+  try {
+    await window.db.collection('platform_data').doc('_connectivity_test').set({ ts: Date.now() });
+    console.log('[STARTUP] ✅ Firebase read/write OK');
+  } catch(e) {
+    console.error('[STARTUP] ❌ Firebase write test FAILED:', e.code, e.message);
+    if (e.code === 'permission-denied') {
+      showNotification(
+        '🔴 Firestore Rules تحتاج تحديث: افتح Firebase Console → Firestore → Rules وانشر القواعد الجديدة',
+        'error'
+      );
+    }
+  }
+})();
 
 // ---- FIREBASE COURSE SYNC ----
-// ✅ FIX (Race Condition): علم بيتفعّل لحظة ما الأدمن يضيف/يعدّل/يحذف كورس،
-// عشان لو طلب تحميل الكورسات القديم من Firebase (اللي بدأ قبل الإضافة) يرجع
-// بعد ما الأدمن خلّص إضافة، الكود يتجاهله ومايمسحش الكورس الجديد.
+// Firebase هو المصدر الموثوق دائماً. عند البدء نجلب منه.
+// عند الحفظ/التعديل/الحذف نرفع إليه فوراً.
 let _coursesDirty = false;
 let _coursesSyncVersion = 0;
 
-async function pushCoursesToFirebase(coursesArray) {
-  if (!window.db) return;
+// Load courses from Firebase on startup
+(async () => {
+  // انتظر حتى يكون window.db جاهزاً (max 6 ثواني)
+  if (!window.db) {
+    await new Promise(resolve => {
+      const t = setInterval(() => { if (window.db) { clearInterval(t); resolve(); } }, 150);
+      setTimeout(() => { clearInterval(t); resolve(); }, 6000);
+    });
+  }
+  if (!window.db) {
+    console.warn('[courses-init] Firebase not available, using localStorage');
+    return;
+  }
+
   try {
+    const doc = await window.db.collection('platform_data').doc('courses_list').get();
+    if (doc.exists) {
+      const data = doc.data() || {};
+      const fbCourses = Array.isArray(data.items) ? data.items : [];
+      if (fbCourses.length > 0) {
+        // Firebase له بيانات → استخدمها كمصدر موثوق
+        courses = fbCourses;
+        localStorage.setItem('alamin_courses', JSON.stringify(courses));
+        localStorage.setItem('alamin_courses_initialized', '1');
+        console.log('[courses-init] Loaded', courses.length, 'courses from Firebase');
+        // حدّث الـ UI لو الصفحة النشطة هي صفحة الكورسات
+        const activePage = document.querySelector('.page.active');
+        if (activePage) {
+          const id = activePage.id.replace('page-', '');
+          if (id === 'courses') renderCoursesAdmin();
+          if (id === 'student-courses') renderStudentCourses();
+          if (id === 'overview') renderOverview();
+        }
+      } else {
+        // Firebase is empty, so clear any stale local cache instead of publishing it.
+        courses = [];
+        localStorage.removeItem('alamin_courses');
+        console.log('[courses-init] Firebase courses_list is empty; local course cache cleared');
+        const activePage = document.querySelector('.page.active');
+        if (activePage) {
+          const id = activePage.id.replace('page-', '');
+          if (id === 'courses') renderCoursesAdmin();
+          if (id === 'student-courses') renderStudentCourses();
+          if (id === 'overview') renderOverview();
+        }
+      }
+    } else {
+      // Missing Firebase document means no published courses yet.
+      courses = [];
+      localStorage.removeItem('alamin_courses');
+      console.log('[courses-init] No Firebase courses_list doc; local course cache cleared');
+      const activePage = document.querySelector('.page.active');
+      if (activePage) {
+        const id = activePage.id.replace('page-', '');
+        if (id === 'courses') renderCoursesAdmin();
+        if (id === 'student-courses') renderStudentCourses();
+        if (id === 'overview') renderOverview();
+      }
+    }
+  } catch(e) {
+    console.warn('[courses-init] Firebase load error:', e.code, e.message);
+  }
+})();
+
+async function pushCoursesToFirebase(coursesArray) {
+  // انتظر حتى يكون window.db جاهزاً (max 8 ثواني)
+  if (!window.db) {
+    console.log('[Firebase] db not ready yet, waiting...');
+    await new Promise(resolve => {
+      const t = setInterval(() => { if (window.db) { clearInterval(t); resolve(); } }, 100);
+      setTimeout(() => { clearInterval(t); resolve(); }, 8000);
+    });
+  }
+  if (!window.db) {
+    console.error('[Firebase] db NEVER became ready after 8s');
+    showNotification('⚠️ Firebase غير متاح — تأكد من تحميل firebase-config.js بشكل صحيح', 'error');
+    return false;
+  }
+
+  console.log('[Firebase] db is ready, pushing', coursesArray.length, 'courses...');
+
+  try {
+    // نظّف البيانات: احذف أي قيمة undefined لأن Firestore لا يقبلها
+    const cleanItems = JSON.parse(JSON.stringify(coursesArray));
     await window.db.collection('platform_data').doc('courses_list').set({
-      items: coursesArray,
+      items: cleanItems,
       updatedAt: Date.now()
     });
-  } catch(e) { console.warn('Course push to Firebase failed:', e); }
+    _coursesDirty = false;
+    console.log('[Firebase] ✅ courses_list saved successfully —', cleanItems.length, 'courses');
+    return true;
+  } catch(e) {
+    console.error('[Firebase] ❌ WRITE FAILED — code:', e.code, '| message:', e.message);
+    if (e.code === 'permission-denied') {
+      showNotification(
+        '❌ Firebase رفض الكتابة (permission-denied) — يجب نشر firestore.rules الجديد من Firebase Console → Firestore → Rules ثم اضغط Publish',
+        'error'
+      );
+    } else if (e.code === 'unavailable' || e.code === 'deadline-exceeded') {
+      showNotification('⚠️ تأخر الاتصال بـ Firebase — تم الحفظ محلياً وسيُزامَن عند استقرار الاتصال', 'warning');
+    } else {
+      showNotification('❌ فشل الحفظ على Firebase: ' + (e.message || e.code || 'خطأ'), 'error');
+    }
+    return false;
+  }
 }
 
+// loadCoursesFromFirebase — helper مستخدم في renderStudentCourses
 async function loadCoursesFromFirebase() {
   if (!window.db) return null;
   try {
     const doc = await window.db.collection('platform_data').doc('courses_list').get();
     if (doc.exists) {
       const data = doc.data();
-      return Array.isArray(data.items) ? data.items : null;
+      return Array.isArray(data.items) ? data.items : [];
     }
-  } catch(e) { console.warn('Course load from Firebase failed:', e); }
+  } catch(e) { console.warn('[Firebase] Course load failed:', e.code, e.message); }
   return null;
 }
-
-// Load courses from Firebase on startup and refresh UI
-(async () => {
-  const _myVersion = ++_coursesSyncVersion;
-  const fbCourses = await loadCoursesFromFirebase();
-
-  // ✅ لو الأدمن عدّل/أضاف كورس محليًا (_coursesDirty) وهو الطلب ده لسه شغال،
-  // أو لو فيه طلب أحدث بدأ بعد الطلب ده، تجاهل النتيجة القديمة دي تمامًا.
-  if (_coursesDirty || _myVersion !== _coursesSyncVersion) {
-    return;
-  }
-
-  if (fbCourses && fbCourses.length) {
-    courses = fbCourses;
-    localStorage.setItem('alamin_courses', JSON.stringify(courses));
-    // Refresh whichever page is active
-    const activePage = document.querySelector('.page.active');
-    if (activePage) {
-      const id = activePage.id.replace('page-', '');
-      if (id === 'courses') renderCoursesAdmin();
-      if (id === 'student-courses') renderStudentCourses();
-      if (id === 'overview') renderOverview();
-    }
-  } else if (courses.length) {
-    // First time: push local defaults to Firebase so all users see them
-    pushCoursesToFirebase(courses);
-  }
-})();
 
 // ---- NAVIGATION ----
 const pageTitles = {
@@ -1750,7 +1890,7 @@ function showPage(id) {
   document.querySelectorAll('.nav-item').forEach(n=>{
     if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+id+"'"))n.classList.add('active');
   });
-  if(id==='students') renderStudentsTable();
+  if(id==='students') initStudentsPage();
   if(id==='courses') renderCoursesAdmin();
   if(id==='analytics') renderAnalytics();
   if(id==='overview') renderOverview();
@@ -1769,6 +1909,31 @@ function showPage(id) {
 // ---- DATA ----
 function getUsers(){return JSON.parse(localStorage.getItem('alamin_users')||'[]');}
 function saveUsers(u){localStorage.setItem('alamin_users',JSON.stringify(u));}
+
+// ✅ FIX: كانت غايبة بالكامل من الداشبورد - سبب تعطّل زر "منح الوصول" وأزرار أخرى
+// (كل استدعاء لها كان يرمي ReferenceError ويوقف تنفيذ الدالة المستدعية بالكامل بصمت)
+function showNotification(msg, type){
+  type = type || 'info';
+  const c = document.getElementById('notificationContainer');
+  if (!c) { console.warn('[showNotification]', type, msg); return; }
+  const el = document.createElement('div');
+  const colors = {
+    success: { border:'#16a34a', color:'#16a34a', bg:'rgba(22,163,74,.1)' },
+    error:   { border:'#dc2626', color:'#dc2626', bg:'rgba(220,38,38,.1)' },
+    info:    { border:'#00b4d8', color:'#00b4d8', bg:'rgba(0,180,216,.1)' }
+  };
+  const c2 = colors[type] || colors.info;
+  el.textContent = msg;
+  el.style.cssText = `background:var(--card-bg,#fff);border:1.5px solid ${c2.border};color:${c2.color};background-color:${c2.bg};border-radius:12px;padding:10px 20px;font-size:.85rem;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.15);font-family:'Tajawal',sans-serif;animation:dashToastIn .3s ease;pointer-events:none;white-space:nowrap;`;
+  c.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+if (!document.getElementById('dash-toast-style')) {
+  const styleTag = document.createElement('style');
+  styleTag.id = 'dash-toast-style';
+  styleTag.textContent = '@keyframes dashToastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}';
+  document.head.appendChild(styleTag);
+}
 
 // gradeLabel و gradeClass يأتيان من grade-mapping.js
 // تعريف fallback محلي في حالة تحميل الصفحة قبل grade-mapping.js
@@ -1821,13 +1986,14 @@ function getCourses(){
   // Return runtime variable (always in sync with Firebase) - fallback to localStorage
   return courses.length ? courses : JSON.parse(localStorage.getItem('alamin_courses')||'[]');
 }
-function saveCourses(c){
-  // ✅ FIX: فعّل علم "تم التعديل محليًا" قبل أي حفظ، عشان أي تحميل قديم
-  // من Firebase كان شغال في الخلفية وقت الإضافة ميمسحش الكورس الجديد.
+async function saveCourses(c){
   _coursesDirty = true;
-  localStorage.setItem('alamin_courses', JSON.stringify(c));
   courses = c;
-  pushCoursesToFirebase(c);
+  localStorage.setItem('alamin_courses', JSON.stringify(c));
+  localStorage.setItem('alamin_courses_updated', Date.now().toString());
+  localStorage.setItem('alamin_courses_initialized', '1');
+  const ok = await pushCoursesToFirebase(c);
+  return ok;
 }
 function getCourseById(id){
   const cs = getCourses();
@@ -1877,15 +2043,15 @@ function getDailyVisits(days){
   return result;
 }
 
-function addCourse(course){
+async function addCourse(course){
   const cs = getCourses();
   course.id = Date.now();
   course.lessons = course.lessons||[];
   cs.push(course);
-  saveCourses(cs);
+  await saveCourses(cs);
   return course;
 }
-function addLessonToCourse(courseId, lesson){
+async function addLessonToCourse(courseId, lesson){
   const cs = getCourses();
   const idx = cs.findIndex(c=>c.id==courseId);
   if(idx===-1) return null;
@@ -1905,22 +2071,22 @@ function addLessonToCourse(courseId, lesson){
   lesson.videoUrl = lesson.videoUrl || (lesson.segments[0] ? lesson.segments[0].videoUrl : '');
   lesson.bunnyLibraryId = lesson.bunnyLibraryId || BUNNY_LIBRARY_ID;
   cs[idx].lessons.push(lesson);
-  saveCourses(cs);
+  await saveCourses(cs);
   return lesson;
 }
 
 async function initStudentsPage(){
-  await syncCenterStudentsFromFirebase();
-  renderStudentsTable();
+  renderStudentsTable(); // عرض فوري من الكاش المحلي
+  await syncPlatformStudents(false); // جلب من Firebase في الخلفية
 }
-function updateLesson(courseId, lessonId, updates){
+async function updateLesson(courseId, lessonId, updates){
   const cs = getCourses();
   const c = cs.find(x=>x.id==courseId);
   if(!c) return false;
   const l = c.lessons.find(x=>x.id==lessonId);
   if(!l) return false;
   Object.assign(l, updates);
-  saveCourses(cs);
+  await saveCourses(cs);
   return true;
 }
 
@@ -2036,10 +2202,13 @@ async function saveEditedLesson(){
   const pdfFileUrl = await readPdfInputAsDataUrl('editLessonPdfFile');
   if(pdfFileUrl === null) return; // ملف غير صالح، تم التنبيه بالفعل
 
+  // ✅ FIX: التحقق من quiz ID بشكل أكثر مرونة - يقرأ من كل مصادر التخزين الممكنة
   const quizIdInput = document.getElementById('editLessonQuizId').value.trim() || null;
   if(quizIdInput){
-    const quizzes = JSON.parse(localStorage.getItem('alamin_quizzes') || '[]');
-    if(!quizzes.some(q=>String(q.id)===String(quizIdInput))){
+    const quizzesLocal = JSON.parse(localStorage.getItem('alamin_quizzes') || '[]');
+    const quizzesData  = typeof window.quizzesData !== 'undefined' ? window.quizzesData : [];
+    const allQuizzes   = quizzesLocal.length ? quizzesLocal : quizzesData;
+    if(allQuizzes.length && !allQuizzes.some(q=>String(q.id)===String(quizIdInput))){
       alert('لا يوجد اختبار بهذا الـ ID. راجع صفحة الاختبارات واكتب ID صحيح.');
       return;
     }
@@ -2076,25 +2245,26 @@ async function saveEditedLesson(){
     });
   }
 
-  saveCourses(cs);
-  showNotification('✅ تم حفظ التعديلات بنجاح', 'success');
+  const ok = await saveCourses(cs);
+  if(ok) showNotification('✅ تم حفظ التعديلات ونشرها للطلاب', 'success');
+  else showNotification('✅ تم الحفظ محلياً — تحقق من الاتصال', 'warning');
   closeModal('editLessonModal');
   renderCoursesAdmin();
 }
 
-function deleteLessonFromCourse(courseId, lessonId){
+async function deleteLessonFromCourse(courseId, lessonId){
   if(!confirm('هل أنت متأكد من حذف هذا الدرس؟ سيتم حذف جميع مقاطعه نهائياً.')) return;
   const cs = getCourses();
   const c = cs.find(x=>x.id==courseId);
   if(!c) return;
   c.lessons = (c.lessons||[]).filter(l=>l.id!=lessonId);
-  saveCourses(cs);
+  await saveCourses(cs);
   showNotification('🗑️ تم حذف الدرس بنجاح', 'success');
   openManageLessonsModal(courseId);
   renderCoursesAdmin();
 }
 
-function deleteSegmentFromLesson(courseId, lessonId, segIndex){
+async function deleteSegmentFromLesson(courseId, lessonId, segIndex){
   if(!confirm('هل أنت متأكد من حذف هذا المقطع؟')) return;
   const cs = getCourses();
   const c = cs.find(x=>x.id==courseId);
@@ -2102,7 +2272,7 @@ function deleteSegmentFromLesson(courseId, lessonId, segIndex){
   const lesson = (c.lessons||[]).find(l=>l.id==lessonId);
   if(!lesson) return;
   lesson.segments = (lesson.segments||[]).filter((_,i)=>i!==segIndex);
-  saveCourses(cs);
+  await saveCourses(cs);
   showNotification('🗑️ تم حذف المقطع', 'success');
   openEditLessonModal(courseId, lessonId);
 }
@@ -2146,7 +2316,7 @@ async function replaceSegmentVideo(input, courseId, lessonId, segIndex){
         lesson.segments[segIndex].bunnyLibraryId = BUNNY_LIBRARY_ID;
         lesson.segments[segIndex].videoUrl = `https://iframe.mediadelivery.net/embed/${BUNNY_LIBRARY_ID}/${videoId}`;
         lesson.segments[segIndex].source = 'bunny';
-        saveCourses(cs);
+        await saveCourses(cs);
       }
     }
 
@@ -2187,54 +2357,62 @@ function renderOverview(){
 
 // ---- STUDENTS TABLE ----
 function normalizeStudentId(id){return String(id);}
-function getStudentsSourceFilter(){
-  return document.getElementById('studentsSourceFilter')?.value || 'all';
-}
 function getStudentsGradeFilter(){
   return document.getElementById('studentsGradeFilter')?.value || 'all';
 }
+function getStudentsTrackFilter(){
+  return document.getElementById('studentsTrackFilter')?.value || 'all';
+}
+
 function renderStudentsGradeSummary(users){
   const wrap = document.getElementById('studentsGradeSummary');
   if(!wrap) return;
-  const source = getStudentsSourceFilter();
-  const base = users.filter(u => source === 'all' || (source === 'center' ? getStudentType(u) === 'center' : getStudentType(u) !== 'center'));
+  const trackFilter = getStudentsTrackFilter();
+  const base = trackFilter === 'all' ? users : users.filter(u => (u.track||'') === trackFilter);
   const cards = [
-    ['1','الأول الثانوي'],
-    ['2','الثاني الثانوي'],
-    ['3','الثالث الثانوي']
+    ['1','الأول الثانوي','#0284c7'],
+    ['2','الثاني الثانوي','#f5a623'],
+    ['3','الثالث الثانوي','#8e44ad']
   ];
-  wrap.innerHTML = cards.map(([grade,label]) => {
+  wrap.innerHTML = cards.map(([grade,label,color]) => {
     const count = base.filter(u => String(u.grade) === grade).length;
     return `<button onclick="document.getElementById('studentsGradeFilter').value='${grade}';filterStudents()" style="text-align:right;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--bg);cursor:pointer;font-family:'Tajawal',sans-serif;color:var(--text)">
-      <div style="font-size:13px;color:var(--text2);font-weight:700">${label}</div>
-      <div style="font-size:24px;font-weight:900;color:var(--primary);margin-top:4px">${count}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--text2)">${label}</div>
+      <div style="font-size:26px;font-weight:900;color:${color};margin-top:4px">${count}</div>
     </button>`;
   }).join('');
 }
 
 function renderStudentsTable(filter=''){
-  const users=getUsers();
-  const tbody=document.getElementById('studentsTableBody');
-  document.getElementById('studentsBadge').textContent=users.length;
-  const sourceFilter = getStudentsSourceFilter();
+  const users = getUsers();
+  const tbody = document.getElementById('studentsTableBody');
+  if(!tbody) return;
+  document.getElementById('studentsBadge').textContent = users.length;
   const gradeFilter = getStudentsGradeFilter();
+  const trackFilter = getStudentsTrackFilter();
   renderStudentsGradeSummary(users);
-  let filtered=users.filter(u=>!filter||(u.name&&u.name.includes(filter))||(u.phone&&u.phone.includes(filter))||(u.email&&u.email.includes(filter))||(u.qrCode&&String(u.qrCode).includes(filter)));
-  if(sourceFilter !== 'all') {
-    filtered = filtered.filter(u => sourceFilter === 'center' ? getStudentType(u) === 'center' : getStudentType(u) !== 'center');
-  }
+  let filtered = users.filter(u =>
+    !filter ||
+    (u.name && u.name.includes(filter)) ||
+    (u.phone && u.phone.includes(filter)) ||
+    (u.email && u.email.includes(filter))
+  );
   if(gradeFilter !== 'all') filtered = filtered.filter(u => String(u.grade) === gradeFilter);
-  if(!filtered.length){tbody.innerHTML='<tr><td colspan="9"><div class="empty-state"><div class="icon">👥</div><p>لا يوجد نتائج</p></div></td></tr>';return;}
-  tbody.innerHTML=filtered.map((u,i)=>`
+  if(trackFilter !== 'all') filtered = filtered.filter(u => (u.track||'') === trackFilter);
+  if(!filtered.length){
+    tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="icon">👥</div><p>لا يوجد طلاب مطابقون للفلتر المختار</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map((u,i) => `
     <tr>
       <td>${i+1}</td>
-      <td><div class="avatar-cell"><div class="avatar-sm">${u.name?u.name[0]:'؟'}</div>${u.name}</div></td>
+      <td><div class="avatar-cell"><div class="avatar-sm">${u.name?u.name[0]:'؟'}</div>${u.name||'-'}</div></td>
       <td>${u.phone||u.email||'-'}</td>
       <td><span class="badge ${gradeClass(u.grade)}">${gradeLabel(u.grade)}</span></td>
-      <td>${u.track || '-'}</td>
-      <td>${studentTypeLabel(getStudentType(u))}</td>
+      <td>${u.track||'-'}</td>
+      <td>${u.gov||'-'}</td>
       <td>${u.joinDate||'-'}</td>
-      <td><span class="badge active">نشط ✅</span></td>
+      <td><span class="badge ${u.status==='active'?'active':'inactive'}">${u.status==='active'?'نشط ✅':'معلق ⏳'}</span></td>
       <td><div class="action-btns">
         <button class="btn-view" onclick="viewStudent('${normalizeStudentId(u.id)}')">عرض</button>
         <button class="btn-delete" onclick="deleteStudent('${normalizeStudentId(u.id)}')">حذف</button>
@@ -2244,84 +2422,132 @@ function renderStudentsTable(filter=''){
 function filterStudents(){renderStudentsTable(document.getElementById('searchStudents').value.trim());}
 
 function viewStudent(id){
-  const u=getUsers().find(u=>normalizeStudentId(u.id)===normalizeStudentId(id));
+  const u = getUsers().find(u => normalizeStudentId(u.id) === normalizeStudentId(id));
   if(!u) return;
-  document.getElementById('modalTitle').textContent='تفاصيل الطالب: '+u.name;
+  document.getElementById('modalTitle').textContent = 'تفاصيل الطالب: ' + u.name;
   const enrolled = u.enrolledCourses || [];
-  const availableCourses = getCourses().filter(c => !enrolled.includes(c.id));
-  const courseList = enrolled.length ? enrolled.map(id => {
-    const course = getCourseById(id);
-    return course ? `<div style="margin-bottom:4px">• ${course.title} (${gradeLabel(course.grade)})</div>` : '';
-  }).join('') : '<div>لا توجد كورسات مفعلة</div>';
-  const courseOptions = availableCourses.length ? availableCourses.map(c => `<option value="${c.id}">${c.title} - ${gradeLabel(c.grade)}</option>`).join('') : '<option value="">لا توجد كورسات جديدة</option>';
+  const allCourses = getCourses();
+  const enrolledList = enrolled.length
+    ? enrolled.map(cid => {
+        const course = getCourseById(cid);
+        return course ? `
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;margin-bottom:6px">
+            <span style="font-size:13px;font-weight:700">📚 ${course.title} <span style="font-size:11px;color:#888">(${gradeLabel(course.grade)})</span></span>
+            <button onclick="revokeCourseFromStudent('${normalizeStudentId(u.id)}',${cid})" style="background:#fff0f3;color:var(--danger);border:none;padding:4px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-family:'Tajawal',sans-serif;font-weight:700">إلغاء ✖</button>
+          </div>` : '';
+      }).join('')
+    : '<div style="color:#888;font-size:13px">لا توجد كورسات مفعلة</div>';
+  const availableCourses = allCourses.filter(c => !enrolled.includes(c.id));
+  const courseOptions = availableCourses.length
+    ? availableCourses.map(c => `<option value="${c.id}">${c.title} — ${gradeLabel(c.grade)}</option>`).join('')
+    : '<option value="">لا توجد كورسات متاحة</option>';
 
-  document.getElementById('modalContent').innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-      <div><strong>الاسم الكامل:</strong><br>${u.name}</div>
+  document.getElementById('modalContent').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+      <div><strong>الاسم الكامل:</strong><br>${u.name||'-'}</div>
       <div><strong>رقم الموبايل:</strong><br>${u.phone||u.email||'-'}</div>
       <div><strong>الصف الدراسي:</strong><br>${gradeLabel(u.grade)}</div>
-      <div><strong>الشُعبة:</strong><br>${u.track || 'غير محدد (إعدادي أو لم يُسجَّل)'}</div>
-      <div><strong>نوع الطالب:</strong><br>${studentTypeLabel(getStudentType(u))}</div>
+      <div><strong>الشُعبة:</strong><br>${u.track||'غير محدد'}</div>
+      <div><strong>المحافظة:</strong><br>${u.gov||'-'}</div>
       <div><strong>تاريخ التسجيل:</strong><br>${u.joinDate||'-'}</div>
       <div><strong>آخر دخول:</strong><br>${u.lastLogin||'-'}</div>
-      <div><strong>الحالة:</strong><br><span class="badge active">نشط ✅</span></div>
-      <div><strong>عدد الكورسات المفعلة:</strong><br>${enrolled.length} كورسات</div>
+      <div><strong>الحالة:</strong><br><span class="badge ${u.status==='active'?'active':'inactive'}">${u.status==='active'?'نشط ✅':'معلق ⏳'}</span></div>
     </div>
-    <div style="margin-bottom:16px;padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:14px">
-      <div style="font-weight:700;margin-bottom:10px">الكورسات المفعلة حالياً:</div>
-      ${courseList}
+    <div style="margin-bottom:16px;padding:14px;background:var(--bg);border:1px solid var(--border);border-radius:14px">
+      <div style="font-weight:800;margin-bottom:10px;font-size:14px">الكورسات المفعلة (${enrolled.length}):</div>
+      ${enrolledList}
     </div>
-    <div style="margin-bottom:8px;font-weight:700">منح وصول لكورس جديد:</div>
+    <div style="font-weight:800;margin-bottom:8px;font-size:14px">➕ منح وصول لكورس:</div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-      <select id="grantCourseSelect" style="flex:1;padding:10px 12px;border:2px solid var(--border);border-radius:12px;background:var(--bg);font-family:'Tajawal',sans-serif">
+      <select id="grantCourseSelect" style="flex:1;padding:10px 12px;border:2px solid var(--border);border-radius:12px;background:var(--bg);font-family:'Tajawal',sans-serif;font-size:14px">
         ${courseOptions}
       </select>
-      <button class="btn-save" onclick="grantCourseToStudent('${normalizeStudentId(u.id)}')" style="padding:10px 18px;">منح وصول</button>
+      <button class="btn-save" onclick="grantCourseToStudent('${normalizeStudentId(u.id)}')" style="padding:10px 18px;white-space:nowrap">منح وصول ✅</button>
     </div>
   `;
   document.getElementById('studentModal').classList.add('open');
 }
+
 async function grantCourseToStudent(userId){
   const select = document.getElementById('grantCourseSelect');
-  if(!select || !select.value){ alert('اختر كورس للتفعيل'); return; }
-  const courseId = parseInt(select.value,10);
+  if(!select || !select.value){ showNotification('اختر كورساً للتفعيل','error'); return; }
+
+  const btn = select.nextElementSibling; // زر "منح وصول ✅"
+  const courseId = parseInt(select.value, 10);
   const users = getUsers();
-  const idx = users.findIndex(u=>normalizeStudentId(u.id)===normalizeStudentId(userId));
-  if(idx === -1){ alert('الطالب غير موجود'); return; }
-  if(!users[idx].enrolledCourses) users[idx].enrolledCourses = [];
-  if(users[idx].enrolledCourses.includes(courseId)){ alert('هذا الطالب لديه وصول بالفعل'); return; }
-  users[idx].enrolledCourses.push(courseId);
-  saveUsers(users);
-  // ✅ مزامنة مع Firebase
-  if(window.db){
-    try {
-      const docId = String(users[idx].id);
-      await window.db.collection('students').doc(docId).update({
+  const idx = users.findIndex(u => normalizeStudentId(u.id) === normalizeStudentId(userId));
+  if(idx === -1){ showNotification('الطالب غير موجود — جاري إعادة جلب البيانات من القاعدة...','error'); syncPlatformStudents(false); return; }
+
+  if(!Array.isArray(users[idx].enrolledCourses)) users[idx].enrolledCourses = [];
+
+  // مقارنة آمنة بين Number/String عشان مكونتش الكورس متفعّل بالفعل بصيغة مختلفة
+  const alreadyEnrolled = users[idx].enrolledCourses.some(id => String(id) === String(courseId));
+  if(alreadyEnrolled){
+    showNotification('هذا الطالب لديه وصول لهذا الكورس بالفعل','error'); return;
+  }
+
+  // تعطيل الزر أثناء التنفيذ لمنع الضغط المتكرر
+  if(btn){ btn.disabled = true; btn.style.opacity = '0.6'; btn.textContent = 'جاري المنح...'; }
+
+  try {
+    users[idx].enrolledCourses.push(courseId);
+    saveUsers(users);
+
+    if(window.db){
+      await window.db.collection('students').doc(String(users[idx].id)).update({
         enrolledCourses: users[idx].enrolledCourses
       });
-    } catch(e){ console.warn('Could not sync enrolledCourses to Firebase:', e); }
+    }
+
+    showNotification('✅ تم تفعيل الوصول للكورس بنجاح', 'success');
+
+    // ─── تحديث الواجهة والبيانات فورًا بعد نجاح العملية ───
+    viewStudent(userId);       // إعادة بناء المودال بالبيانات الجديدة
+    renderStudentsTable();     // تحديث جدول الطلاب الرئيسي
+    if (typeof renderOverview === 'function') renderOverview(); // تحديث الإحصائيات لو موجودة
+  } catch(err) {
+    console.error('grantCourseToStudent failed:', err);
+    // تراجع عن التعديل المحلي لو فشلت المزامنة مع القاعدة
+    users[idx].enrolledCourses = users[idx].enrolledCourses.filter(id => String(id) !== String(courseId));
+    saveUsers(users);
+    showNotification('❌ فشل منح الوصول. تأكد من اتصال الإنترنت وحاول مرة أخرى', 'error');
+  } finally {
+    if(btn){ btn.disabled = false; btn.style.opacity = '1'; btn.textContent = 'منح وصول ✅'; }
   }
-  alert('تم تفعيل الوصول للكورس للطالب بنجاح ✅');
+}
+
+async function revokeCourseFromStudent(userId, courseId){
+  if(!confirm('إلغاء وصول هذا الطالب للكورس؟')) return;
+  const users = getUsers();
+  const idx = users.findIndex(u => normalizeStudentId(u.id) === normalizeStudentId(userId));
+  if(idx === -1) return;
+  users[idx].enrolledCourses = (users[idx].enrolledCourses || []).filter(id => id !== courseId && id !== String(courseId));
+  saveUsers(users);
+  if(window.db){
+    try {
+      await window.db.collection('students').doc(String(users[idx].id)).update({
+        enrolledCourses: users[idx].enrolledCourses
+      });
+    } catch(e){ console.warn('sync revoke failed:', e); }
+  }
+  showNotification('✅ تم إلغاء الوصول للكورس', 'success');
   viewStudent(userId);
 }
-async function deleteStudent(id){
-  if(!confirm('هل أنت متأكد من حذف هذا الطالب؟ سيتم حذفه نهائياً من قاعدة البيانات.')) return;
-  const normalizedId = normalizeStudentId(id);
-  let users=getUsers().filter(u=>normalizeStudentId(u.id)!==normalizedId);
-  saveUsers(users);
 
-  // ✅ FIX: كانت الدالة بتحذف من localStorage بس وتسيب الطالب موجود في Firebase،
-  // فيرجع تاني لو تحدّثت البيانات من السيرفر. دلوقتي بتحذف من قاعدة البيانات الحقيقية كمان.
+async function deleteStudent(id){
+  if(!confirm('هل أنت متأكد من حذف هذا الطالب؟ سيتم حذفه نهائياً.')) return;
+  const normalizedId = normalizeStudentId(id);
+  let users = getUsers().filter(u => normalizeStudentId(u.id) !== normalizedId);
+  saveUsers(users);
   if(window.db){
     try {
       await window.db.collection('students').doc(normalizedId).delete();
     } catch(e){
-      console.warn('Could not delete student from Firebase:', e);
-      showNotification('⚠️ تم الحذف محلياً لكن فشل الحذف من قاعدة البيانات. تأكد من الاتصال بالإنترنت وحاول مجدداً.', 'error');
+      console.warn('Could not delete from Firebase:', e);
+      showNotification('⚠️ تم الحذف محلياً لكن فشل الحذف من Firebase', 'error');
     }
   }
-
-  showNotification('🗑️ تم حذف الطالب نهائياً', 'success');
+  showNotification('🗑️ تم حذف الطالب', 'success');
   renderStudentsTable();
   renderOverview();
 }
@@ -2331,7 +2557,7 @@ function renderCoursesAdmin(){
   const grid=document.getElementById('coursesAdminGrid');
   grid.innerHTML=courses.map(c=>{
     const thumbHTML = c.thumbnail
-      ? `<img src="${c.thumbnail}" style="width:100%;height:100%;object-fit:cover;object-position:${c.thumbnailX || 50}% ${c.thumbnailY || 50}%;display:block">`
+      ? `<img src="${c.thumbnail}" style="max-width:100%;max-height:200px;object-fit:contain;display:block;margin:auto">`
       : `<span style="font-size:48px">${c.emoji || '📚'}</span>`;
       
     const typeBadge = c.type === 'free'
@@ -2355,11 +2581,13 @@ function renderCoursesAdmin(){
     </div>`;
   }).join('');
 }
-function deleteCourse(id){
+async function deleteCourse(id){
   if(!confirm('حذف هذا الكورس؟')) return;
-  courses=courses.filter(c=>c.id!==id);
-  saveCourses(courses);
+  courses=courses.filter(c=>c.id!=id);
+  const ok = await saveCourses(courses);
   renderCoursesAdmin();
+  if(ok) showNotification('🗑️ تم حذف الكورس وتحديث Firebase بنجاح', 'success');
+  else showNotification('🗑️ تم الحذف محلياً — تأكد من اتصال الإنترنت', 'warning');
 }
 
 function openEditCourse(id){
@@ -2368,6 +2596,8 @@ function openEditCourse(id){
   document.getElementById('acId').value = c.id;
   document.getElementById('acTitle').value = c.title || '';
   document.getElementById('acDesc').value = c.desc || '';
+  const _sda = document.getElementById('acAiSmartDesc'); if(_sda) _sda.value = c.aiSmartDesc || '';
+  const _sds = document.getElementById('acSmartDescStatus'); if(_sds) _sds.textContent = '';
   document.getElementById('acGrade').value = c.grade || '';
   document.getElementById('acType').value = c.type || 'free';
   document.getElementById('acPrice').value = c.price != null ? c.price : '';
@@ -2399,30 +2629,6 @@ function openEditCourse(id){
   document.getElementById('addCourseModal').classList.add('open');
 }
 
-// ---- ADD STUDENT ----
-function openAddStudentModal(){document.getElementById('addStudentModal').classList.add('open');}
-function saveNewStudent(){
-  const fn=document.getElementById('asFN').value.trim();
-  const ln=document.getElementById('asLN').value.trim();
-  const ph=document.getElementById('asPH').value.trim();
-  const gr=document.getElementById('asGR').value;
-  const type=document.getElementById('asType').value;
-  const pw=document.getElementById('asPW').value;
-  if(!fn||!ln||!ph||!gr||!type){alert('من فضلك اكمل البيانات');return;}
-  const users=getUsers();
-  const base = {id:Date.now(),firstName:fn,lastName:ln,name:fn+' '+ln,
-    phone:ph,grade:gr,studentType:type,password:pw,
-    joinDate:new Date().toLocaleDateString('ar-EG'),status:'active',enrolledCourses:[]};
-  const student = typeof buildStudentExportPayload === 'function'
-    ? buildStudentExportPayload(base)
-    : { ...base, offlineGrade: gr, platformGrade: gr };
-  users.push(student);
-  saveUsers(users);
-  closeModal('addStudentModal');
-  renderStudentsTable();
-  renderOverview();
-}
-
 // ---- ADD COURSE ----
 function updateCourseTrackVisibility(){
   const grade = document.getElementById('acGrade').value;
@@ -2433,6 +2639,7 @@ function updateCourseTrackVisibility(){
   if(!isSecondary) document.getElementById('acTrack').value = 'both';
 }
 function openAddCourseModal(){
+  if(window._voiceDescRecording) stopVoiceDesc();
   document.getElementById('acId').value='';
   document.getElementById('acTitle').value='';
   document.getElementById('acDesc').value='';
@@ -2449,101 +2656,86 @@ function openAddCourseModal(){
   clearCourseThumbnail();
   document.getElementById('acSaveButton').textContent = 'إضافة الكورس ✅';
   document.getElementById('addCourseModal').classList.add('open');
+  // reset AI desc fields
+  const _ap = document.getElementById('acDescAiPrompt'); if(_ap) _ap.value = '';
+  const _as = document.getElementById('acDescAiStatus'); if(_as) _as.textContent = '';
+  const _vs = document.getElementById('voiceDescStatus'); if(_vs) _vs.textContent = '';
+  const _sd = document.getElementById('acAiSmartDesc'); if(_sd) _sd.value = '';
+  const _ss = document.getElementById('acSmartDescStatus'); if(_ss) _ss.textContent = '';
 }
-function saveNewCourse(){
+async function saveNewCourse(){
   const courseId = document.getElementById('acId').value.trim();
   const title=document.getElementById('acTitle').value.trim();
   const desc=document.getElementById('acDesc').value.trim();
+  const aiSmartDesc=(document.getElementById('acAiSmartDesc')?.value||'').trim();
   const grade=document.getElementById('acGrade').value;
   const type=document.getElementById('acType').value;
   const price = parseFloat(document.getElementById('acPrice').value) || 0;
   const isSecondary = typeof isSecondaryGrade === 'function' ? isSecondaryGrade(grade) : ['1','2','3'].includes(grade);
   const track = isSecondary ? (document.getElementById('acTrack').value || 'both') : 'both';
 
-  // قراءة قيم التغطية والتموضع المخصص
   const thumbnail = document.getElementById('acThumbnail').value;
   const thumbnailX = parseInt(document.getElementById('acThumbnailX').value, 10) || 50;
   const thumbnailY = parseInt(document.getElementById('acThumbnailY').value, 10) || 50;
 
-  // ✅ FIX: قراءة العنوان الثابت واللون من المودال
   const headerTitle = document.getElementById('acHeaderTitle').value.trim();
   const headerColor = document.getElementById('acHeaderColor').value || 'linear-gradient(135deg,#8B6F47,#A0826D)';
 
   if(!title){alert('ادخل اسم الكورس');return;}
-  const emojis=['📖','🌿','🔥','⭐','🎯','💡','🚀','📝'];
-  const colors=['linear-gradient(135deg,#1a1a2e,#8B6914)','linear-gradient(135deg,#1b4332,#2d6a4f)','linear-gradient(135deg,#3d0000,#c00000)','linear-gradient(135deg,#2c1654,#7b2ff7)'];
+
+  // --- تعديل كورس موجود ---
   if(courseId){
     const idx = courses.findIndex(c=>c.id===parseInt(courseId,10));
     if(idx !== -1){
       courses[idx] = {
         ...courses[idx],
-        title,
-        desc,
-        grade,
-        type,
-        price,
-        track,
-        thumbnail,
-        thumbnailX,
-        thumbnailY,
-        headerTitle,
-        headerColor,
+        title, desc, aiSmartDesc, grade, type, price, track,
+        thumbnail, thumbnailX, thumbnailY, headerTitle, headerColor,
         color: headerColor,
         bg: headerColor,
       };
-      saveCourses(courses);
-      
-      // ✅ FIX: تحديث Firebase عند تعديل كورس
-      if(window.db){
-        try {
-          window.db.collection('platform_data').doc('courses_list').set({
-            items: courses,
-            lastUpdated: new Date().toISOString()
-          }, { merge: true }).catch(e => console.warn('Firebase sync optional:', e));
-        } catch(e){ console.warn('Firebase update skipped:', e); }
+      const btn = document.getElementById('acSaveButton');
+      if(btn){ btn.disabled = true; btn.textContent = '⏳ جاري الحفظ...'; }
+      const ok = await saveCourses(courses);
+      if(btn){ btn.disabled = false; btn.textContent = 'حفظ التعديلات ✅'; }
+      if(ok){
+        showNotification('✅ تم حفظ التعديلات ونشرها للطلاب فوراً', 'success');
+      } else {
+        showNotification('⚠️ تم الحفظ محلياً — تأكد من اتصال الإنترنت لمزامنة Firebase', 'warning');
       }
-      
       closeModal('addCourseModal');
       renderCoursesAdmin();
-      showAlert('تم حفظ تعديل الكورس بنجاح ✅ (يظهر للطلاب فوراً)');
       return;
     }
   }
+
+  // --- إضافة كورس جديد ---
+  const emojis=['📖','🌿','🔥','⭐','🎯','💡','🚀','📝'];
+  const colors=['linear-gradient(135deg,#1a1a2e,#8B6914)','linear-gradient(135deg,#1b4332,#2d6a4f)','linear-gradient(135deg,#3d0000,#c00000)','linear-gradient(135deg,#2c1654,#7b2ff7)'];
   const newCourse = {
-    id:Date.now(),
-    title,
-    desc,
-    grade,
-    type,
-    price,
-    track,
-    thumbnail,
-    thumbnailX,
-    thumbnailY,
-    headerTitle,
-    headerColor,
+    id: Date.now(),
+    title, desc, aiSmartDesc, grade, type, price, track,
+    thumbnail, thumbnailX, thumbnailY, headerTitle, headerColor,
     color: headerColor || colors[Math.floor(Math.random()*colors.length)],
     bg: headerColor || colors[Math.floor(Math.random()*colors.length)],
-    emoji:emojis[Math.floor(Math.random()*emojis.length)],
-    created:new Date().toLocaleDateString('ar-EG'),
-    lessons:[]
+    emoji: emojis[Math.floor(Math.random()*emojis.length)],
+    created: new Date().toLocaleDateString('ar-EG'),
+    lessons: []
   };
   courses.push(newCourse);
-  saveCourses(courses);
-  
-  // ✅ FIX: تحديث Firebase عند إضافة كورس جديد
-  if(window.db){
-    try {
-      window.db.collection('platform_data').doc('courses_list').set({
-        items: courses,
-        lastUpdated: new Date().toISOString()
-      }, { merge: true }).catch(e => console.warn('Firebase sync optional:', e));
-    } catch(e){ console.warn('Firebase update skipped:', e); }
+
+  const btn = document.getElementById('acSaveButton');
+  if(btn){ btn.disabled = true; btn.textContent = '⏳ جاري الحفظ...'; }
+  const ok = await saveCourses(courses);
+  if(btn){ btn.disabled = false; btn.textContent = 'إضافة الكورس ✅'; }
+
+  if(ok){
+    showNotification('✅ تم إضافة الكورس ونشره للطلاب فوراً', 'success');
+  } else {
+    showNotification('⚠️ تم الحفظ محلياً — تأكد من اتصال الإنترنت لمزامنة Firebase', 'warning');
   }
-  
   closeModal('addCourseModal');
   renderCoursesAdmin();
-  showAlert('تم إضافة الكورس بنجاح ✅ (يظهر للطلاب فوراً)');
 }
 
 // ---- COURSE THUMBNAIL HANDLERS ----
@@ -2650,8 +2842,11 @@ function addLessonSegmentField(title='', videoUrl='', locked=false, duration='',
   row.className = 'lesson-segment-row';
   row.dataset.segid = segId;
 
-  const isReady = !!bunnyVideoId || (videoUrl && videoUrl.includes('mediadelivery'));
-  const readyText = isReady ? '✅ الفيديو جاهز' : '';
+  const isYouTube = videoUrl && (videoUrl.includes('youtube') || videoUrl.includes('youtu.be'));
+  const isReady   = !!bunnyVideoId || (videoUrl && videoUrl.includes('mediadelivery')) || isYouTube;
+
+  // تحديد نوع المصدر الحالي
+  let currentSource = bunnyVideoId ? 'bunny' : (isYouTube ? 'youtube' : (videoUrl ? 'url' : 'bunny'));
 
   row.innerHTML = `
     <div class="seg-row-top">
@@ -2660,10 +2855,53 @@ function addLessonSegmentField(title='', videoUrl='', locked=false, duration='',
       ${locked ? '<span></span>' : '<button type="button" class="seg-del-btn" onclick="this.closest(\'.lesson-segment-row\').remove()">🗑️</button>'}
     </div>
 
-    <label class="seg-upload-btn" style="position:relative;overflow:hidden">
-      <input type="file" accept="video/*" onchange="uploadSegmentVideo(this, '${segId}')">
-      📹 ارفع الفيديو
-    </label>
+    <!-- ── اختيار نوع الفيديو ── -->
+    <div class="seg-source-tabs" style="display:flex;gap:8px;margin-bottom:10px">
+      <button type="button"
+        class="seg-tab-btn ${currentSource!=='youtube'?'seg-tab-active':''}"
+        onclick="switchSegTab(this,'bunny','${segId}')"
+        style="flex:1;padding:8px;border-radius:8px;border:2px solid;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;
+               ${currentSource!=='youtube'?'background:#0284c7;color:#fff;border-color:#0284c7':'background:#f8fafc;color:#475569;border-color:#e2e8f0'}">
+        🎬 رفع على بياني.net
+      </button>
+      <button type="button"
+        class="seg-tab-btn ${currentSource==='youtube'?'seg-tab-active':''}"
+        onclick="switchSegTab(this,'youtube','${segId}')"
+        style="flex:1;padding:8px;border-radius:8px;border:2px solid;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;
+               ${currentSource==='youtube'?'background:#dc2626;color:#fff;border-color:#dc2626':'background:#f8fafc;color:#475569;border-color:#e2e8f0'}">
+        📺 رابط يوتيوب
+      </button>
+    </div>
+
+    <!-- ── قسم رفع بياني.net ── -->
+    <div id="bunny_section_${segId}" style="${currentSource==='youtube'?'display:none':''}">
+      <label class="seg-upload-btn" style="position:relative;overflow:hidden">
+        <input type="file" accept="video/*" onchange="uploadSegmentVideo(this, '${segId}')">
+        📹 ارفع الفيديو على بياني.net
+      </label>
+    </div>
+
+    <!-- ── قسم رابط يوتيوب ── -->
+    <div id="youtube_section_${segId}" style="${currentSource!=='youtube'?'display:none':''}">
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="text" id="yturl_${segId}"
+          placeholder="https://youtube.com/watch?v=... أو https://youtu.be/..."
+          value="${isYouTube ? escapeHTML(videoUrl) : ''}"
+          style="flex:1;padding:9px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:'Tajawal',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none"
+          oninput="previewYouTubeSegment('${segId}')">
+        <button type="button" onclick="previewYouTubeSegment('${segId}')"
+          style="padding:9px 14px;background:#dc2626;color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:700;font-size:13px;white-space:nowrap">
+          معاينة
+        </button>
+      </div>
+      <div id="ytpreview_${segId}" style="margin-top:10px;display:none;border-radius:12px;overflow:hidden;position:relative;padding-bottom:28.125%;height:0">
+        <iframe id="ytiframe_${segId}" src="" frameborder="0"
+          style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px"
+          allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture"
+          allowfullscreen></iframe>
+      </div>
+      <div class="field-hint" style="margin-top:6px">⚠️ سيُعرض داخل المنصة بأقصى عزل ممكن عن يوتيوب.</div>
+    </div>
 
     <div class="seg-progress-wrap" id="swrap_${segId}">
       <div class="seg-progress-bar"><div class="seg-progress-fill" id="sfill_${segId}"></div></div>
@@ -2674,8 +2912,77 @@ function addLessonSegmentField(title='', videoUrl='', locked=false, duration='',
 
     <input type="hidden" class="segment-url" value="${escapeHTML(videoUrl)}">
     <input type="hidden" class="segment-bunny-id" value="${escapeHTML(bunnyVideoId)}">
+    <input type="hidden" class="segment-source" value="${currentSource}">
   `;
   container.appendChild(row);
+}
+
+/* تبديل بين بياني وYouTube */
+function switchSegTab(btn, source, segId) {
+  const row = btn.closest('.lesson-segment-row');
+  if (!row) return;
+  const bunnySection  = document.getElementById(`bunny_section_${segId}`);
+  const ytSection     = document.getElementById(`youtube_section_${segId}`);
+  const sourceInput   = row.querySelector('.segment-source');
+  const allTabs       = row.querySelectorAll('.seg-tab-btn');
+  const urlInput      = row.querySelector('.segment-url');
+
+  allTabs.forEach(t => {
+    t.style.background   = '#f8fafc';
+    t.style.color        = '#475569';
+    t.style.borderColor  = '#e2e8f0';
+  });
+  if (source === 'youtube') {
+    btn.style.background  = '#dc2626';
+    btn.style.color       = '#fff';
+    btn.style.borderColor = '#dc2626';
+    if (bunnySection) bunnySection.style.display = 'none';
+    if (ytSection)    ytSection.style.display    = '';
+    if (sourceInput)  sourceInput.value = 'youtube';
+    if (urlInput)     urlInput.value = ''; // مسح الـ URL القديم
+  } else {
+    btn.style.background  = '#0284c7';
+    btn.style.color       = '#fff';
+    btn.style.borderColor = '#0284c7';
+    if (bunnySection) bunnySection.style.display = '';
+    if (ytSection)    ytSection.style.display    = 'none';
+    if (sourceInput)  sourceInput.value = 'bunny';
+    if (urlInput)     urlInput.value = '';
+  }
+}
+
+/* معاينة يوتيوب في الداشبورد */
+function previewYouTubeSegment(segId) {
+  const input = document.getElementById(`yturl_${segId}`);
+  if (!input) return;
+  const raw = input.value.trim();
+  let ytId = '';
+  if (raw.includes('watch')) { const m = raw.match(/[?&]v=([^&]+)/); ytId = m ? m[1] : ''; }
+  else if (raw.includes('youtu.be')) { const m = raw.match(/youtu\.be\/([^?&]+)/); ytId = m ? m[1] : ''; }
+  else { ytId = raw.replace(/^.*\//, '').split('?')[0]; }
+
+  const previewWrap = document.getElementById(`ytpreview_${segId}`);
+  const iframe      = document.getElementById(`ytiframe_${segId}`);
+  const ready       = document.getElementById(`sready_${segId}`);
+  const urlHidden   = document.querySelector(`[data-segid="${segId}"] .segment-url`) ||
+                      (previewWrap && previewWrap.closest('.lesson-segment-row') && previewWrap.closest('.lesson-segment-row').querySelector('.segment-url'));
+
+  if (!ytId) {
+    if (previewWrap) previewWrap.style.display = 'none';
+    return;
+  }
+
+  // حفظ الـ URL المُنسق
+  const finalUrl = `https://www.youtube.com/watch?v=${ytId}`;
+  if (urlHidden) urlHidden.value = finalUrl;
+  input.value = finalUrl;
+
+  // معاينة بـ nocookie وبدون عناصر يوتيوب قدر الإمكان
+  if (iframe) {
+    iframe.src = `https://www.youtube-nocookie.com/embed/${ytId}?modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&fs=1&disablekb=0&color=white&controls=1`;
+  }
+  if (previewWrap) previewWrap.style.display = 'block';
+  if (ready)       { ready.textContent='✅ رابط يوتيوب جاهز'; ready.style.display='inline-block'; }
 }
 
 // ✅ FIX: حساب مدة الفيديو تلقائياً من الملف نفسه (بدون أي تدخل يدوي من الأدمن)
@@ -2821,12 +3128,24 @@ async function uploadSegmentVideo(input, segId){
 function collectLessonSegments(){
   const rows = Array.from(document.querySelectorAll('#lessonSegments .lesson-segment-row'));
   return rows.map((row, index)=>{
-    const title        = row.querySelector('.segment-title')?.value.trim()     || `المقطع ${index + 1}`;
-    const videoUrl     = row.querySelector('.segment-url')?.value.trim()       || '';
-    const duration     = row.querySelector('.segment-duration')?.value.trim()  || '';
-    const bunnyVideoId = row.querySelector('.segment-bunny-id')?.value.trim()  || '';
-    const source       = bunnyVideoId ? 'bunny' : (videoUrl ? 'url' : '');
-    return {title, videoUrl, duration, bunnyVideoId, source, position: index + 1};
+    const title        = row.querySelector('.segment-title')?.value.trim()    || `المقطع ${index + 1}`;
+    const duration     = row.querySelector('.segment-duration')?.value.trim() || '';
+    const bunnyVideoId = row.querySelector('.segment-bunny-id')?.value.trim() || '';
+    const sourceType   = row.querySelector('.segment-source')?.value.trim()   || '';
+
+    let videoUrl = row.querySelector('.segment-url')?.value.trim() || '';
+
+    // إذا كان YouTube، اقرأ الـ URL من حقل الإدخال المرئي
+    if (sourceType === 'youtube') {
+      const segId = row.dataset.segid;
+      if (segId) {
+        const ytInput = document.getElementById(`yturl_${segId}`);
+        if (ytInput && ytInput.value.trim()) videoUrl = ytInput.value.trim();
+      }
+    }
+
+    const source = bunnyVideoId ? 'bunny' : (sourceType === 'youtube' ? 'youtube' : (videoUrl ? 'url' : ''));
+    return { title, videoUrl, duration, bunnyVideoId, source, position: index + 1 };
   }).filter(segment => segment.videoUrl || segment.bunnyVideoId);
 }
 
@@ -3149,8 +3468,258 @@ async function saveNewLesson(){
   if(sbtn){ sbtn.disabled = false; sbtn.textContent = 'حفظ الدرس ✅'; }
 }
 
+// ============================================================
+// ===== EARNINGS TABLE =====
+// ============================================================
+function renderEarningsTable() {
+  const allCourses = typeof getCourses === 'function' ? getCourses() : (window.courses || []);
+  const users      = getUsers();
+  const tbody      = document.getElementById('earningsTableBody');
+  const cardsEl    = document.getElementById('earningsSummaryCards');
+  if(!tbody) return;
+
+  if(!allCourses.length) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="icon">📚</div><p>لا توجد كورسات بعد</p></div></td></tr>';
+    if(cardsEl) cardsEl.innerHTML = '';
+    return;
+  }
+
+  function subsCount(cid) {
+    return users.filter(u => (u.enrolledCourses || []).includes(cid)).length;
+  }
+
+  let totalEarnings = 0, totalStudents = 0;
+
+  const rows = allCourses.map(c => {
+    const isPaid   = c.type === 'paid';
+    const price    = isPaid ? (parseFloat(c.price) || 0) : 0;
+    const subs     = subsCount(c.id);
+    const earn     = price * subs;
+    totalEarnings += earn;
+    totalStudents += subs;
+
+    const typeLabel = isPaid
+      ? `<span class="badge" style="background:var(--primary-light,#e8f4ff);color:var(--primary);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:800;">مدفوع 💰</span>`
+      : `<span class="badge" style="background:#e8fff3;color:#27ae60;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:800;">مجاني 🆓</span>`;
+
+    const earnCell = isPaid
+      ? `<strong style="color:${earn>0?'#27ae60':'var(--text2)'}">${earn.toLocaleString('ar-EG')} ج.م</strong>`
+      : `<span style="color:var(--text2);font-size:12px;">—</span>`;
+
+    return `<tr>
+      <td style="font-weight:800;">${c.title || '—'}</td>
+      <td>${typeLabel}</td>
+      <td style="font-weight:700;">${isPaid ? price.toLocaleString('ar-EG') + ' ج.م' : '—'}</td>
+      <td><span style="background:var(--bg);border:1px solid var(--border);padding:3px 12px;border-radius:20px;font-weight:800;font-size:13px;">${subs} طالب</span></td>
+      <td>${earnCell}</td>
+    </tr>`;
+  });
+
+  tbody.innerHTML = rows.join('');
+
+  if(cardsEl) {
+    const paidCount = allCourses.filter(c => c.type === 'paid').length;
+    const cardStyle = (grad) =>
+      `background:${grad};color:#fff;border-radius:14px;padding:14px 20px;flex:1;min-width:140px;text-align:center;`;
+    cardsEl.innerHTML = `
+      <div style="${cardStyle('linear-gradient(135deg,#27ae60,#1a7a44)')}">
+        <div style="font-size:24px;font-weight:900;">${totalEarnings.toLocaleString('ar-EG')} ج.م</div>
+        <div style="font-size:12px;opacity:.9;margin-top:3px;">💰 إجمالي الأرباح</div>
+      </div>
+      <div style="${cardStyle('linear-gradient(135deg,var(--primary),var(--primary-dark))')}">
+        <div style="font-size:24px;font-weight:900;">${totalStudents.toLocaleString('ar-EG')}</div>
+        <div style="font-size:12px;opacity:.9;margin-top:3px;">👨‍🎓 إجمالي المشتركين</div>
+      </div>
+      <div style="${cardStyle('linear-gradient(135deg,#8B6914,#C8A96E)')}">
+        <div style="font-size:24px;font-weight:900;">${allCourses.length}</div>
+        <div style="font-size:12px;opacity:.9;margin-top:3px;">📚 إجمالي الكورسات</div>
+      </div>
+      <div style="${cardStyle('linear-gradient(135deg,#e67e22,#c0392b)')}">
+        <div style="font-size:24px;font-weight:900;">${paidCount}</div>
+        <div style="font-size:12px;opacity:.9;margin-top:3px;">💳 الكورسات المدفوعة</div>
+      </div>`;
+  }
+}
+
+// ============================================================
+// ===== AI COURSE DESCRIPTION + VOICE =====
+// ============================================================
+window._voiceDescRecognition = null;
+window._voiceDescRecording   = false;
+
+async function generateCourseDescAI() {
+  const prompt  = (document.getElementById('acDescAiPrompt')?.value || '').trim();
+  const title   = (document.getElementById('acTitle')?.value || '').trim();
+  const btn     = document.getElementById('btnDescAI');
+  const status  = document.getElementById('acDescAiStatus');
+
+  if(!title) { alert('اكتب اسم الكورس أولاً!'); return; }
+
+  const req = prompt || 'اعمل وصف كورس احترافي واضح للطلاب';
+
+  // ─── الوصف التسويقي (يظهر للطلاب) ───
+  const marketingPrompt = `أنت مساعد تعليمي لمنصة "الدكتور".
+اكتب وصفاً تسويقياً جذاباً لكورس دراسي بناءً على الطلب التالي.
+اسم الكورس: ${title}
+طلب المعلم: ${req}
+شروط: استخدم إيموجيات تعليمية (📚✨🎯📝🌟)، عربي واضح جذاب للطلاب، التزم بعدد الكلمات أو الأسطر إن ذُكر.
+أعد الوصف التسويقي فقط بدون أي مقدمة أو تعليق.`;
+
+  // ─── الوصف التحليلي الداخلي (لنظام الترشيح فقط) ───
+  const smartPrompt = `أنت محلل تعليمي خبير. حلل الكورس التالي وأنشئ وصفاً تحليلياً داخلياً دقيقاً يستخدمه نظام الذكاء الاصطناعي لترشيح الكورس للطلاب المناسبين.
+اسم الكورس: ${title}
+ما قاله المعلم عن الكورس: ${req}
+
+اكتب وصفاً تحليلياً داخلياً يتضمن:
+- المشكلات والتحديات التي يعالجها هذا الكورس تحديداً
+- نقاط الضعف الدراسية التي يحلها
+- من يحتاج هذا الكورس (الطالب المستهدف بدقة)
+- المواضيع والمهارات المغطاة
+- الكلمات المفتاحية التي يستخدمها الطلاب للتعبير عن هذه المشكلات
+
+اكتب النص بأسلوب تحليلي مباشر يساعد نظام الذكاء الاصطناعي على مطابقة الكورس باحتياج الطالب. لا تستخدم إيموجيات. أعد النص التحليلي فقط.`;
+
+  if(btn)    { btn.disabled = true; btn.textContent = '⏳ جاري التوليد...'; }
+  if(status) status.textContent = '⏳ جاري توليد الوصف التسويقي...';
+
+  try {
+    // 1) توليد الوصف التسويقي
+    const marketText = await callGeminiApi(marketingPrompt, false);
+    const desc = (marketText || '').trim();
+    if(!desc) throw new Error('لم يُرجع الذكاء الاصطناعي وصفاً تسويقياً.');
+    const ta = document.getElementById('acDesc');
+    if(ta) ta.value = desc;
+    if(status) status.textContent = '✅ الوصف التسويقي جاهز... ⏳ جاري التحليل الذكي الداخلي...';
+
+    // 2) توليد الوصف التحليلي الداخلي
+    try {
+      const smartText = await callGeminiApi(smartPrompt, false);
+      const smartDesc = (smartText || '').trim();
+      if(smartDesc) {
+        const sda = document.getElementById('acAiSmartDesc');
+        if(sda) sda.value = smartDesc;
+        const sds = document.getElementById('acSmartDescStatus');
+        if(sds) { sds.textContent = '✅ تم التحليل الذكي!'; setTimeout(() => { if(sds) sds.textContent = ''; }, 4000); }
+      }
+    } catch(smartErr) {
+      console.warn('Smart desc generation failed:', smartErr);
+    }
+
+    if(status) { status.textContent = '✅ تم توليد الوصف التسويقي والتحليل الذكي!'; setTimeout(() => { if(status) status.textContent = ''; }, 4000); }
+  } catch(err) {
+    if(status) status.textContent = '❌ ' + (err.message || 'فشل');
+    alert('فشل توليد الوصف: ' + err.message);
+  } finally {
+    if(btn) { btn.disabled = false; btn.textContent = '✨ توليد'; }
+  }
+}
+
+// ─── إعادة توليد التحليل الذكي الداخلي فقط (بدون تغيير الوصف التسويقي) ───
+async function regenerateSmartDesc() {
+  const title  = (document.getElementById('acTitle')?.value || '').trim();
+  const desc   = (document.getElementById('acDesc')?.value || '').trim();
+  const prompt = (document.getElementById('acDescAiPrompt')?.value || '').trim();
+  const btn    = document.getElementById('btnRegenerateSmartDesc');
+  const status = document.getElementById('acSmartDescStatus');
+
+  if(!title) { alert('اكتب اسم الكورس أولاً!'); return; }
+  const content = desc || prompt || title;
+
+  const smartPrompt = `أنت محلل تعليمي خبير. حلل الكورس التالي وأنشئ وصفاً تحليلياً داخلياً دقيقاً يستخدمه نظام الذكاء الاصطناعي لترشيح الكورس للطلاب المناسبين.
+اسم الكورس: ${title}
+معلومات عن الكورس: ${content}
+
+اكتب وصفاً تحليلياً داخلياً يتضمن:
+- المشكلات والتحديات التي يعالجها هذا الكورس تحديداً
+- نقاط الضعف الدراسية التي يحلها
+- من يحتاج هذا الكورس (الطالب المستهدف بدقة)
+- المواضيع والمهارات المغطاة
+- الكلمات المفتاحية التي يستخدمها الطلاب للتعبير عن هذه المشكلات
+
+اكتب النص بأسلوب تحليلي مباشر. لا تستخدم إيموجيات. أعد النص التحليلي فقط.`;
+
+  if(btn) { btn.disabled = true; btn.textContent = '⏳ جاري التحليل...'; }
+  if(status) status.textContent = '⏳ جاري التحليل الذكي...';
+
+  try {
+    const smartText = await callGeminiApi(smartPrompt, false);
+    const smartDesc = (smartText || '').trim();
+    if(!smartDesc) throw new Error('لم يُرجع الذكاء الاصطناعي تحليلاً.');
+    const sda = document.getElementById('acAiSmartDesc');
+    if(sda) sda.value = smartDesc;
+    if(status) { status.textContent = '✅ تم التحليل الذكي!'; setTimeout(() => { if(status) status.textContent = ''; }, 4000); }
+  } catch(err) {
+    if(status) status.textContent = '❌ ' + (err.message || 'فشل');
+  } finally {
+    if(btn) { btn.disabled = false; btn.textContent = '🧠 إعادة توليد التحليل'; }
+  }
+}
+
+function toggleVoiceDesc() {
+  window._voiceDescRecording ? stopVoiceDesc() : startVoiceDesc();
+}
+
+async function startVoiceDesc() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) { alert('متصفحك لا يدعم التسجيل الصوتي. جرب Chrome أو Edge.'); return; }
+  const btn    = document.getElementById('btnVoiceDesc');
+  const status = document.getElementById('voiceDescStatus');
+  const rec    = new SR();
+  rec.lang = 'ar-EG'; rec.continuous = true; rec.interimResults = true;
+  let final = '';
+
+  rec.onstart = () => {
+    window._voiceDescRecording = true;
+    if(btn)    { btn.textContent = '⏹️ إيقاف'; btn.style.borderColor = '#e74c3c'; }
+    if(status) status.textContent = '🔴 جاري التسجيل... تكلم الآن';
+  };
+  rec.onresult = (e) => {
+    let interim = '';
+    for(let i = e.resultIndex; i < e.results.length; i++) {
+      if(e.results[i].isFinal) final += e.results[i][0].transcript;
+      else interim += e.results[i][0].transcript;
+    }
+    if(status) status.textContent = '🔴 ' + (interim || final || 'استمر...');
+  };
+  rec.onerror = () => stopVoiceDesc();
+  rec.onend   = async () => {
+    window._voiceDescRecording = false;
+    if(btn) { btn.textContent = '🎙️ تسجيل صوتي'; }
+    if(!final.trim()) { if(status) status.textContent = 'لم يُسجَّل أي كلام.'; return; }
+    if(status) status.textContent = '⏳ جاري تحويل الكلام لوصف...';
+    const pField = (document.getElementById('acDescAiPrompt')?.value || '').trim();
+    const ttl    = (document.getElementById('acTitle')?.value || '').trim();
+    const aiP    = `أنت مساعد تعليمي لمنصة "الدكتور".
+المعلم قال: "${final}"
+اسم الكورس: ${ttl || 'غير محدد'}${pField ? '\n' + pField : ''}
+حوّل هذا الكلام لوصف كورس احترافي وواضح للطلاب بإيموجيات تعليمية (📚✨🎯📝🌟).
+أعد الوصف فقط.`;
+    try {
+      const desc = await callGeminiApi(aiP, false);
+      const ta   = document.getElementById('acDesc');
+      if(ta) ta.value = (desc || '').trim();
+      if(status) { status.textContent = '✅ تم!'; setTimeout(() => { if(status) status.textContent = ''; }, 3000); }
+    } catch(err) {
+      if(status) status.textContent = '❌ فشل: ' + err.message;
+    }
+  };
+  window._voiceDescRecognition = rec;
+  rec.start();
+}
+
+function stopVoiceDesc() {
+  window._voiceDescRecording = false;
+  const btn = document.getElementById('btnVoiceDesc');
+  if(btn) btn.textContent = '🎙️ تسجيل صوتي';
+  if(window._voiceDescRecognition) {
+    try { window._voiceDescRecognition.stop(); } catch(e) {}
+    window._voiceDescRecognition = null;
+  }
+}
+
 // ---- PAYMENTS (ADMIN) ----
 function renderPaymentsTable() {
+  renderEarningsTable();
   const pending = JSON.parse(localStorage.getItem('alamin_pending_payments')||'[]');
   const users = getUsers();
   const pendingCount = pending.filter(p=>p.status==='pending').length;
@@ -3213,7 +3782,7 @@ function buildStudentCourseCard(c, enrolled) {
   const createdDate = c.created || today;
   
   const coverHTML = c.thumbnail
-    ? `<img src="${c.thumbnail}" class="scc-cover-img" style="width:100%;height:100%;object-fit:cover;object-position:${c.thumbnailX || 50}% ${c.thumbnailY || 50}%;position:absolute;inset:0;">`
+    ? `<img src="${c.thumbnail}" class="scc-cover-img" style="max-width:100%;max-height:100%;object-fit:contain;display:block">`
     : `<span style="position:relative;z-index:1;font-size:72px">${coverEmoji}</span>`;
   
   if (enrolled) {
@@ -3281,15 +3850,25 @@ async function renderStudentCourses() {
   const current = JSON.parse(localStorage.getItem('alamin_current')) || currentUser;
   if(!current || current.role !== 'student') return;
 
-  // تحميل الكورسات من Firebase لو مش موجودة محلياً
-  let allCourses = getCourses();
-  if(!allCourses.length && window.db && !_coursesDirty){
-    const fb = await loadCoursesFromFirebase();
-    if(fb && fb.length && !_coursesDirty){
-      courses = fb;
-      localStorage.setItem('alamin_courses', JSON.stringify(fb));
-      allCourses = fb;
-    }
+  // دائماً اجلب الكورسات من Firebase (هي المصدر الموثوق)
+  let allCourses = [];
+  if(window.db){
+    try {
+      const doc = await window.db.collection('platform_data').doc('courses_list').get();
+      if(doc.exists){
+        const data = doc.data() || {};
+        allCourses = Array.isArray(data.items) ? data.items : [];
+        if(allCourses.length){
+          // حدّث الكاش المحلي
+          localStorage.setItem('alamin_courses', JSON.stringify(allCourses));
+          courses = allCourses;
+        }
+      }
+    } catch(e){ console.warn('[student] Courses load from Firebase failed:', e); }
+  }
+  // fallback للكاش المحلي لو Firebase فشل
+  if(!allCourses.length){
+    allCourses = getCourses();
   }
 
   // جيب enrolledCourses الحديثة من Firebase
@@ -3434,6 +4013,8 @@ window.addEventListener('load', () => {
   setTimeout(() => {
     syncQuizzesFromFirebase();
     syncQuestionBankFromFirebase();
+    // جلب طلاب المنصة تلقائياً في الخلفية
+    syncPlatformStudents(false);
   }, 1000);
 });
 
@@ -4160,7 +4741,124 @@ async function resetStudentAttempt(studentId, quizId) {
 }
 
 function printQuizResults() {
-  window.print();
+  const quiz = window._currentQuiz;
+  const attempts = window._currentQuizAttempts || [];
+  if (!quiz) { alert('لا يوجد اختبار محدد للطباعة.'); return; }
+
+  // كل طلاب الصف المسجلين بالسنتر (نفس منطق تبويب "المتغيبون")
+  const allStudents = filterUsersByGradeAndType(getUsers(), quiz.grade, 'center');
+
+  // الطلاب الذين قدّموا الاختبار (لهم محاولة) — نرتبهم تنازلياً حسب الدرجة
+  const presentRows = [...attempts].sort((a, b) => (b.score || 0) - (a.score || 0));
+  const presentIds = new Set(attempts.map(a => String(a.studentId)));
+
+  // الباقي من طلاب الصف الذين لم يقدموا الاختبار بعد = غائبون
+  const absentStudents = allStudents.filter(s => !presentIds.has(String(s.id)));
+
+  const passMark = quiz.totalPoints * ((quiz.passingGrade || 50) / 100);
+  const totalCount = allStudents.length || (presentRows.length + absentStudents.length);
+  const passedCount = presentRows.filter(a => (a.score || 0) >= passMark).length;
+  const failedCount = presentRows.length - passedCount;
+  const absentCount = absentStudents.length;
+
+  const presentRowsHtml = presentRows.length ? presentRows.map((a, i) => {
+    const isPassed = (a.score || 0) >= passMark;
+    return `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${escHtml(a.studentName || '')}</td>
+        <td>${escHtml(String(a.studentCode || ''))}</td>
+        <td>${a.score} / ${a.totalPoints || quiz.totalPoints}</td>
+        <td>${a.percentage != null ? a.percentage + '%' : '—'}</td>
+        <td class="${isPassed ? 'pass' : 'fail'}">${isPassed ? 'ناجح' : 'راسب'}</td>
+      </tr>`;
+  }).join('') : `<tr><td colspan="6" style="text-align:center;padding:14px;">لا يوجد طلاب قدّموا الاختبار</td></tr>`;
+
+  const absentRowsHtml = absentStudents.length ? absentStudents.map((s, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${escHtml(s.name || '')}</td>
+        <td>${escHtml(String(s.qrCode || s.id || ''))}</td>
+        <td colspan="3" class="absent">غائب</td>
+      </tr>`).join('') : `<tr><td colspan="6" style="text-align:center;padding:14px;">لا يوجد طلاب غائبون</td></tr>`;
+
+  const printDate = new Date().toLocaleString('ar-EG');
+
+  const printHtml = `
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>نتائج اختبار: ${escHtml(quiz.title || '')}</title>
+<style>
+  @page { size: A4; margin: 14mm; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Tajawal', Arial, sans-serif; color:#000; padding:0; margin:0; }
+  .header { text-align:center; margin-bottom:18px; border-bottom:3px solid #000; padding-bottom:12px; }
+  .header h1 { font-size:22px; margin-bottom:6px; }
+  .meta { display:flex; justify-content:center; flex-wrap:wrap; gap:18px; font-size:13px; margin-top:8px; }
+  .meta span { font-weight:700; }
+  .stats { display:flex; justify-content:center; gap:14px; margin:16px 0; flex-wrap:wrap; }
+  .stat-box { border:1px solid #000; border-radius:8px; padding:8px 16px; text-align:center; min-width:90px; }
+  .stat-box .num { font-size:18px; font-weight:900; display:block; }
+  .stat-box .lbl { font-size:11px; }
+  h2.section-title { font-size:15px; margin:18px 0 8px; border-right:4px solid #000; padding-right:8px; }
+  table { width:100%; border-collapse:collapse; margin-bottom:10px; font-size:12px; }
+  th, td { border:1px solid #444; padding:6px 8px; text-align:center; }
+  th { background:#e5e5e5; font-weight:900; }
+  .pass { font-weight:800; }
+  .fail { font-weight:800; }
+  .absent { font-weight:800; color:#444; }
+  .footer-note { margin-top:18px; font-size:11px; text-align:left; color:#444; }
+  @media print { body { -webkit-print-color-adjust: exact; } }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>نتائج اختبار: ${escHtml(quiz.title || '')}</h1>
+    <div class="meta">
+      <span>الصف: ${escHtml(gradeLabel(quiz.grade))}</span>
+      <span>المادة: ${escHtml(quiz.subject || '')}</span>
+      <span>زمن الاختبار: ${escHtml(String(quiz.time || ''))} دقيقة</span>
+      <span>عدد الأسئلة: ${quiz.questionsCount || 0}</span>
+      <span>الدرجة الكلية: ${quiz.totalPoints || 0}</span>
+      <span>نسبة النجاح: ${quiz.passingGrade || 50}%</span>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-box"><span class="num">${totalCount}</span><span class="lbl">إجمالي الطلاب</span></div>
+    <div class="stat-box"><span class="num">${presentRows.length}</span><span class="lbl">قدّموا الاختبار</span></div>
+    <div class="stat-box"><span class="num">${passedCount}</span><span class="lbl">ناجحين</span></div>
+    <div class="stat-box"><span class="num">${failedCount}</span><span class="lbl">راسبين</span></div>
+    <div class="stat-box"><span class="num">${absentCount}</span><span class="lbl">غائبين</span></div>
+  </div>
+
+  <h2 class="section-title">📋 الطلاب الذين قدّموا الاختبار</h2>
+  <table>
+    <thead><tr><th>#</th><th>اسم الطالب</th><th>الكود</th><th>الدرجة</th><th>النسبة</th><th>الحالة</th></tr></thead>
+    <tbody>${presentRowsHtml}</tbody>
+  </table>
+
+  <h2 class="section-title">🚫 الطلاب الغائبون (لم يقدّموا الاختبار)</h2>
+  <table>
+    <thead><tr><th>#</th><th>اسم الطالب</th><th>الكود</th><th colspan="3">الحالة</th></tr></thead>
+    <tbody>${absentRowsHtml}</tbody>
+  </table>
+
+  <div class="footer-note">تم الطباعة في: ${printDate}</div>
+</body>
+</html>`;
+
+  const printWin = window.open('', '_blank');
+  if (!printWin) { alert('تم حظر فتح نافذة الطباعة من المتصفح. الرجاء السماح بالنوافذ المنبثقة (Popups) لهذا الموقع.'); return; }
+  printWin.document.open();
+  printWin.document.write(printHtml);
+  printWin.document.close();
+  printWin.onload = function () {
+    printWin.focus();
+    printWin.print();
+  };
 }
 
 function exportQuizResultsExcel() {
@@ -4307,51 +5005,60 @@ function isSystemStudentDoc(doc, data) {
     (!!qrCode && docId === qrCode) ||
     (hasOfflineCodeShape && data.role !== 'admin');
 }
-async function syncCenterStudentsFromFirebase() {
-  if (!window.db) return { added: 0, imported: 0, error: new Error('Firebase غير متاح') };
+// ─── جلب كل طلاب المنصة من Firebase تلقائياً ───────────────
+async function syncPlatformStudents(showNotif = true) {
+  if (!window.db) {
+    if (showNotif) showNotification('⚠️ Firebase غير متاح', 'error');
+    return;
+  }
+  if (showNotif) showNotification('🔄 جاري جلب بيانات الطلاب...', 'info');
   try {
-    let snapshot;
-    try {
-      snapshot = await window.db.collection('students').get();
-    } catch (err) {
-      console.warn('Full students import failed, trying role query', err);
-      snapshot = await window.db.collection('students').where('role', '==', 'student').get();
-    }
+    const snapshot = await window.db.collection('students').get();
     const users = getUsers();
     let added = 0;
-    let imported = 0;
-    let scanned = 0;
     snapshot.forEach(doc => {
-      scanned++;
       const data = doc.data() || {};
-      if (!isSystemStudentDoc(doc, data)) return;
-      const id = String(data.id || data.qrCode || doc.id);
+      if (data.role === 'admin') return; // تجاهل الأدمن فقط
+      const id = String(data.id || data.phone || data.qrCode || doc.id);
       if (!id) return;
       const incoming = {
         ...data,
         id,
         qrCode: data.qrCode || id,
-        name: data.name || 'طالب من السيستم',
-        grade: normalizeImportedStudentGrade(data),
-        studentType: 'center',
+        name: data.name || data.fullName || 'طالب',
+        grade: data.grade || 'all',
+        track: data.track || '',
+        gov: data.gov || '',
+        phone: data.phone || '',
+        studentType: data.studentType || 'outside',
         role: 'student',
-        enrolledCourses: data.enrolledCourses || []
+        status: data.status || 'active',
+        enrolledCourses: data.enrolledCourses || [],
+        joinDate: data.joinDate || (data.registeredAt ? data.registeredAt.slice(0,10) : '-')
       };
-      const existingIndex = users.findIndex(u => String(u.id) === id || String(u.qrCode || '') === id);
+      const existingIndex = users.findIndex(u =>
+        String(u.id) === id ||
+        (incoming.phone && String(u.phone||'') === incoming.phone)
+      );
       if (existingIndex > -1) {
         users[existingIndex] = { ...users[existingIndex], ...incoming };
       } else {
         users.push(incoming);
         added++;
       }
-      imported++;
     });
     saveUsers(users);
-    return { added, imported, scanned };
+    if (showNotif) showNotification(`✅ تم تحديث بيانات ${users.length} طالب (${added} جديد)`, 'success');
+    renderStudentsTable();
+    renderOverview();
   } catch (err) {
-    console.warn('Could not sync center students', err);
-    return { added: 0, imported: 0, scanned: 0, error: err };
+    console.warn('syncPlatformStudents error:', err);
+    if (showNotif) showNotification('⚠️ فشل جلب الطلاب: ' + (err.message||err), 'error');
   }
+}
+// للتوافق مع الأجزاء القديمة التي تستدعي هذا الاسم
+async function syncCenterStudentsFromFirebase() {
+  return syncPlatformStudents(false);
 }
 async function initVouchersPage() {
   await syncCenterStudentsFromFirebase();
@@ -5228,26 +5935,27 @@ function initAiHelperPage() {
 }
 
 /** نفس fetch في runAiAnalysis() — حامل القرآن admin.html */
-async function callGeminiApi(promptText, jsonMode) {
+// callGeminiApi — يدعم نص أو PDF inline كـ base64
+// pdfData = null | { base64: string, name: string }
+async function callGeminiApi(promptText, jsonMode, pdfData) {
   const apiKey = requireGeminiApiKey();
   if(!apiKey) throw new Error('لا يوجد مفتاح API');
-  const payload = {
-    contents: [{ parts: [{ text: promptText }] }]
-  };
+  const parts = [];
+  if(pdfData && pdfData.base64) {
+    parts.push({ inline_data: { mime_type: 'application/pdf', data: pdfData.base64 } });
+  }
+  parts.push({ text: promptText });
+  const payload = { contents: [{ parts }] };
   if(jsonMode) {
     payload.generationConfig = { responseMimeType: 'application/json' };
   }
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+    { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }
+  );
   if(!response.ok) {
     let errMsg = 'فشل الاتصال بـ Gemini API';
-    try {
-      const errData = await response.json();
-      errMsg = errData.error?.message || errMsg;
-    } catch(e) { /* ignore */ }
+    try { const errData = await response.json(); errMsg = errData.error?.message || errMsg; } catch(e) {}
     throw new Error(formatGeminiErrorMessage(errMsg));
   }
   const resultData = await response.json();
@@ -5255,8 +5963,8 @@ async function callGeminiApi(promptText, jsonMode) {
   if(!responseText) throw new Error('لم يرجع الذكاء الاصطناعي أي رد صالح.');
   let cleanedText = responseText.trim();
   if(cleanedText.startsWith('```json')) cleanedText = cleanedText.substring(7);
-  if(cleanedText.startsWith('```')) cleanedText = cleanedText.substring(3);
-  if(cleanedText.endsWith('```')) cleanedText = cleanedText.substring(0, cleanedText.length - 3);
+  if(cleanedText.startsWith('```'))     cleanedText = cleanedText.substring(3);
+  if(cleanedText.endsWith('```'))       cleanedText = cleanedText.substring(0, cleanedText.length - 3);
   return cleanedText.trim();
 }
 
@@ -5278,6 +5986,9 @@ function setAiQuizFileStatus(msg, isError) {
   el.style.color = isError ? 'var(--danger)' : 'var(--text2)';
 }
 
+// ---- حالة الـ PDF المرفوع ----
+window._aiQuizPdfData = null;
+
 function readFileAsText(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -5287,26 +5998,13 @@ function readFileAsText(file) {
   });
 }
 
-async function extractTextFromPdf(file) {
-  let pdfjs = window.pdfjsLib;
-  if(!pdfjs) {
-    await new Promise(r => setTimeout(r, 400));
-    pdfjs = window.pdfjsLib;
-  }
-  if(!pdfjs) throw new Error('مكتبة PDF لم تُحمّل. تأكد من الاتصال بالإنترنت وحدّث الصفحة (F5).');
-  pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-  const data = await file.arrayBuffer();
-  const pdf = await pdfjs.getDocument({ data }).promise;
-  const parts = [];
-  for(let p = 1; p <= pdf.numPages; p++) {
-    setAiQuizFileStatus(`جاري قراءة PDF... صفحة ${p} من ${pdf.numPages}`);
-    const page = await pdf.getPage(p);
-    const content = await page.getTextContent();
-    const pageText = content.items.map(item => item.str).join(' ').replace(/\s+/g, ' ').trim();
-    if(pageText) parts.push(pageText);
-  }
-  return { text: parts.join('\n\n'), pages: pdf.numPages };
+function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result.split(',')[1]);
+    reader.onerror = () => reject(new Error('فشل قراءة الملف'));
+    reader.readAsDataURL(file);
+  });
 }
 
 function trimQuizSourceText(text) {
@@ -5314,7 +6012,7 @@ function trimQuizSourceText(text) {
   let t = String(text || '').replace(/\r/g, '').trim();
   if(!t) return '';
   if(t.length > maxLen) {
-    t = t.substring(0, maxLen) + '\n\n[... تم اختصار النص لطول الملف — الأسئلة ستُبنى على الجزء الأول ...]';
+    t = t.substring(0, maxLen) + '\n\n[... تم اختصار النص لطول الملف ...]';
   }
   return t;
 }
@@ -5337,134 +6035,155 @@ async function handleAiQuizFileUpload() {
   }
 
   if(btn) btn.disabled = true;
-  setAiQuizFileStatus('جاري قراءة الملف واستخراج النص...');
+  window._aiQuizPdfData = null;
+  setAiQuizFileStatus('⏳ جاري تحميل الملف...');
 
   try {
-    let extracted = '';
-    let pages = 0;
-
     if(isPdf) {
-      const result = await extractTextFromPdf(file);
-      extracted = result.text;
-      pages = result.pages;
+      // نرفع PDF كـ base64 — Gemini يقراه مباشرة (أفضل من استخراج النص)
+      const b64 = await readFileAsBase64(file);
+      window._aiQuizPdfData = { base64: b64, name: file.name };
+      contextArea.value = '';
+      contextArea.placeholder = `✅ تم تحميل «${file.name}» — سيقرأ Gemini الـ PDF مباشرة عند التوليد.`;
+      setAiQuizFileStatus(`✅ PDF جاهز: «${file.name}» (${(file.size/1024).toFixed(0)} KB) — Gemini سيقرأه مباشرة 🔍`);
     } else {
-      extracted = await readFileAsText(file);
+      const text = trimQuizSourceText(await readFileAsText(file));
+      if(!text) throw new Error('الملف النصي فارغ.');
+      window._aiQuizPdfData = null;
+      contextArea.value = text;
+      setAiQuizFileStatus(`✅ تم تحميل «${file.name}» — ${text.length.toLocaleString('ar-EG')} حرف`);
     }
-
-    const text = trimQuizSourceText(extracted);
-    if(!text) {
-      throw new Error(isPdf
-        ? 'لم يُستخرج نص من الـ PDF. قد يكون ملف مسح ضوئي (صورة). جرّب PDF فيه نص قابل للتحديد أو الصق المحتوى يدوياً.'
-        : 'الملف النصي فارغ.');
-    }
-
-    contextArea.value = text;
-    const pagesInfo = pages ? ` — ${pages} صفحة` : '';
-    setAiQuizFileStatus(`✅ تم استخراج ${text.length.toLocaleString('ar-EG')} حرف من «${file.name}»${pagesInfo}`);
-    alert(`تم تحميل الملف بنجاح!${pagesInfo}\nعدد الأحرف: ${text.length}\nيمكنك الآن توليد الاختبار.`);
   } catch(err) {
-    console.error('PDF/TXT upload error:', err);
     setAiQuizFileStatus('❌ ' + err.message, true);
     alert('فشل قراءة الملف: ' + err.message);
     fileInput.value = '';
+    window._aiQuizPdfData = null;
   } finally {
     if(btn) btn.disabled = false;
   }
 }
 
-// Generate Quiz using Gemini
-async function generateQuizViaAI() {
-  const title = document.getElementById('aiQuizTitle').value.trim();
-  const grade = document.getElementById('aiQuizGrade').value;
-  const count = parseInt(document.getElementById('aiQuizCount').value, 10) || 5;
-  const context = document.getElementById('aiQuizContext').value.trim();
-  const btn = document.getElementById('btnGenQuiz');
-  
-  if(!title) { alert('برجاء إدخال عنوان للاختبار أولاً!'); return; }
-  if(!context) { alert('برجاء إدخال نص مصدر الأسئلة، أو رفع ملف PDF/TXT لاستخراج النص أولاً!'); return; }
-  
-  btn.disabled = true;
-  btn.textContent = '⏳ جاري تفكير وصياغة الأسئلة بالذكاء الاصطناعي...';
+// ---- helpers ----
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-  const promptText = `أنت خبير تربوي متمكن في تدريس اللغة العربية للمرحلة الثانوية بمصر ومساعد لمنصة "الدكتور".
-مهمتك هي إنشاء اختبار اختيار من متعدد (Multiple Choice Quiz) مبني بالكامل على المحتوى المرفق.
-يجب أن ترد بصيغة JSON فقط دون أي نصوص خارجية أو علامات Markdown (لا تستخدم \`\`\`json أو \`\`\`).
-الـ JSON يجب أن يكون كائناً يحتوي على مفتاحين: "title" وهو عنوان الاختبار، و "questions" وهو مصفوفة تحتوي على الأسئلة بعدد ${count} أسئلة بالضبط.
-هيكل مصفوفة الأسئلة يجب أن يكون كالتالي بالضبط:
-{
-  "title": "${title}",
-  "questions": [
-    {
-      "q": "نص السؤال بوضوح ودقة لغوية تامة؟",
-      "opts": ["الاختيار الأول الصحيح دائمًا", "الاختيار الثاني الخاطئ", "الاختيار الثالث الخاطئ", "الاختيار الرابع الخاطئ"]
-    }
-  ]
+function buildBatchPrompt(title, context, batchSize, batchIndex, totalCount) {
+  const start = batchIndex * batchSize + 1;
+  const end   = Math.min(start + batchSize - 1, totalCount);
+  const isPdf = !context || context === 'راجع الـ PDF المرفق كاملاً';
+  const sourceSection = isPdf
+    ? 'المصدر: الملف المرفق (PDF) — اقرأه كاملاً وابنِ الأسئلة منه.'
+    : `المحتوى:\n${context}`;
+  return `أنت خبير تربوي متمكن في تدريس اللغة العربية للمرحلة الثانوية بمصر ومساعد لمنصة "الدكتور".
+مهمتك إنشاء ${end - start + 1} سؤال اختيار من متعدد (رقم ${start} إلى ${end} من أصل ${totalCount}) مبنية على المحتوى المرفق.
+رد بـ JSON فقط — مصفوفة array — بهذا الشكل:
+[{"q":"نص السؤال؟","opts":["الصحيح دائماً هنا","خطأ مقنع","خطأ مقنع","خطأ مقنع"]}]
+ملاحظات: الاختيار الأول صحيح دائماً. لا تضف نصاً خارج JSON.
+${sourceSection}
+أعد مصفوفة JSON فقط.`;
 }
-ملاحظة هامة جداً: يجب أن يكون الاختيار الأول في مصفوفة "opts" هو الإجابة الصحيحة دائمًا، والـ 3 خيارات الأخرى خاطئة تمامًا ومقنعة لغويًا ومستخرجة من المنهج. سنقوم نحن بخلط الاختيارات برمجياً للطلاب.
-يجب أن تحتوي الأسئلة على عمق لغوي وبلاغي يناسب الثانوية العامة في مصر.
 
-المحتوى المرفق الذي يجب صياغة الأسئلة منه:
+// Generate Quiz using Gemini — مع batching لتجنب quota
+async function generateQuizViaAI() {
+  const title   = document.getElementById('aiQuizTitle').value.trim();
+  const grade   = document.getElementById('aiQuizGrade').value;
+  const count   = parseInt(document.getElementById('aiQuizCount').value, 10) || 5;
+  const context = document.getElementById('aiQuizContext').value.trim();
+  const btn     = document.getElementById('btnGenQuiz');
+  const pdfData = window._aiQuizPdfData || null;
 
-${trimQuizSourceText(context)}
+  if(!title)              { alert('برجاء إدخال عنوان للاختبار أولاً!'); return; }
+  if(!context && !pdfData){ alert('برجاء إدخال نص مصدر الأسئلة، أو رفع ملف PDF!'); return; }
 
-ملاحظة مهمة: يجب أن يكون الرد JSON صالحاً فقط ولا تضف أي نصوص توضيحية أو علامات ماركداون خارج الـ JSON.`;
+  btn.disabled = true;
+
+  // PDF → batch واحد كبير. نص → 5 أسئلة لكل batch
+  const BATCH_SIZE   = pdfData ? count : 5;
+  const DELAY_MS     = 5000;
+  const totalBatches = Math.ceil(count / BATCH_SIZE);
+  const trimmedCtx   = pdfData ? '' : trimQuizSourceText(context);
+
+  let allQuestions = [];
 
   try {
-    const jsonText = await callGeminiApi(promptText, true);
-    const generatedQuiz = JSON.parse(jsonText);
-    
-    if(!generatedQuiz.questions || !generatedQuiz.questions.length) {
-      throw new Error('لم يقم الذكاء الاصطناعي بتوليد أي أسئلة بشكل متطابق!');
-    }    const normalizedQuestions = generatedQuiz.questions.map((q, idx) => ({
+    for(let i = 0; i < totalBatches; i++) {
+      const batchNum = i + 1;
+      btn.textContent = `⏳ الجزء ${batchNum}/${totalBatches} (${allQuestions.length}/${count} سؤال جاهز)...`;
+
+      const prompt = buildBatchPrompt(title, pdfData ? 'راجع الـ PDF المرفق كاملاً' : trimmedCtx, BATCH_SIZE, i, count);
+
+      let jsonText;
+      for(let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          jsonText = await callGeminiApi(prompt, true, pdfData);
+          break;
+        } catch(err) {
+          if(attempt === 2) throw err;
+          btn.textContent = `⚠️ تأخير... إعادة المحاولة للجزء ${batchNum}`;
+          await sleep(8000);
+        }
+      }
+
+      let cleaned = (jsonText || '').trim();
+      if(cleaned.startsWith('```json')) cleaned = cleaned.substring(7);
+      if(cleaned.startsWith('```'))     cleaned = cleaned.substring(3);
+      if(cleaned.endsWith('```'))       cleaned = cleaned.substring(0, cleaned.length - 3);
+
+      let parsed = JSON.parse(cleaned.trim());
+      if(!Array.isArray(parsed)) parsed = parsed.questions || parsed.quiz || [];
+      allQuestions = allQuestions.concat(parsed);
+
+      if(i < totalBatches - 1) {
+        btn.textContent = `⏳ انتظار قليل... (${allQuestions.length}/${count} سؤال جاهز)`;
+        await sleep(DELAY_MS);
+      }
+    }
+
+    if(!allQuestions.length) throw new Error('لم يُولَّد أي أسئلة!');
+
+    const normalizedQuestions = allQuestions.slice(0, count).map((q, idx) => ({
       id: q.id || `q_ai_${Date.now()}_${idx}`,
-      q: q.q || q.text || '',
+      q: q.q || q.text || q.question || '',
       type: 'mcq',
-      opts: Array.isArray(q.opts) ? q.opts : [],
+      opts: Array.isArray(q.opts) ? q.opts : (Array.isArray(q.options) ? q.options : []),
       correctOpt: q.correctOpt !== undefined ? q.correctOpt : 0,
       points: q.points || 1,
-      mediaUrl: null,
-      imageWidth: 360,
-      imageHeight: null
-    })).filter(q => q.q && q.opts.length);
+      mediaUrl: null, imageWidth: 360, imageHeight: null
+    })).filter(q => q.q && q.opts.length >= 2);
 
-    // Save quiz to localStorage
+    if(!normalizedQuestions.length) throw new Error('تعذّر معالجة الأسئلة المولّدة.');
+
     const newQuiz = {
       id: getNextQuizId(),
-      title: generatedQuiz.title || title,
+      title: title,
       grade: grade,
       subject: 'عام',
       questionsCount: normalizedQuestions.length,
-      totalPoints: normalizedQuestions.reduce((sum, q) => sum + (q.points || 1), 0),
-      averageGrade: 50,
-      passingGrade: 50,
-      time: normalizedQuestions.length * 2, // 2 minutes per question
+      totalPoints: normalizedQuestions.reduce((s, q) => s + (q.points || 1), 0),
+      averageGrade: 50, passingGrade: 50,
+      time: normalizedQuestions.length * 2,
       questionsList: normalizedQuestions
     };
-    
+
     quizzesData.push(newQuiz);
     localStorage.setItem('alamin_quizzes', JSON.stringify(quizzesData));
-    
-    // Also save in Firebase if available
     if(window.db) {
-      try {
-        await window.db.collection('quizzes').doc(String(newQuiz.id)).set(newQuiz);
-      } catch(e) { console.warn('Could not sync to Firebase:', e); }
+      try { await window.db.collection('quizzes').doc(String(newQuiz.id)).set(newQuiz); } catch(e) {}
     }
-    
-    alert(`🎉 نجاح باهر! تم توليد اختبار ذكي بالكامل يحتوي على ${newQuiz.questionsCount} أسئلة احترافية، وتم نشره فوراً للطلاب في صفحة الاختبارات.`);
-    
-    // Reset form
-    document.getElementById('aiQuizTitle').value = '';
+
+    alert(`🎉 نجاح! تم توليد ${newQuiz.questionsCount} سؤالاً ونشرهم للطلاب.`);
+
+    document.getElementById('aiQuizTitle').value   = '';
     document.getElementById('aiQuizContext').value = '';
-    document.getElementById('aiQuizFile').value = '';
-    
-    // Redirect to Quizzes view
+    document.getElementById('aiQuizFile').value    = '';
+    window._aiQuizPdfData = null;
+    document.getElementById('aiQuizContext').placeholder = 'ألصق هنا نصوص شرح المنهج، أو فقرة القراءة، أو الأبيات الشعرية... أو ارفع ملف PDF بالأسفل.';
+    setAiQuizFileStatus('');
     showPage('quizzes');
     renderQuizzesTable();
-    
+
   } catch(error) {
-    console.error('AI Quiz Error:', error);
-    alert('⚠️ فشل توليد الاختبار:\n\n' + formatGeminiErrorMessage(error.message));
+    alert('⚠️ فشل توليد الاختبار:\n\n' + formatGeminiErrorMessage(error.message)
+      + (allQuestions.length ? `\n\nتم توليد ${allQuestions.length} سؤال قبل الخطأ.` : ''));
   } finally {
     btn.disabled = false;
     btn.textContent = 'توليد الاختبار فوراً ونشره للطلاب 🚀';
@@ -5621,13 +6340,9 @@ if(currentUser && currentUser.role === 'student') {
           return html;
         };
 
-    // فلتر الطلاب
+    // فلتر الطلاب - الصف
     const gf = document.getElementById('studentsGradeFilter');
     if (gf) gf.innerHTML = buildOpts('', true);
-
-    // modal إضافة طالب
-    const ag = document.getElementById('asGR');
-    if (ag) ag.innerHTML = buildOpts('1', false);
 
     // فلاتر الكورسات والفاوتشرات (لو موجودة)
     ['coursesGradeFilter','voucherGradeFilter','lessonsGradeFilter','quizGradeFilter'].forEach(id => {
@@ -5637,65 +6352,6 @@ if(currentUser && currentUser.role === 'student') {
   })();
 }
 
+
 </script>
 <!-- ACTIVATION CODE MODAL -->
-<div class="code-modal-overlay" id="codeModal">
-  <div class="code-modal" style="max-width:500px; padding:32px 28px;">
-    <div class="code-modal-icon" style="font-size:48px; margin-bottom:12px;">🔑</div>
-    <h3 style="font-size:22px; font-weight:900; margin-bottom:6px;">اشتراك وتفعيل الكورس</h3>
-    <div id="modalCourseInfo" style="display:none; margin-bottom:18px; padding:8px 16px; background:rgba(0, 180, 216, 0.05); border:1px solid var(--border); border-radius:12px; font-size:14px; font-weight:700; color:var(--primary-dark);">
-      📚 كورس: <span id="modalCourseTitle"></span> | 💰 السعر: <span id="modalCoursePrice"></span> ج.م
-    </div>
-    
-    <!-- Tabs -->
-    <div class="activation-tabs">
-      <button class="activation-tab active" id="tabModalBtnCode" onclick="switchModalTab('code')">🔑 كود التفعيل</button>
-      <button class="activation-tab" id="tabModalBtnTransfer" onclick="switchModalTab('transfer')">💳 تحويل فودافون كاش</button>
-    </div>
-
-    <!-- Tab Content 1: Code -->
-    <div id="tabModalContentCode">
-      <p style="color:var(--text2); margin-bottom:16px; font-size:13.5px; line-height:1.5;">اكتب كود التفعيل الخاص بالكورس وسيتم تفعيله لحسابك فوراً!</p>
-      <div class="code-input-wrap">
-        <input type="text" id="codeInput" placeholder="XXXXXXXX" maxlength="12" oninput="this.value=this.value.toUpperCase()" style="font-size:20px; padding:12px;">
-      </div>
-      <div class="code-result" id="codeResult"></div>
-      <button onclick="submitActivationCode()" class="btn-submit-action" style="margin-bottom:12px;">تفعيل الكود ✅</button>
-    </div>
-
-    <!-- Tab Content 2: Transfer -->
-    <div id="tabModalContentTransfer" style="display:none;">
-      <div class="payment-instruction-box">
-        <div class="payment-instruction-title" style="color: #d68910;">
-          <span>⚠️ تنبيه هام جداً:</span>
-        </div>
-        <div class="payment-instruction-desc">
-          يرجى تحويل قيمة الكورس أولاً إلى رقم فودافون كاش التالي قبل إرسال طلب التفعيل:
-        </div>
-        <div class="payment-number-container">
-          <span class="payment-number" id="payNum_modal">01012457129</span>
-          <button class="btn-copy" onclick="copyPaymentNumber('modal')">
-            <span>📋</span> <span id="copyText_modal">نسخ الرقم</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="activation-input-group">
-        <label for="modalPaymentPhoneInput">رقم المحفظة التي قمت بالتحويل منها</label>
-        <input id="modalPaymentPhoneInput" placeholder="مثال: 01012345678" class="activation-input" type="tel">
-      </div>
-
-      <div class="activation-input-group">
-        <label for="modalPaymentAmountInput">المبلغ الذي قمت بتحويله (ج.م)</label>
-        <input id="modalPaymentAmountInput" placeholder="المبلغ الفعلي المحول" class="activation-input" type="number" min="0">
-      </div>
-
-      <button id="modalSubmitPaymentBtn" onclick="submitCoursePaymentRequestFromModal()" class="btn-submit-action" style="margin-bottom:12px;">إرسال طلب التفعيل 🚀</button>
-    </div>
-
-    <button onclick="closeCodeModal()" style="width:100%; padding:12px; background:var(--bg); color:var(--text); border:1.5px solid var(--border); border-radius:12px; font-family:'Tajawal',sans-serif; font-weight:700; font-size:14px; cursor:pointer; transition:all 0.2s;">إلغاء</button>
-  </div>
-</div>
-
-</body>
-</html>

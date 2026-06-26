@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتائج الاختبار - طباعة</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Arial', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+
+        .print-container {
+            background: white;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Header Styles */
+        .print-header {
+            text-align: center;
+            border-bottom: 3px solid #0284c7;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .school-logo {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .school-name {
+            font-size: 26px;
+            font-weight: 900;
+            color: #0284c7;
+            margin-bottom: 5px;
+        }
+
+        .school-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .test-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-right: 4px solid #0284c7;
+        }
+
+        .test-info-item {
+            font-size: 14px;
+        }
+
+        .test-info-label {
+            font-weight: 700;
+            color: #0284c7;
+            margin-bottom: 4px;
+        }
+
+        .test-info-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* Table Styles */
+        .results-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: #0284c7;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0284c7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title-icon {
+            font-size: 24px;
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 4px solid #0284c7;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 900;
+            color: #0284c7;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        thead {
+            background: #0284c7;
+            color: white;
+        }
+
+        th {
+            padding: 14px;
+            text-align: right;
+            font-weight: 700;
+            font-size: 14px;
+            border: none;
+        }
+
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .rank {
+            font-weight: 700;
+            color: #0284c7;
+            text-align: center;
+            min-width: 30px;
+        }
+
+        .grade {
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .grade-a {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .grade-b {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .grade-c {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .grade-f {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-passed {
+            background: #c8e6c9;
+            color: #1b5e20;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .status-absent {
+            background: #ffcdd2;
+            color: #b71c1c;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        /* Footer */
+        .print-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .footer-item {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer-label {
+            font-weight: 700;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .print-container {
+                box-shadow: none;
+                margin: 0;
+                padding: 20px;
+            }
+
+            .print-header {
+                page-break-after: avoid;
+            }
+
+            .results-section {
+                page-break-inside: avoid;
+            }
+
+            table {
+                page-break-inside: avoid;
+            }
+
+            .btn-container {
+                display: none;
+            }
+        }
+
+        /* Buttons (Hidden in Print) */
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: white;
+        }
+
+        .btn-print:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+        }
+
+        .btn-close {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-close:hover {
+            background: #e0e0e0;
+        }
+
+        /* Note */
+        .print-note {
+            background: #fffbea;
+            border-right: 4px solid #ffa502;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #c77f2c;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .print-note-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        /* Student Search */
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: #0284c7;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="print-container">
+        <!-- Header -->
+        <div class="print-header">
+            <div class="school-logo">📚</div>
+            <div class="school-name">الدكتور في اللغة العربية</div>
+            <div class="school-subtitle">نتائج الاختبار الشامل</div>
+        </div>
+
+        <!-- Test Information -->
+        <div class="test-info">
+            <div class="test-info-item">
+                <div class="test-info-label">📖 اسم الاختبار</div>
+                <div class="test-info-value" id="testName">اختبار القراءة المحررة</div>
+            </div>
+            <div class="test-info-item">
+                <div class="test-info-label">📅 التاريخ</div>
+                <div class="test-info-value" id="testDate">25/06/2026</div>
+            </div>
+            <div class="test-info-item">
+                <div class="test-info-label">🏫 الصف الدراسي</div>
+                <div class="test-info-value" id="testGrade">السادس الثانوي</div>
+            </div>
+            <div class="test-info-item">
+                <div class="test-info-label">⏱️ المدة الزمنية</div>
+                <div class="test-info-value" id="testDuration">ساعتان</div>
+            </div>
+        </div>
+
+        <!-- Search Container -->
+        <div class="search-container" id="searchContainer">
+            <input type="text" id="searchInput" placeholder="🔍 ابحث عن طالب...">
+        </div>
+
+        <!-- Note -->
+        <div class="print-note">
+            <span class="print-note-icon">⚠️</span>
+            <span>تم إعداد هذا التقرير من قبل نظام إدارة الاختبارات. الدرجات المعروضة هي النتائج النهائية للطلاب.</span>
+        </div>
+
+        <!-- Section 1: Passed Students -->
+        <div class="results-section">
+            <div class="section-title">
+                <span class="section-title-icon">✅</span>
+                <span>الطلاب الناجحون</span>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-box">
+                    <div class="stat-label">العدد الكلي</div>
+                    <div class="stat-value" id="passedCount">25</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">متوسط الدرجات</div>
+                    <div class="stat-value" id="passedAvg">78.5</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">أعلى درجة</div>
+                    <div class="stat-value" id="passedMax">95</div>
+                </div>
+            </div>
+
+            <table id="passedTable">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;">#</th>
+                        <th>اسم الطالب</th>
+                        <th style="width: 150px;">الرقم الجلسة</th>
+                        <th style="width: 100px;">الدرجة</th>
+                        <th style="width: 100px;">النسبة %</th>
+                        <th style="width: 120px;">التقدير</th>
+                        <th style="width: 100px;">الحالة</th>
+                    </tr>
+                </thead>
+                <tbody id="passedTableBody">
+                    <!-- سيتم ملأها بواسطة JavaScript -->
+                </tbody>
+            </table>
+
+            <div id="noPassedData" class="no-data" style="display: none;">
+                لا توجد بيانات للطلاب الناجحين
+            </div>
+        </div>
+
+        <!-- Section 2: Absent Students -->
+        <div class="results-section">
+            <div class="section-title">
+                <span class="section-title-icon">⛔</span>
+                <span>الطلاب الغائبون</span>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-box">
+                    <div class="stat-label">عدد الغائبين</div>
+                    <div class="stat-value" id="absentCount">5</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">نسبة الغياب</div>
+                    <div class="stat-value" id="absentPercentage">16.7%</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">الإجمالي المتوقع</div>
+                    <div class="stat-value" id="totalExpected">30</div>
+                </div>
+            </div>
+
+            <table id="absentTable">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;">#</th>
+                        <th>اسم الطالب</th>
+                        <th style="width: 150px;">الرقم الجلسة</th>
+                        <th style="width: 120px;">سبب الغياب</th>
+                        <th style="width: 100px;">الحالة</th>
+                    </tr>
+                </thead>
+                <tbody id="absentTableBody">
+                    <!-- سيتم ملأها بواسطة JavaScript -->
+                </tbody>
+            </table>
+
+            <div id="noAbsentData" class="no-data" style="display: none;">
+                لا توجد غيابات
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="results-section">
+            <div class="section-title">
+                <span class="section-title-icon">📊</span>
+                <span>الملخص الإحصائي</span>
+            </div>
+
+            <table style="max-width: 500px;">
+                <tbody>
+                    <tr>
+                        <td style="font-weight: 700;">إجمالي الطلاب المتوقع حضورهم</td>
+                        <td style="text-align: center; font-weight: 700; color: #0284c7;" id="summaryTotal">30</td>
+                    </tr>
+                    <tr style="background: #c8e6c9;">
+                        <td style="font-weight: 700;">✅ الطلاب الناجحون</td>
+                        <td style="text-align: center; font-weight: 700; color: #1b5e20;" id="summaryPassed">25</td>
+                    </tr>
+                    <tr style="background: #ffcdd2;">
+                        <td style="font-weight: 700;">⛔ الطلاب الغائبون</td>
+                        <td style="text-align: center; font-weight: 700; color: #b71c1c;" id="summaryAbsent">5</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 700;">📈 معدل الحضور</td>
+                        <td style="text-align: center; font-weight: 700; color: #0284c7;" id="summaryAttendance">83.3%</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 700;">📊 متوسط الدرجات الكلي</td>
+                        <td style="text-align: center; font-weight: 700; color: #0284c7;" id="summaryAvg">78.5</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="print-footer">
+            <div class="footer-item">
+                <span class="footer-label">تاريخ الطباعة:</span>
+                <span id="printDate">25/06/2026</span>
+            </div>
+            <div class="footer-item">
+                <span class="footer-label">تم إعداده بواسطة:</span>
+                <span>نظام الاختبارات الإلكترونية</span>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="btn-container">
+            <button class="btn-print" onclick="window.print()">🖨️ طباعة التقرير</button>
+            <button class="btn-close" onclick="window.close()">✕ إغلاق</button>
+        </div>
+    </div>
+
+    <script>
+        // Sample Data (يمكن استبدالها ببيانات حقيقية من قاعدة البيانات)
+        const testData = {
+            testName: "اختبار القراءة المحررة",
+            testDate: "25/06/2026",
+            testGrade: "السادس الثانوي",
+            testDuration: "ساعتان",
+            passedStudents: [
+                { rank: 1, name: "أحمد محمود", rollNo: "001", score: 95, total: 100, percentage: 95, grade: "A" },
+                { rank: 2, name: "فاطمة علي", rollNo: "002", score: 92, total: 100, percentage: 92, grade: "A" },
+                { rank: 3, name: "محمد سالم", rollNo: "003", score: 88, total: 100, percentage: 88, grade: "A" },
+                { rank: 4, name: "سارة يوسف", rollNo: "004", score: 85, total: 100, percentage: 85, grade: "B" },
+                { rank: 5, name: "علي حسن", rollNo: "005", score: 82, total: 100, percentage: 82, grade: "B" },
+                { rank: 6, name: "نور إبراهيم", rollNo: "006", score: 80, total: 100, percentage: 80, grade: "B" },
+                { rank: 7, name: "مريم أحمد", rollNo: "007", score: 78, total: 100, percentage: 78, grade: "B" },
+                { rank: 8, name: "خالد عمر", rollNo: "008", score: 75, total: 100, percentage: 75, grade: "C" },
+                { rank: 9, name: "ليلى محمود", rollNo: "009", score: 72, total: 100, percentage: 72, grade: "C" },
+                { rank: 10, name: "إبراهيم طه", rollNo: "010", score: 70, total: 100, percentage: 70, grade: "C" },
+                { rank: 11, name: "زيد أنور", rollNo: "011", score: 68, total: 100, percentage: 68, grade: "C" },
+                { rank: 12, name: "رقية محمد", rollNo: "012", score: 65, total: 100, percentage: 65, grade: "C" },
+                { rank: 13, name: "جمال نصر", rollNo: "013", score: 62, total: 100, percentage: 62, grade: "D" },
+                { rank: 14, name: "هند محمود", rollNo: "014", score: 60, total: 100, percentage: 60, grade: "D" },
+                { rank: 15, name: "صلاح الدين", rollNo: "015", score: 58, total: 100, percentage: 58, grade: "D" },
+            ],
+            absentStudents: [
+                { rank: 1, name: "أسماء خالد", rollNo: "016", reason: "غياب مرضي" },
+                { rank: 2, name: "هاشم عبدالرحمن", rollNo: "017", reason: "ظرف طارئ" },
+                { rank: 3, name: "دينا محمود", rollNo: "018", reason: "غياب بدون عذر" },
+                { rank: 4, name: "ياسين أحمد", rollNo: "019", reason: "غياب مرضي" },
+                { rank: 5, name: "لمياء علي", rollNo: "020", reason: "ظرف طارئ" },
+            ]
+        };
+
+        // Initialize the page
+        function initializePage() {
+            // Fill test info
+            document.getElementById('testName').textContent = testData.testName;
+            document.getElementById('testDate').textContent = testData.testDate;
+            document.getElementById('testGrade').textContent = testData.testGrade;
+            document.getElementById('testDuration').textContent = testData.testDuration;
+            document.getElementById('printDate').textContent = testData.testDate;
+
+            // Load passed students
+            loadPassedStudents();
+            
+            // Load absent students
+            loadAbsentStudents();
+
+            // Calculate summary
+            calculateSummary();
+
+            // Setup search
+            setupSearch();
+        }
+
+        function loadPassedStudents() {
+            const tbody = document.getElementById('passedTableBody');
+            tbody.innerHTML = '';
+
+            if (testData.passedStudents.length === 0) {
+                document.getElementById('noPassedData').style.display = 'block';
+                return;
+            }
+
+            testData.passedStudents.forEach((student, index) => {
+                const row = document.createElement('tr');
+                const gradeClass = `grade-${student.grade.toLowerCase()}`;
+                
+                row.innerHTML = `
+                    <td class="rank">${student.rank}</td>
+                    <td>${student.name}</td>
+                    <td>${student.rollNo}</td>
+                    <td style="font-weight: 700; color: #0284c7;">${student.score}</td>
+                    <td style="font-weight: 700;">${student.percentage}%</td>
+                    <td><span class="grade ${gradeClass}">${student.grade}</span></td>
+                    <td><span class="status-passed">✅ نجح</span></td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+
+            // Update stats
+            const scores = testData.passedStudents.map(s => s.score);
+            const avg = (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1);
+            const max = Math.max(...scores);
+
+            document.getElementById('passedCount').textContent = testData.passedStudents.length;
+            document.getElementById('passedAvg').textContent = avg;
+            document.getElementById('passedMax').textContent = max;
+        }
+
+        function loadAbsentStudents() {
+            const tbody = document.getElementById('absentTableBody');
+            tbody.innerHTML = '';
+
+            if (testData.absentStudents.length === 0) {
+                document.getElementById('noAbsentData').style.display = 'block';
+                return;
+            }
+
+            testData.absentStudents.forEach((student, index) => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td class="rank">${student.rank}</td>
+                    <td>${student.name}</td>
+                    <td>${student.rollNo}</td>
+                    <td>${student.reason}</td>
+                    <td><span class="status-absent">⛔ غائب</span></td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+
+            // Update stats
+            const total = testData.passedStudents.length + testData.absentStudents.length;
+            const percentage = ((testData.absentStudents.length / total) * 100).toFixed(1);
+
+            document.getElementById('absentCount').textContent = testData.absentStudents.length;
+            document.getElementById('absentPercentage').textContent = percentage + '%';
+            document.getElementById('totalExpected').textContent = total;
+        }
+
+        function calculateSummary() {
+            const passed = testData.passedStudents.length;
+            const absent = testData.absentStudents.length;
+            const total = passed + absent;
+            const attendance = ((passed / total) * 100).toFixed(1);
+            const avgScore = (testData.passedStudents.reduce((a, b) => a + b.score, 0) / passed).toFixed(1);
+
+            document.getElementById('summaryTotal').textContent = total;
+            document.getElementById('summaryPassed').textContent = passed;
+            document.getElementById('summaryAbsent').textContent = absent;
+            document.getElementById('summaryAttendance').textContent = attendance + '%';
+            document.getElementById('summaryAvg').textContent = avgScore;
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('keyup', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                // Filter passed students
+                const passedRows = document.querySelectorAll('#passedTableBody tr');
+                passedRows.forEach(row => {
+                    const name = row.textContent.toLowerCase();
+                    row.style.display = name.includes(searchTerm) ? '' : 'none';
+                });
+
+                // Filter absent students
+                const absentRows = document.querySelectorAll('#absentTableBody tr');
+                absentRows.forEach(row => {
+                    const name = row.textContent.toLowerCase();
+                    row.style.display = name.includes(searchTerm) ? '' : 'none';
+                });
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>

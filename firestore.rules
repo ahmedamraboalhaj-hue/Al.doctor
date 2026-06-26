@@ -14,28 +14,64 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // ── الطلاب: القراءة للكل (للتسجيل والبحث بالكود)، الكتابة مغلقة ──
+    // ── الطلاب: القراءة والكتابة مفتوحة (الأدمن بدون Firebase Auth) ──
     match /students/{docId} {
-      allow read: if true;
-      allow write: if false;
+      allow read, write: if true;
     }
 
-    // ── بيانات المنصة (الكورسات، الإعدادات): القراءة للكل، الكتابة مغلقة ──
+    // ── بيانات المنصة (الكورسات، الإعدادات): القراءة والكتابة مفتوحة ──
     match /platform_data/{docId} {
-      allow read: if true;
-      allow write: if false;
+      allow read, write: if true;
     }
 
-    // ── الدروس: القراءة للكل، الكتابة مغلقة ──
+    // ── الدروس: القراءة والكتابة مفتوحة ──
     match /lessons/{docId} {
-      allow read: if true;
-      allow write: if false;
+      allow read, write: if true;
     }
 
-    // ── أكواد التفعيل: القراءة للكل (للتحقق من الكود)، الكتابة مغلقة ──
+    // ── أكواد التفعيل: القراءة والكتابة مفتوحة ──
     match /activationCodes/{docId} {
-      allow read: if true;
-      allow write: if false;
+      allow read, write: if true;
+    }
+
+    // ── الاختبارات: القراءة والكتابة مفتوحة ──
+    match /quizzes/{docId} {
+      allow read, write: if true;
+    }
+
+    // ── بنك الأسئلة: القراءة والكتابة مفتوحة ──
+    match /question_bank/{docId} {
+      allow read, write: if true;
+    }
+
+    // ── الفيديوهات: القراءة والكتابة مفتوحة ──
+    match /videos/{docId} {
+      allow read, write: if true;
+    }
+
+    // ── محاولات الاختبارات: القراءة والكتابة مفتوحة (للطلاب) ──
+    match /quiz_attempts/{docId} {
+      allow read, write: if true;
+    }
+
+    // ── نشاط الطلاب: القراءة والكتابة مفتوحة ──
+    match /student_activity/{docId} {
+      allow read, write: if true;
+    }
+
+    // ── اشتراكات الطلاب في الكورسات ──
+    match /platform_courses/{docId}/{sub=**} {
+      allow read, write: if true;
+    }
+
+    // ── طلبات الدفع ──
+    match /payment_requests/{docId} {
+      allow read, write: if true;
+    }
+
+    // ── طلبات الدفع (اسم بديل) ──
+    match /paymentRequests/{docId} {
+      allow read, write: if true;
     }
 
     // ── كل المجموعات الأخرى: مغلقة تماماً ──

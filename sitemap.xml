@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- الصفحة الرئيسية — أعلى أولوية -->
+  <url>
+    <loc>https://aldoctor-7e153.web.app/</loc>
+    <lastmod>2025-06-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://aldoctor-7e153.web.app/"/>
+  </url>
+
+  <!-- صفحة الكورسات والدروس -->
+  <url>
+    <loc>https://aldoctor-7e153.web.app/lessons.html</loc>
+    <lastmod>2025-06-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- صفحة الاختبارات والمراجعات -->
+  <url>
+    <loc>https://aldoctor-7e153.web.app/tests.html</loc>
+    <lastmod>2025-06-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- صفحة الملف الشخصي -->
+  <url>
+    <loc>https://aldoctor-7e153.web.app/profile.html</loc>
+    <lastmod>2025-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+</urlset>

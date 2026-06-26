@@ -3,7 +3,7 @@
 // الإصدار: غيّر الرقم ده كل ما تعمل تحديث → التحديث يوصل فوراً
 // ============================================================
 
-const CACHE_VERSION = 'aldoctor-v1';
+const CACHE_VERSION = 'aldoctor-v2-courses-sync';
 
 // الملفات اللي هتتحفظ offline
 const CORE_FILES = [

@@ -3,7 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>محتوى الكورس - الدكتور في اللغة العربية</title>
+
+<!-- SEO -->
+<title>كورسات اللغة العربية | شرح اللغة العربية للثانوية — الدكتور إبراهيم طناني</title>
+<meta name="description" content="شرح اللغة العربية للثانوية العامة والأزهرية مع الدكتور إبراهيم طناني. كورسات منظمة لأولى وثانية وثالثة ثانوي بأسلوب مبسط واحترافي.">
+<meta name="keywords" content="كورسات اللغة العربية, شرح اللغة العربية للثانوية العامة, شرح اللغة العربية للثانوية الأزهرية, دروس لغة عربية, إبراهيم طناني, أولى ثانوي, ثانية ثانوي, ثالثة ثانوي">
+<meta name="author" content="الدكتور إبراهيم طناني">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://aldoctor-7e153.web.app/lessons.html">
+<meta property="og:title" content="كورسات اللغة العربية | الدكتور إبراهيم طناني">
+<meta property="og:description" content="شرح اللغة العربية للثانوية العامة والأزهرية — دروس منظمة لكل الصفوف الثانوية.">
+<meta property="og:url" content="https://aldoctor-7e153.web.app/lessons.html">
+<meta property="og:image" content="https://aldoctor-7e153.web.app/ايقونة الهدر.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_EG">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "كورسات اللغة العربية — الدكتور إبراهيم طناني",
+  "description": "قائمة كورسات شرح اللغة العربية للثانوية العامة والأزهرية",
+  "url": "https://aldoctor-7e153.web.app/lessons.html",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "اللغة العربية أولى ثانوي" },
+    { "@type": "ListItem", "position": 2, "name": "اللغة العربية ثانية ثانوي" },
+    { "@type": "ListItem", "position": 3, "name": "اللغة العربية ثالثة ثانوي" }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -297,6 +324,26 @@ body{ font-family:'Tajawal',sans-serif; background:var(--bg); color:var(--text);
   aspect-ratio: 16/9;
   display:flex; align-items:center; justify-content:center;
   color: #fff; overflow:hidden; position:relative;
+  /* منع سحب المحتوى */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* عزل مشغّل يوتيوب — منع الـ context menu داخل المشغّل */
+.video-player iframe {
+  pointer-events: auto;
+  border: none !important;
+}
+
+/* طبقة الحماية فوق يوتيوب — تُخفي عناصر الانتقال لكنها لا تمنع التشغيل */
+.yt-overlay-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 46px;
+  z-index: 5;
+  pointer-events: all;
+  cursor: default;
+  background: transparent;
 }
 .vp-placeholder {
   text-align:center; opacity:.5;
@@ -1137,12 +1184,47 @@ function renderVideo(url, segment){
       }catch(e){ console.warn('[playerjs]',e); startVpTimeTracking(videoId); }
     } else { startVpTimeTracking(videoId); }
 
-  // 2) YouTube
+  // 2) YouTube — مشغّل معزول بأقصى حماية ممكنة من سياسات يوتيوب
   } else if(v.includes('youtube')||v.includes('youtu.be')){
     let id='';
     if(v.includes('watch')){ const m=v.match(/[?&]v=([^&]+)/); id=m?m[1]:''; }
-    else { const m=v.match(/youtu\.be\/([^?&]+)/); id=m?m[1]:v; }
-    vpEl.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen style="border-radius:14px"></iframe>`;
+    else { const m=v.match(/youtu\.be\/([^?&]+)/); id=m?m[1]:v.split('/').pop().split('?')[0]; }
+
+    if(!id){ vpEl.innerHTML='<div style="padding:48px;text-align:center;color:#94a3b8">رابط الفيديو غير صحيح</div>'; return; }
+
+    // استخدام youtube-nocookie.com + معاملات إخفاء العناصر
+    const ytSrc = `https://www.youtube-nocookie.com/embed/${id}`
+      + `?modestbranding=1`   // تقليل ظهور شعار يوتيوب
+      + `&rel=0`              // بدون فيديوهات مقترحة من قنوات أخرى
+      + `&showinfo=0`         // إخفاء معلومات الفيديو
+      + `&iv_load_policy=3`   // إخفاء التعليقات التوضيحية
+      + `&color=white`        // شريط التقدم أبيض بدلاً من أحمر
+      + `&playsinline=1`      // تشغيل داخل الصفحة على iOS
+      + `&disablekb=0`        // السماح باختصارات لوحة المفاتيح الأساسية
+      + `&fs=1`               // السماح بوضع ملء الشاشة
+      + `&controls=1`;        // إظهار أدوات التحكم الأساسية
+
+    vpEl.innerHTML = `
+      <div style="position:relative;width:100%;height:100%;border-radius:14px;overflow:hidden;background:#000">
+        <!-- طبقة شفافة فوق شعار يوتيوب في الزاوية العلوية اليسرى -->
+        <div style="position:absolute;top:0;left:0;width:180px;height:48px;z-index:10;pointer-events:none;background:transparent"></div>
+        <!-- طبقة تمنع النقر على عنوان الفيديو في الأعلى -->
+        <div style="position:absolute;top:0;left:0;right:0;height:44px;z-index:10;pointer-events:all;cursor:default;background:transparent"
+             onclick="return false;" ondblclick="return false;"></div>
+
+        <iframe id="ytIframe"
+          src="${ytSrc}"
+          style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:14px"
+          allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;fullscreen"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"
+          sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-popups-to-escape-sandbox"
+          loading="lazy"
+          title="فيديو الدرس"></iframe>
+      </div>`;
+
+    // تتبع وقت المشاهدة تقريبياً للطالب (بدون API)
+    startVpTimeTracking('yt_' + id);
 
   // 3) Direct video
   } else if(v){
@@ -1426,6 +1508,34 @@ window.addEventListener('load', async ()=>{
     await syncStudentDataFromFirestore();
   await renderCoursePage();
 });
+
+// ═══════════════════════════════════════════════════════════
+// حماية مشغّل يوتيوب — منع الخروج من المنصة
+// ═══════════════════════════════════════════════════════════
+(function() {
+  // منع فتح نوافذ جديدة عبر window.open (حسب حدود السياسة)
+  const _open = window.open.bind(window);
+  window.open = function(url, target, features) {
+    // السماح فقط بالنوافذ المقصودة من المنصة
+    if (url && (url.includes('youtube.com') || url.includes('youtu.be'))) {
+      console.warn('[Platform] YouTube direct link blocked');
+      return null;
+    }
+    return _open(url, target, features);
+  };
+
+  // منع contextmenu داخل الـ video player
+  document.addEventListener('contextmenu', function(e) {
+    const vp = document.querySelector('.video-player');
+    if (vp && vp.contains(e.target)) e.preventDefault();
+  });
+
+  // منع drag من الـ iframe
+  document.addEventListener('dragstart', function(e) {
+    const vp = document.querySelector('.video-player');
+    if (vp && vp.contains(e.target)) e.preventDefault();
+  });
+})();
 </script>
 </body>
 </html>
